@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	Sencha Ext JS で美しい線画を描く Part 1 へのコメント	</title>
+	<atom:link href="/877/feed" rel="self" type="application/rss+xml" />
+	<link>/877</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Wed, 16 Dec 2015 23:00:48 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>
+		Sencha Ext JS で美しい線画を描く Part 2 &#124; Sunvisor Lab. Ext JS 別館 より		</title>
+		<link>/877#comment-197195</link>
+
+		<dc:creator><![CDATA[Sencha Ext JS で美しい線画を描く Part 2 &#124; Sunvisor Lab. Ext JS 別館]]></dc:creator>
+		<pubDate>Wed, 16 Dec 2015 23:00:48 +0000</pubDate>
+		<guid isPermaLink="false">/?p=877#comment-197195</guid>
+
+					<description><![CDATA[&lt;p&gt;[&#8230;]          &#171; Sencha Ext JS で美しい線画を描く Part 1     [&#8230;]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;]          &laquo; Sencha Ext JS で美しい線画を描く Part 1     [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

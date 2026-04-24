@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>vim &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/vim/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Sun, 28 Oct 2012 06:29:49 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Vimの設定をNeoBundle中心にした</title>
+		<link>/598</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Thu, 25 Oct 2012 03:41:22 +0000</pubDate>
+				<category><![CDATA[未分類]]></category>
+		<category><![CDATA[vim]]></category>
+		<guid isPermaLink="false">/?p=598</guid>
+
+					<description><![CDATA[MacVimの環境をしばらくぶりにリニューアルしました。 VundleからShougoさんのNeoBundleに変えて。 pathogen > Vundle > NeoBundle とプラグイン管理を変えてきました。 あ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>MacVimの環境をしばらくぶりにリニューアルしました。
+VundleからShougoさんのNeoBundleに変えて。
+pathogen > Vundle > NeoBundle とプラグイン管理を変えてきました。
+ある意味、正常な人です僕は。
+<span id="more-598"></span></p>
+
+<h2>NeoBundle</h2>
+
+<p>これを入れなくては始まりません。</p>
+
+<p>https://github.com/Shougo/neobundle.vim</p>
+
+<p>GitHubサイトのREADME.mdの通りに設定します。</p>
+
+<ul>
+<li>~/.vim/bundle ディレクトリにNeoBundleをクローンします。</li>
+<li>サンプルの .vimrc をみて、.vimrc に設定をします。</li>
+<li>インストールするプラグインの指定以外はほとんどまるまるコピペでいけます。</li>
+</ul>
+
+<h2>VimProc / Unite</h2>
+
+<p>重要なプラグインが二つをあります。それはVimProcとUniteです。
+NeoBundleを入れたので、.vimrc に</p>
+
+<pre><code>NeoBundle "Shougo/vimproc"
+NeoBundle "Shougo/unite.vim"
+</code></pre>
+
+<p>と書いて、</p>
+
+<pre><code>:NeoBundleInstall
+</code></pre>
+
+<p>ってするだけです。ただ、VimProcを使うためにはmakeが必要です。</p>
+
+<pre><code>$ cd ~/.vim/bundle/vimproc
+$ make -f make_mak.mak
+</code></pre>
+
+<p>２つ目は環境に合わせて実行するMakeファイルを変えます。</p>
+
+<h2>プラグイン</h2>
+
+<p>ほかのプラグイン</p>
+
+<pre><code>Shougo/vimproc
+Shougo/vimfiler
+Shougo/vimshell
+Shougo/unite.vim
+Shougo/neocomplcache
+NeoBundle "Shougo/neosnippet"
+pangloss/vim-javascript
+sudo.vim
+scrooloose/nerdtree
+vim-scripts/surround.vim
+thinca/vim-ref
+peterhost/vim-markdown-preview
+majutsushi/tagbar
+sjl/gundo.vim
+vim-scripts/VimRepress
+Raimondi/javaScriptLint.vim
+</code></pre>
+
+<h2>JSer用の設定</h2>
+
+<p>まず、次のプラグインを入れます。</p>
+
+<pre><code>pangloss/vim-javascript
+</code></pre>
+
+<p>これを入れたら、syntaxとかindentとか全部やってくれるのでとても便利ですし、
+賢いです。JSerならまずこれを入れましょう。
+それから、文法チェックをするために、次のプラグインも入れましょう。</p>
+
+<pre><code>Raimondi/javaScriptLint.vim
+</code></pre>
+
+<p>このプラグインを入れると、保存時にjslを使って、JavaScriptの文法チェックをしてくれます。
+実行には別途jslが必要なので、
+http://www.javascriptlint.com/
+から、jslを入手してパスの通ったところに配置します。</p>
+
+<p>ただ、少々warningがうるさすぎる嫌いがありますので、
+チェックする内容をカスタマイズしたいと思うでしょう。
+そんな場合は、jslint_comman_options で起動オプションを設定できます。</p>
+
+<pre><code>" javaScriptLintの動作オプションの設定
+" 最初の -conf ~/bin/jsl.conf がキモ。これでjslの警告レベルを細かく調整できる
+let jslint_command_options = '-conf ~/bin/jsl.conf -nofilelisting -nocontext -nosummary -nologo -process'
+</code></pre>
+
+<p>このなかで、-conf オプションで、jsl.conf というファイルを指定していますが、
+jslのオプションを書いたファイルになります。
+このファイルに細かな実行オプションを書けばいいということです。
+一から書くのは面倒くさいので、</p>
+
+<pre><code>$ jsl help:conf &gt; jsl.conf
+</code></pre>
+
+<p>でひな形を作成してそれを編集します。</p>
+
+<p>JSDoc形式のコメントを入れるスクリプトは自作しました。gistに公開しています。</p>
+
+<script src="https://gist.github.com/3903772.js"> </script>
+
+<p>このコードを、.vim/ftplugin/javascript.vim に追加します。</p>
+
+<h2>その他細かいの</h2>
+
+<pre><code>" ヤンクの時にクリップボードにもセットする
+set clipboard+=unnamed
+</code></pre>
+
+<p>これ便利です。Vimでyyでヤングして、他のアプリに⌘ + Vで貼り付けできます。
+よそで、⌘ + Cでコピーしたものをpで貼り付けもできます。</p>
+
+<pre><code>" %で 対応するhtmlタグに飛べるようにする
+runtime macros/matchit.vim
+</code></pre>
+
+<p>%を使って閉じタグに飛べます。</p>
+
+<pre><code>"カーソルを表示行で移動する。物理行移動は&lt;C-n&gt;,&lt;C-p&gt;
+nnoremap j gj
+nnoremap k gk
+nnoremap &lt;Down&gt; gj
+nnoremap &lt;Up&gt;   gk
+</code></pre>
+
+<p>Vimでの j k は論理行単位でカーソル移動しますが、それを物理行単位にします。</p>
+
+<h2>Unite</h2>
+
+<p>Unite便利すぎる。これから活用しよう。
+まずは、一部オプションの変更</p>
+
+<pre><code>" Unite 設定
+"let g:unite_enable_split_vertically = 1
+"let g:unite_winwidth = 40
+let g:unite_split_rule = "rightbelow"
+</code></pre>
+
+<p>unite_enable_split_verticallyを1にすると、Uniteのウィンドウを縦に分割して表示します。
+でも、横の方が使いやすいのでやめました。
+unite_split_rule のデフォルトはtopleftですが、これを変更しました。
+僕にはこちらの方が使いやすいです。</p>
+
+<pre><code>" Unite で yunk history
+let g:unite_source_history_yank_enable =1  "history/yankの有効化
+nnoremap &lt;silent&gt; ,p :&lt;C-u&gt;Unite history/yank&lt;CR&gt;
+" Uniteのバッファ一覧機能
+nnoremap &lt;silent&gt; ,b :&lt;C-u&gt;Unite buffer&lt;CR&gt;
+" Uniteのレジスター覧機能
+nnoremap &lt;silent&gt; ,r :&lt;C-u&gt;Unite register&lt;CR&gt;
+" Uniteの最近使ったファイル一覧機能
+nnoremap &lt;silent&gt; ,f :&lt;C-u&gt;Unite file_mru&lt;CR&gt;
+</code></pre>
+
+<p>ということでヤンクの履歴からペーストする機能を始め、いくつかのキーマップをしました。
+Uniteは他にもいろいろ便利そうなので、Uniteがらみのキーマップ多くなりそうです。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>VimでWordPressの投稿を書く</title>
+		<link>/406</link>
+					<comments>/406#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 12 Oct 2011 07:03:44 +0000</pubDate>
+				<category><![CDATA[未分類]]></category>
+		<category><![CDATA[vim]]></category>
+		<guid isPermaLink="false">/?p=406</guid>
+
+					<description><![CDATA[VimでWordpressに投稿できるらしいとは聞いていたので、やってみることにしました。 普通にvim wordpress とかでググると、Vimpressというプラグインがヒットします。 最初、それを入れてみたのです [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>VimでWordpressに投稿できるらしいとは聞いていたので、やってみることにしました。</p>
+
+<p><span id="more-406"></span></p>
+
+<p>普通にvim wordpress とかでググると、Vimpressというプラグインがヒットします。
+最初、それを入れてみたのですが、編集の時にmoreタグ以降が落ちてこない、という現象に出くわしまして、
+それでさらにググってたらVimRepressというのを見つけました。</p>
+
+<p>では、それを入れます。Vundle使ってるので簡単。</p>
+
+<p>.vimrcに</p>
+
+<pre><code>Bundle "vim-scripts/VimRepress"
+</code></pre>
+
+<p>を加えます。同時にブログの設定も書いておきます。</p>
+
+<pre><code>let VIMPRESS = [{'username':'martini3oz', 
+        \'password':'hogehoge', 
+        \'blog_url':'/' 
+        \}] 
+</code></pre>
+
+<p>こんな感じです。password はオプションなので設定しなければ都度聞いてくるようです。
+また、Wordpressのダッシュボード > 設定 > 投稿設定 で XML-RPC を有効にしなければなりません。</p>
+
+<p>.vimrcを再度読み込んで、BundleInstallすればインストールでき、投稿が出来ます。</p>
+
+<p>新しい投稿を書くには、:BlogNew コマンドを実行します。
+EditFormat: Markdown とするとMarkdownで記述したものをHTMLに変換してアップロードしてくれるような感じですが、
+僕の環境ではエラーになりました。
+もっとも僕は、Markdownのプラグインを入れているので、変換をローカルでする必要はありません。
+ですので、EditFormat: HTML としておいて、Markdown記法で書いています。</p>
+
+<p>既存の記事を編集も出来ます。</p>
+
+<p>:BlogList コマンドで一覧を取得でき、一覧から記事を選んでEnterを押すと編集できます。
+編集後は :BlogSaveコマンドでブログが更新されます。</p>
+
+<p>これは便利だわ。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/406/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Vim: tagbarプラグインの導入メモ</title>
+		<link>/325</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 08 Aug 2011 13:11:45 +0000</pubDate>
+				<category><![CDATA[未分類]]></category>
+		<category><![CDATA[vim]]></category>
+		<guid isPermaLink="false">/?p=325</guid>
+
+					<description><![CDATA[VimをIDEみたくしたいという欲求の、その１はファイルエクスプローラーウィンドウでしたがNERDTreeでOK。 その２は補完でしたが、これはNEOCompleteCacheでOK。そして３つめがメソッドのリストです。 [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>VimをIDEみたくしたいという欲求の、その１はファイルエクスプローラーウィンドウでしたがNERDTreeでOK。
+その２は補完でしたが、これはNEOCompleteCacheでOK。そして３つめがメソッドのリストです。<span id="more-325"></span></p>
+
+<h2>最初はtaglist</h2>
+
+<p>taglistというプラグインを入れると、それらしきことができるというので入れて使ってみましたら、
+これが、PHPだと結構使える感じなのですが、JavaScriptでは全然だめでした。
+そこでいろいろと調べてみると、tablist-plusというプラグインがありました。</p>
+
+<p><a href="https://github.com/int3/vim-taglist-plus/">https://github.com/int3/vim-taglist-plus/</a></p>
+
+<h2>jsctags</h2>
+
+<p>ただこれを入れただけでは使えず、jsctagsというコマンドがいるといいます。
+jsctags は、現在は、doctorjs というプロジェクトになっていて、
+GitHubからプロジェクトをcloneしてmakeする必要があるとのことです。
+ここまで調べるのも、英語がわからんせいで結構苦労したのですが、</p>
+
+<p>最初に、mozilla/doctorjs のリポジトリからcloneしてmakeするとエラーがでます。
+それをfokeしているevilpie/jsctagsというのがあったのでそちらをcloneしてmakeすると
+ちゃんとjsctagsができました。</p>
+
+<p>が、</p>
+
+<p>これではだめだったのです。taglist-plusがエラーを出します。
+どうもコマンドラインの引数の仕様が違うようです。
+やっぱり mozilla/doctorjsでないとだめみたいです。</p>
+
+<p>でも、なんでmakeが通らないんだろう。その質問をしている人がいました。</p>
+
+<p><a href="https://github.com/mozilla/doctorjs/issues/7/">https://github.com/mozilla/doctorjs/issues/7/</a></p>
+
+<p>ここのやりとりを見て、ちょっと前のコミットをcheckoutしてmakeしなはれ、
+というアドバイスがあったので、素直にそうしてみました。</p>
+
+<div>[text]
+$ git checkout f63c1e0d30bd8a15823e
+$ sudo make install
+[/text]</div>
+
+<p>ここまでくるのにどれだけかかったか。orz
+英語が読めない悲しさです。</p>
+
+<h2>tagbarのほうがよさげ</h2>
+
+<p>このあたりを調べているときに、tagbarプラグインの存在を知りまして、
+どうもtaglist-plusよりよさげなので、こっちを入れることにしました。</p>
+
+<p><a href="https://github.com/majutsushi/tagbar/">https://github.com/majutsushi/tagbar/</a></p>
+
+<p>Vundleでインストールするのはめちゃ簡単です。
+.vimrcに</p>
+
+<p>Bundle &#8220;majutsushi/tagbar&#8221;</p>
+
+<p>と書いて、</p>
+
+<p>:BundleInstall</p>
+
+<p>とコマンドを実行するだけです。</p>
+
+<p><a href="/wp-content/uploads/2011/08/tagbar.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2011/08/tagbar-1024x697.png" alt="" title="tagbar" width="640" height="435" class="alignnone size-large wp-image-326" srcset="/wp-content/uploads/2011/08/tagbar-1024x697.png 1024w, /wp-content/uploads/2011/08/tagbar-300x204.png 300w, /wp-content/uploads/2011/08/tagbar.png 1379w" sizes="(max-width: 640px) 100vw, 640px" /></a></p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Vimでの開発環境設定</title>
+		<link>/306</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 30 Jul 2011 02:36:35 +0000</pubDate>
+				<category><![CDATA[未分類]]></category>
+		<category><![CDATA[vim]]></category>
+		<guid isPermaLink="false">/?p=306</guid>
+
+					<description><![CDATA[MacVimの環境が、わからないままいい加減に作っていたので、一度、一からやり直そうということで再構築したメモです。すんごいいい加減ですが、どんどん書き足していってます。 MacVim-kaoriya のインストール 普 [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>MacVimの環境が、わからないままいい加減に作っていたので、一度、一からやり直そうということで再構築したメモです。すんごいいい加減ですが、どんどん書き足していってます。<span id="more-306"></span></p>
+
+<h2>MacVim-kaoriya のインストール</h2>
+
+<p>普通にダウンロードして、普通にインストールします。（手抜きブログｗ)
+ほんで、mvimコマンドをパスの通ったところにおいておくと便利です。</p>
+
+<h2>pathogen.vim</h2>
+
+<p>最初にこのプラグインを入れました。なんせ後が楽になります。github から clone した後に、
+<code>.vim/autoload</code>に
+pathogen.vimをコピーします。
+そしてまずは、.vimrcを編集して、pathogenを有効にします。</p>
+
+<div>[text]
+    call pathogen#runtime_append_all_bundles()
+[/text]</div>
+
+<p>これで、プラグインはbundleディレクトリにいれるだけで使えるようになります。
+実は、MacVimでのみpathogenを使うのなら、プラグインのインストールは必要ありません。コンソールでvimを使うときにも使いたいので、インストールしました。</p>
+
+<div>[bash]
+$ cd ~/.vim/bundle
+$ git clone https://github.com/scrooloose/nerdtree.git
+[/bash]</div>
+
+<p>こんな風にgithubからcloneするだけで使えるようになります。</p>
+
+<div>[text]
+:helptag ~/.vim/bundle/nerdtree/doc
+[/text]
+</div>
+
+<p>あとはヘルプを見られるように、上記のコマンドを打ちます。どのプラグインもほぼ同じ手順で登録できます。プラグインを最新のものに更新するには、git pull だけでいけるのがいいですね。</p>
+
+<h2>NERDTree</h2>
+
+<p>これは見た目がIDE風になるのが気に入っているプラグインです。
+mキーで簡単なファイル操作ならできます。
+そこにプラグインを入れられることを知りました。</p>
+
+<p><a href="http://yp.xenophy.com/?p=78">NERDTreeでgrep検索</a></p>
+
+<p>これはいい。ということで入れました。</p>
+
+<p><a href="https://gist.github.com/414375/">https://gist.github.com/414375/</a></p>
+
+<p>からファイルをダウンロードして、 .vim/nerdtree_plugin
+の中に入れます。
+これはものすごく便利です。</p>
+
+<h2>NeoCompleteCacheプラグインの設定</h2>
+
+<div>[text]
+let g:neocomplcache_enable_at_startup = 1
+smap  neocomplcache#sources#snippets_complete#expandable() ? &quot;\(neocomplcache_snippets_expand)&quot; : pumvisible() ? &quot;\&quot; : &quot;\&quot;
+imap  neocomplcache#sources#snippets_complete#expandable() ? &quot;\(neocomplcache_snippets_expand)&quot; : pumvisible() ? &quot;\&quot; : &quot;\&quot;
+command! -nargs=* Es NeoComplCacheEditSnippets
+let g:neocomplcache_snippets_dir = $HOME.&#8217;/.vim/snippets&#8217;
+[/text]</div>
+
+<p>この設定を最初、.vimrcに書きましたが、snippetをエディットするときにもtabキーで展開されてしまい
+困ったことになりましたので、
+この設定を必要とするファイルタイプでのみ設定することにして、
+ftpluginディレクトリのjavascript.vim とか php.vim に書きました。
+他にもいろいろ設定項目があるので、調べてチューニングします。</p>
+
+<h2>snippetの作成</h2>
+
+<p>~/.vim/snippetsディレクトリを作成して、その中にスニペットを書いていきます。その前にスニペットでインデントさせるには、ハードタブでスニペットを書かなければいけませんが、標準のsnippetのftpluginの設定ではexpandtabが有効になっています。
+そこで、
+~/.vim/bundle/neocomplcache/ftplugin/snippet.vim を ~/.vim/ftpluginにコピーして、setlocal expandtab を setlocal noexpandtab に変えます。</p>
+
+<div>[text]
+command! -nargs=* Es NeoComplCacheEditSnippets
+[/text]</div>
+
+<p>上記の設定をすると、:Es でスニペットの編集ができるので便利です。
+ExtJSのスニペットをどんどん書こうと思います。</p>
+
+<h2>Folding</h2>
+
+<p>JavaScriptの折りたたみは
+<a href="http://www.vim.org/scripts/script.php?script_id=1491">JavaScript syntax : Better JavaScrirpt syntax support</a></p>
+
+<p>を入れたるとちゃんと折りたたみができるようになります。
+が、上記のファイルの中で、foldlevel=4 と設定されているので、初期状態で折りたたまれません。
+初期状態で折りたたまれていて欲しいので、その行をコメントアウトしました。</p>
+
+<h2>文法チェック</h2>
+
+<p>まずは、ispern さんのお世話になります。</p>
+
+<p><a href="http://www.ispern.com/?p=430">MacVimでHTML,CSS,JavaScriptの文法チェック | Free Writing</a></p>
+
+<p>JavaScriptについてはこれでばっちり。
+PHPについては、haltさんの、</p>
+
+<p><a href="http://project-p.jp/halt/?p=919/">http://project-p.jp/halt/?p=919/</a></p>
+
+<p>を参考にしました。vimrcに</p>
+
+<div>[text]
+&quot;&quot;
+&quot; PHPLint
+&quot;
+&quot; @author halt feits &lt;halt.feits at gmail.com&gt;
+&quot;
+function PHPLint()
+  let result = system( &amp;ft . &#8216; -l &#8216; . bufname(&quot;&quot;))
+  echo result
+endfunction
+[/text]</div>
+
+<p>をセットして、ftplugin/php.vimに</p>
+
+<div>[text]
+nmap ,l :call PHPLint()&lt;CR&gt;
+[/text]</div>
+
+<p>とセットすると、ノーマルモードで ,l を入力すると文法チェックができます。</p>
+
+<h2>コメントアウト</h2>
+
+<p>キーバインドを沢山するのはいやなので、一つのキーバインドで各言語に対応するように、
+ftpluginでファイルタイプ別に設定しました。
+// を使った行単位のコメントアウトはキーマッピングを使い、
+/* */でのコメントアウトは、surround.vimを使います。</p>
+
+<h3>JavaScriptやPHPの場合。</h3>
+
+<p>範囲指定してから、sc でコメントブロックによるコメントアウト。
+範囲指定あるいはそのままで、,/ で行コメントアウト。
+コメント行を選択して、 ,c でコメントを外す。</p>
+
+<div>[text]
+let g:surround_{char2nr(&#8216;c&#8217;)} = &quot;/* \r */&quot;
+vmap ,/ :s/^/\/\//&lt;CR&gt;:nohlsearch&lt;CR&gt;
+vmap ,c :s/^\/\///&lt;CR&gt;:nohlsearch&lt;CR&gt;
+nmap ,/ V,/
+nmap ,c V,c
+[/text]</div>
+
+<h3>htmlファイルの場合</h3>
+
+<p>行コメントはないので、sc によるコメントのみ。</p>
+
+<div>[text]
+let g:surround_{char2nr(&#8216;c&#8217;)} = &quot;&lt;!&#8211; \r &#8211;&gt;&quot;
+[/text]</div>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

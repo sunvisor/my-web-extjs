@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>xFrameworkPX &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/xframeworkpx/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Sat, 03 Mar 2012 07:37:25 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>UbuntuにPDO-OCIを設置してPXを使えるようにする</title>
+		<link>/393</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 28 Sep 2011 00:22:03 +0000</pubDate>
+				<category><![CDATA[xFrameworkPX]]></category>
+		<category><![CDATA[Oracle]]></category>
+		<category><![CDATA[PDO]]></category>
+		<guid isPermaLink="false">/?p=393</guid>
+
+					<description><![CDATA[このエントリは，ほぼ完全に僕のための構築メモです。Ubuntu に Oracle のクライアントを入れて，PDOから使えるようにして，PXの開発環境を整えます。 Oracle Instant Client のインストール [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>このエントリは，ほぼ完全に僕のための構築メモです。Ubuntu に Oracle のクライアントを入れて，PDOから使えるようにして，PXの開発環境を整えます。<span id="more-393"></span></p>
+
+<h2>Oracle Instant Client のインストール</h2>
+
+<p>https://help.ubuntu.com/community/Oracle%20Instant%20Client
+を参考にインストール。</p>
+
+<div>[bash]
+    $ sudo apt-get install apache2
+    $ sudo apt-get install php5 libapache2-mod-php5
+    $ sudo service apache2 restart
+[/bash]</div>
+
+<p><a href="https://help.ubuntu.com/community/Oracle%20Instant%20Client">https://help.ubuntu.com/community/Oracle%20Instant%20Client</a>
+からrpmファイルをダウンロードする。</p>
+
+<ul>
+<li>oracle-instantclient11.2-basic-11.2.0.2.0.i386.rpm</li>
+<li>oracle-instantclient11.2-devel-11.2.0.2.0.i386.rpm</li>
+<li>oracle-instantclient11.2-sqlplus-11.2.0.2.0.i386.rpm</li>
+</ul>
+
+<p>alien が必要なので入ってなければインストール。</p>
+
+<div>[bash]
+$ sudo apt-get install alien
+[/bash]</div>
+
+<p>alienを使うとrpmからインストールできるらしいです。</p>
+
+<div>[bash]
+    $ sudo alien -i oracle-instantclient11.2-basic-11.2.0.2.0.i386.rpm 
+    $ sudo alien -i oracle-instantclient11.2-devel-11.2.0.2.0.i386.rpm 
+    $ sudo alien -i oracle-instantclient11.2-sqlplus-11.2.0.2.0.i386.rpm 
+[/bash]</div>
+
+<p>basicのインストールは結構時間がかかりました。</p>
+
+<div>[bash]
+    $ sudo gvim /etc/ld.so.conf.d/oracle.conf
+[/bash]</div>
+
+<p>次の1行を追加。</p>
+
+<div>[text]
+    /usr/lib/oracle/11.2/client/lib/
+[/text]</div>
+
+<p>ldconfigを実行する。</p>
+
+<div>[bash]
+    $ sudo ldconfig
+[/bash]</div>
+
+<p>環境変数の指定。</p>
+
+<div>[bash]
+$ sudo gvim /etc/profile.d/oracle.sh
+[/bash]</div>
+
+<div>[text]
+    export ORACLE_HOME=/usr/lib/oracle/11.2/client
+    export LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client/lib
+[/text]</div>
+
+<div>[bash]
+$ . /etc/profile.d/oracle.sh 
+[/bash]</div>
+
+<p>Oracle Homeディレクトリとincludeディレクトリの位置確認。</p>
+
+<div>[bash]
+    $ ls $ORACLE_HOME
+    bin  lib
+
+    $ ls -d /usr/include/oracle/*/client
+    /usr/include/oracle/11.2/client
+[/bash]</div>
+
+<p>シンボリックリンクの追加。</p>
+
+<div>[bash]
+    $ sudo ln -s /usr/include/oracle/11.2/client $ORACLE_HOME/include
+[/bash]</div>
+
+<h2>PDO-OCIのインストール</h2>
+
+<p><a href="http://www.sunvisor.net/node/406">http://www.sunvisor.net/node/406</a></p>
+
+<p>を参考にインストール。
+基本的には同じ操作をします。
+違う点は，iniファイルの場所は，/etc/php.d ではなく /etc/php5/conf.d であること
+など，Centとubuntuによる違い。</p>
+
+<h2>xFrameworkPXを使う準備</h2>
+
+<p>UserDir/Rewriteモジュールを有効化します。ubuntuの場合はこうしたコマンドがあるのですね。</p>
+
+<div>[bash]
+    $ sudo a2enmod userdir
+    $ sudo a2enmod rewrite
+[/bash]</div>
+
+<p>UserDirの設定。後ほど関係してきます。</p>
+
+<div>[text]
+&lt;IfModule mod_userdir.c&gt;
+        UserDir &quot;/home/sunvisor/devsite/*/public_html&quot;
+
+        &lt;Directory &quot;/home/sunvisor/devsite/*/public_html&quot;&gt;
+                AllowOverride All
+                Options Indexes FollowSymLinks Includes ExecCGI
+                &lt;Limit GET POST OPTIONS&gt;
+                        Order allow,deny
+                        Allow from all
+                &lt;/Limit&gt;
+                &lt;LimitExcept GET POST OPTIONS&gt;
+                        Order deny,allow
+                        Deny from all
+                &lt;/LimitExcept&gt;
+        &lt;/Directory&gt;
+&lt;/IfModule&gt;
+[/text]</div>
+
+<p>Apache再起動。</p>
+
+<div>[bash]
+$ sudo service apache2 restart
+[/bash]</div>
+
+<p>xFrameworkPXを取得</p>
+
+<div>[bash]
+$ cd ~/gitrep
+$ git clone https://github.com/xenophy/xFrameworkPX
+[/bash]</div>
+
+<p>開発サイト作成。$HOMEの下にdevsiteディレクトリを作成し，
+そのディレクトリのサブフォルダがプロジェクトになる。
+ブラウザからは，http://localhost/~hoge でアクセスする。
+先ほどのUserDirの設定が生きてくる。</p>
+
+<div>[bash]
+$ mkdir devsite
+[/bash]</div>
+
+<p>PXサイトを初期作成するスクリプト</p>
+
+<div>[bash]
+    #!/bin/sh
+    PXLib=/home/sunvisor/gitrep/xFrameworkPX
+    mkdir $1
+    ln -s $PXLib/bindtransfer/ $1/bindtransfer
+    ln -s $PXLib/library/ $1/library
+    cp -r $PXLib/behaviors/ $1/behaviors
+    cp -r $PXLib/configs/ $1/configs
+    cp -r $PXLib/console/ $1/console
+    cp -r $PXLib/controllers/ $1/controllers
+    cp -r $PXLib/locales/ $1/locales
+    cp -r $PXLib/modules/ $1/modules
+    cp -r $PXLib/public_html/ $1/public_html
+    cp -r $PXLib/templates/ $1/templates
+    cp -r $PXLib/tests/ $1/tests
+    cp -r $PXLib/webapp/ $1/webapp
+    ln -s /home/sunvisor/ext-4.0.2a $1/webapp/ext4
+    mkdir $1/cache
+    chmod 777 $1/cache
+    mkdir $1/logs
+    chmod 777 $1/logs
+    sed -i &quot;s/xFrameworkPX/&quot;$1&quot;/g&quot; $1/public_html/.htaccess
+[/bash]</div>
+
+<p>このスクリプトを叩くと，PXのプロジェクトが作られます。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Ext Direct での更新処理</title>
+		<link>/36</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 24 Jan 2011 05:05:54 +0000</pubDate>
+				<category><![CDATA[Direct]]></category>
+		<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[xFrameworkPX]]></category>
+		<category><![CDATA[Ext3]]></category>
+		<guid isPermaLink="false">http://wp.sunvisor.net/?p=36</guid>
+
+					<description><![CDATA[Ext Directでの更新処理をやってみたいと思いました。やっぱりExtJSらしいところで，GridPanel（いや更新ですからEditorGridPanelか）で訂正したデータをサーバーに更新をかけるということになり [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext Directでの更新処理をやってみたいと思いました。やっぱりExtJSらしいところで，GridPanel（いや更新ですからEditorGridPanelか）で訂正したデータをサーバーに更新をかけるということになります。</p>
+
+<p>サーバーサイドのxFrameworkPXのモデルに更新用のメソッドを用意して，DirectStoreのapiにそれをセットするのかなと思ったのですが，apiの仕様がいまいちよくわかりません。パラメータの渡し方も。ですので，更新をStoreに任せるのではなくて，違う方法での実現を考えました。<span id="more-36"></span></p>
+
+<p>※ その後，勉強の甲斐あって，Storeに任せる方法もわかりました。こちらを参照ください＞<a href="http://www.sunvisor.net/node/412">08.DirectStore でサーバー更新をかける</a></p>
+
+<h2>JavaScript側での更新タイミング</h2>
+
+<p>更新をかけるタイミングとしてまず注目したのは，Storeのupdateイベントです。データの更新があったらこのイベントが発生します。このイベントで更新をかけてはどうかと考えました。</p>
+
+<p>EditorGridPanelに結びつけられたStoreでのupdateイベントは，Gridのセルが変更されたときに発火します。その際にoperationには，Ext.data.Record.EDITがセットされます。また，StoreのcommitChangesがコールされたときにも発火します。その際には，operationは，Ext.data.Record.COMMITが渡されます。また，このイベントにはStoreとRecordが渡されます。</p>
+
+<p>operationがExt.data.Record.EDITの時のイベントでサーバーを更新する方法もありですが，すべての更新を終えて「保存」ボタンをクリックしたようなときに更新をかけたいと思います。ですので，「保存」ボタンをクリックしたらStoreのcommitChangesをコールして，updateイベントでサーバーを更新させようと考えました。</p>
+
+<p>複数のレコードが更新されてCOMMITされた時に，どんな動作をするのでしょうか。更新されたレコード数だけupdateイベントが発生するのでしょうか。違います。一度だけしか発生しません。そのときのrecordは最後に更新されたレコードだけがセットされています。ではStoreのgetModifiedRecordメソッドで更新されたレコードを得て，それを対象に更新しましょう。とおもいきや，updateイベントが発生するのは，すでにStoreがコミットされた後みたいで，getModifiedRecordメソッドで返ってくるレコードは空っぽでした。</p>
+
+<p>ですので，updateイベントで処理するのではなく，「保存」ボタンのclickイベントハンドラの中でStoreをサーバー側に転送する処理を書くことにします。</p>
+
+<p>Storeの中での更新されたレコードを得るには，さきほどから出てきているgetModifiedRecordメソッドを使います。戻り値はrecordの配列です。さらにレコードの中の更新されたフィールドを得るには，recordのmodifiedプロパティで得られますよとAPIドキュメントに書いてあります。modifiedは変更されたフィールド名をキーにして変更前の値を値として持ちます。recordのdataプロパティとこのmodifiedプロパティを使えば，更新されたレコードとフィールドをサーバー側に伝えることができそうです。</p>
+
+<p>と，いま，APIドキュメントを参照していたら，recordには，getChanges()というメソッドもあります。こちらはそのものずばりで，変更されたフィールド名と変更後の値のセットが得られるようです。そこで，サーバー側には，RecordのidとgetChanges()で得られたオブジェクトを渡したらいいんじゃないでしょうか。JavaScript側のソースです。Saveボタンが押されたときのイベントハンドラです。</p>
+
+<div>[js]
+    onBtnSaveClick: function(button, e) {
+        var store = Ext.StoreMgr.get(&#8216;StaffStore&#8217;);
+        var mrec = store.getModifiedRecords();
+        var changed;
+        var rowId;
+
+        for(var r=0; r &amp;lt; mrec.length; r++){
+            changed = mrec[r].getChanges();
+            rowId = mrec[r].id;
+            // サーバーサイド関数を呼び出す
+            Staff.updateRec(rowId, changed);
+        }
+        store.commitChanges();
+    },
+[/js]</div>
+
+<p>getModifiedRecordsで変更のあったレコードを取り出し，それぞれのレコードについて，サーバー側のメソッドupdateRecを呼び出しています。その際に渡しているのが，Record.idとgetChanges()の戻り値です。結構簡単なハンドラになりましたね。</p>
+
+<p>サーバー側のモジュールのメソッドです。</p>
+
+<div>[php]
+public function updateRec($id, $changedData)
+    {
+        // 引数を連想配列にキャスト
+        $updateData = (array)$changedData;
+        // データの更新
+        $this-&amp;gt;set(
+            $updateData,
+            array(&#8216;id&#8217; =&amp;gt; $id)
+        );
+    }
+[/php]</div>
+
+<p>xFrameworkPXのモジュールのsetメソッドは，更新するフィールド名と値のセットを渡すので，ExtJSのgetChanges()メソッドの戻り値がそのままんま使えます。だからメソッドは上記のように超簡単な記述で済みます。すごい！簡単！かっこいい！</p>
+
+<p>なお，渡された$changeDataは，stdClassとして渡されるので，4行目で連想配列にキャストしています。</p>
+
+<p>いろいろ試行錯誤しましたが，最終的には非常にスマートな感じで更新部分ができました。これもxFramewordPXのおかげですね。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

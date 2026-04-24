@@ -1,0 +1,837 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Architect &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/architect/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Sun, 07 Apr 2013 05:26:42 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Sencha Architectの中でExt Schedulerを使う</title>
+		<link>/665</link>
+					<comments>/665#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sun, 07 Apr 2013 05:24:53 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[未分類]]></category>
+		<category><![CDATA[Architect]]></category>
+		<category><![CDATA[Bryntum]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=665</guid>
+
+					<description><![CDATA[この記事は、 Using Ext Scheduler in Sencha Architect の翻訳です。 私たちはこれまでSencha Architectの中で我々のコンポーネントを使う方法について、口が酸っぱくなるほ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>この記事は、
+<a href="http://www.bryntum.com/blog/using-ext-scheduler-in-sencha-architect/">Using Ext Scheduler in Sencha Architect</a>
+の翻訳です。
+<span id="more-665"></span>
+<!--
+We’ve been asked quite a lot how to use our components inside Sencha
+Architect. With the recent release of Sencha Architect 2.2, this is now
+very easy to solve. Please note that third party components still aren’t
+fully supported by Architect and they won’t render in the canvas (but
+it’s still very useful). If you’re in a rush and just want to see how
+this is done, you can see me do it in this simple YouTube video.
+--></p>
+
+<p>私たちはこれまでSencha Architectの中で我々のコンポーネントを使う方法について、口が酸っぱくなるほど尋ねてきました。
+最新リリースのSencha Architect 2.2において、このことを簡単に解決できるようになりました。
+サードパーティーのコンポーネントは未だに完全にサポートされてはおらず、キャンバスには描画されない点は覚えておいてください（それでもとても素晴らしいことです）。
+すぐにでもそのやり方を見たいのであれば、次のYouTubeビデオでサンプルをご覧ください。</p>
+
+<iframe loading="lazy" width="420" height="315" src="http://www.youtube.com/embed/TTMLHhISGrQ" frameborder="0" allowfullscreen></iframe>
+
+<p><!--If you prefer reading, let’s get started.-->
+読む方をお望みのかたのために、では始めましょうか。</p>
+
+<!-- ## Launching Architect 2.2-->
+
+<h2>Architect 2.2を起動する</h2>
+
+<p><!--
+First of all, we create a new Architect project using Ext JS 4.2. We
+then drag a simple Ext.Panel onto the canvas to serve as our example
+container for this demo. Remember to set the ‘layout’ property of this
+panel to ‘fit’. The Architect UI should look something like this:
+-->
+まず始めに、新しいArchitectプロジェクトをExt JS 4.2を使って生成します。
+その後、<code>Ext.Panel</code>をキャンバスにドラッグします。
+このパネルはこのデモのコンテナーになります。
+パネルの<code>'layout'</code>プロパティを<code>fit</code>に設定するのを忘れずに。
+ArchitectのUIは次のようになります。</p>
+
+<p><img decoding="async" loading="lazy" class="alignnone size-medium wp-image-2792" alt="Screen Shot 2013-04-03 at 8.53.12 PM" src="http://www.bryntum.com/wp-content/uploads/2013/04/Screen-Shot-2013-04-03-at-8.53.12-PM.png" width="295" height="300"></p>
+
+<!--
+We then continue to add another Ext.Panel to the top panel. Then we
+select the child panel in the canvas so we can add some config
+properties to it, like setting its title to My Scheduler. Now it’s time
+for the first trick to get this working: **createAlias**.
+-->
+
+<p>続いて他の<code>Ext.Panel</code>をトップパネルに追加します。
+次にキャンバスの中で子パネルを選択すると、Schedulerのタイトルを設定するなど、そこにコンフィグプロパティが設定できるようになります。
+さて<strong><code>createAlias</code></strong>を使って最初の技を使う時です。</p>
+
+<p><img decoding="async" class="alignnone size-full wp-image-2797" alt="Screen Shot 2013-04-03 at 9.01.24 PM" src="http://www.bryntum.com/wp-content/uploads/2013/04/Screen-Shot-2013-04-03-at-9.01.24-PM.png" width="300"></p>
+
+<!--
+The ‘createAlias’ option allows us to set a custom xtype for a component
+which is actually just what we need. We can now set this value to
+‘**schedulergrid**‘ which maps to our Sch.panel.SchedulerGrid
+constructor. If we were to save this, build and run it now, we’d get a
+cryptic error saying
+-->
+
+<p><code>'createAlias'</code>オプションを使うと実際に自分たちが必要とするコンポーネントのカスタムxtypeを設定する事ができます。
+そこでこの値を<code>Sch.panel.SchedulerGrid</code>のコンストラクターに割り付けられた<code>'**schedulergrid**'</code>に設定します。</p>
+
+<blockquote>
+  <p>“Uncaught TypeError: Cannot call method ‘substring’ of undefined”.</p>
+</blockquote>
+
+<p><!--
+This is the Ext JS way of saying “I don’t understand”. And while the
+error message is cryptic, once we know what Ext JS is trying to tell us
+– it makes sense since we haven’t added any references to the Ext
+Scheduler resources.
+-->
+これはExt JSが「わかりません」と言うときのおきまりのセリフです。
+そしてこのエラーメッセージは理解しにくいですが、
+Ext JSは、Ext Schedulerのリソースへの参照が追加されていないせいで、このエラーが発生したのだと言おうとしているのです。</p>
+
+<!-- ## Importing the Ext Scheduler resources-->
+
+<h2>Ext Schedulerのリソースをインポートする</h2>
+
+<p><!--
+In the Project Inspector panel, locate and select the Resources node and
+then hit the + symbol in the toolbar above. Add one JS resource and one
+CSS resource. Point the JS resource to your local copy of
+sch-all-debug.js and do the same for the CSS resource
+(resources/css/sch-all.css). The Project Inspector panel should now look
+like this:
+-->
+Project Inspectorパネルの中で、Resourcesノードを探し上のツールバーにある + 記号をクリックします。
+JSリソースを一つとCSSリソースを一つ追加します。
+JSリソースを選択し、sch-all-debug.jsのローカルコピーを指定し、
+CSSリソースにも同じ操作（resources/css/sch-all.css）をします。
+この操作の後のProject Inspectorパネルは、次のようになります。</p>
+
+<p><img decoding="async" class="alignnone size-full wp-image-2800" alt="Screen Shot 2013-04-03 at 9.11.16 PM" src="http://www.bryntum.com/wp-content/uploads/2013/04/Screen-Shot-2013-04-03-at-9.11.16-PM.png" width="300"></p>
+
+<!-- ## Adding Ext Scheduler config properties-->
+
+<h2>Adding Ext Scheduler config properties</h2>
+
+<p><!--
+If you build and publish the project and try to run it at this point,
+you’ll see this error in the console.
+-->
+この時点でプロジェクトをビルドしてみると、次のようなエラーがコンソールに記録されます。</p>
+
+<blockquote>
+  <p>Uncaught Sch.mixin.AbstractSchedulerPanel.initStores(): You must
+  specify a resourceStore config</p>
+</blockquote>
+
+<p><!--
+Don’t worry – this is also expected since we haven’t yet configured the
+Scheduler properly (it requires a resource store and an event store). To
+add simple custom config properties, we can just use the textbox seen at
+the top of the Config panel (try adding ‘startDate’, ‘endDate’ and
+‘viewPreset’). To provide the Scheduler with complex config properties
+such as the custom stores it needs, we open the Config panel and locate
+the ‘processMyScheduler’ function hook. Click the **+** symbol next to
+it to add this hook to the component. You should now see it located in
+Project Inspector above, go ahead and double click it. This opens the
+code editor:
+-->
+ご心配なく。
+これもまた、この設定されるべきSchedulerプロパティ（resourceStoreとeventStoreは必須項目です）がまだ設定されていないことを指摘しているのです。
+簡単なカスタムコンフィグプロパティを追加するには、Configパネルの上部にあるテキストボックスを使います（試しに<code>'startDate'</code>、<code>'endDate'</code>、<code>'viewPreset'</code>を設定してみてください）。
+Schedulerに必要なカスタムストアなどの複雑なコンフィグプロパティを設定するには、ConfigパネルでProcess Configを探しそこの <strong>+</strong> 記号をクリックすると、<code>'processMyScheduler'</code>関数フックがコンポーネントに追加されます。
+そうすると上にあるProject Inspectorにその関数フックが表示されますので、それをダブルクリックします。
+するとコードエディターが表示されます。</p>
+
+<p><img decoding="async" class="alignnone size-full wp-image-2805" style="max-width: 100%;" alt="Screen Shot 2013-04-03 at 9.16.33 PM" src="http://www.bryntum.com/wp-content/uploads/2013/04/Screen-Shot-2013-04-03-at-9.16.33-PM.png" width="100%"></p>
+
+<!--
+As you can see, the default implementation receives the scheduler config
+object and simply returns it as is. We can now apply our own config code
+easily:
+-->
+
+<p>ご覧の通り、デフォルトの実装ではスケジューラーのコンフィグオブジェクトを受け取り、それをそのまま返しています。
+そこに設定したいコンフィグコードを適用することができます。</p>
+
+<div>[js]
+    var startDate = config.startDate || new Date();
+
+    return Ext.applyIf(config, {
+        colums: [{
+                header: &#8216;Name&#8217;,
+                dataIndex: &#8216;Name&#8217;
+            }
+        ],
+
+        resourceStore: new Sch.data.ResourceStore({
+            // Here you&#8217;ll configure your resource store properties
+            // for now we use dummy data
+            data: [{
+                    Id: 1,
+                    Name: &#8216;Mike&#8217;
+                }, {
+                    Id: 2,
+                    Name: &#8216;Kate&#8217;
+                }
+            ]
+        }),
+        eventStore: new Sch.data.EventStore({
+            // Here you&#8217;ll configure your event store properties
+            // for now we use dummy data
+            data: [{
+                    ResourceId: 1,
+                    Name: &#8216;Bake the cake&#8217;,
+                    StartDate: startDate,
+                    EndDate: Ext.Date.add(startDate, Ext.Date.DAY, 5)
+                }, {
+                    ResourceId: 2,
+                    Name: &#8216;Brew some coffee&#8217;,
+                    StartDate: startDate,
+                    EndDate: Ext.Date.add(startDate, Ext.Date.DAY, 5)
+                }
+            ]
+        })
+    });
+[/js]</div>
+
+<p><!--
+We simply create a grid column and 2 stores and fill them with some
+basic dummy data to make sure all is working fine. If you try to run it
+now, you should see something like this:
+-->
+ここはグリッドコラムと二つのストアを作り、ちゃんと動作するように基本的なダミーデータを設定しています。
+ここで実行してみると、次のような画面が表示されます。</p>
+
+<p><img decoding="async" class="alignnone size-full wp-image-2830" alt="Screen Shot 2013-04-03 at 9.48.32 PM" src="http://www.bryntum.com/wp-content/uploads/2013/04/Screen-Shot-2013-04-03-at-9.48.32-PM.png" width="420"></p>
+
+<!--
+…and the mission is accomplished! To understand what was actually
+generated behind the scenes, let’s open the generated source file in
+MyPanel.js.
+-->
+
+<p>…これで任務を完了しました！
+背後で実際に生成されたものを理解するために、MyPanel.jsに生成されたソースファイルを開いてみましょう。</p>
+
+<div>[js]
+    /*
+     * File: app/view/MyPanel.js
+     *
+     * This file was generated by Sencha Architect version 2.2.0.
+     * http://www.sencha.com/products/architect/
+     *
+     * This file requires use of the Ext JS 4.2.x library, under independent license.
+     * License of Sencha Architect does not include license for Ext JS 4.2.x. For more
+     * details see http://www.sencha.com/license or contact license@sencha.com.
+     *
+     * This file will be auto-generated each and everytime you save your project.
+     *
+     * Do NOT hand edit this file.
+     */
+    Ext.define(&#8216;MyApp.view.MyPanel&#8217;, {
+        extend: &#8216;Ext.panel.Panel&#8217;,
+
+        height: 250,
+        width: 400,
+        layout: {
+            type: &#8216;fit&#8217;
+        },
+        title: &#8216;My Panel&#8217;,
+
+        initComponent: function () {
+            var me = this;
+
+            Ext.applyIf(me, {
+                items: [
+                        me.processMyScheduler({
+                        xtype: &#8216;schedulergrid&#8217;,
+                        title: &#8216;My Scheduler&#8217;
+                    })
+                ]
+            });
+
+            me.callParent(arguments);
+        },
+
+        processMyScheduler: function (config) {
+            var startDate = config.startDate || new Date();
+
+            return Ext.applyIf(config, {
+                columns: [{
+                        header: &#8216;Name&#8217;,
+                        dataIndex: &#8216;Name&#8217;
+                    }
+                ],
+
+                resourceStore: new Sch.data.ResourceStore({
+                    // Here you&#8217;ll configure your resource store properties
+                    // for now we use dummy data
+                    data: [{
+                            Id: 1,
+                            Name: &#8216;Mike&#8217;
+                        }, {
+                            Id: 2,
+                            Name: &#8216;Kate&#8217;
+                        }
+                    ]
+                }),
+                eventStore: new Sch.data.EventStore({
+                    // Here you&#8217;ll configure your event store properties
+                    // for now we use dummy data
+                    data: [{
+                            ResourceId: 1,
+                            Name: &#8216;Bake the cake&#8217;,
+                            StartDate: startDate,
+                            EndDate: Ext.Date.add(startDate, Ext.Date.DAY, 5)
+                        }, {
+                            ResourceId: 2,
+                            Name: &#8216;Brew some coffee&#8217;,
+                            StartDate: startDate,
+                            EndDate: Ext.Date.add(startDate, Ext.Date.DAY, 5)
+                        }
+                    ]
+                })
+            });
+        }
+    });
+[/js]</div>
+]]></content:encoded>
+					
+					<wfw:commentRss>/665/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Sencha Architect 入門(実践編)</title>
+		<link>/569</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 26 May 2012 07:05:14 +0000</pubDate>
+				<category><![CDATA[Architect]]></category>
+		<guid isPermaLink="false">/?p=569</guid>
+
+					<description><![CDATA[基本編でSencha Architectの全体像がわかったことと思いますので、 ここでは実践編として、実際にプロジェクトを操作しながら解説してみます。 プロジェクトの作成 プロジェクトを作成する前に、開発環境を整えましょ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>基本編でSencha Architectの全体像がわかったことと思いますので、
+ここでは実践編として、実際にプロジェクトを操作しながら解説してみます。
+<span id="more-569"></span></p>
+
+<h2>プロジェクトの作成</h2>
+
+<p>プロジェクトを作成する前に、開発環境を整えましょう。</p>
+
+<p>ローカルでWebサーバーが動作する環境になっていますでしょうか。
+そこにプロジェクト用のフォルダをセットアップします。
+僕の場合は、Apacheのuserdirモジュールを使ってプロジェクト毎に開発環境を整えていますので、
+次のようなURLプリフィックスになります。</p>
+
+<pre><code>http://localhost/~test/
+</code></pre>
+
+<p>Sencha Architect を起動して、新しいExt JSプロジェクトを開きます。
+最初にするのは、プロジェクトの設定です。
+ツールバーのSettingsボタンをクリックします。</p>
+
+<h2>Viewの作成</h2>
+
+<p>まず実際にViewを作成してみます。
+Ext JSにとって一般的な、Viewportを使ったものを想定します。
+通常のブラウザ画面を占領するExt JSアプリケーションを作るために、Viewportを配置します。</p>
+
+<h3>Viewportの定義</h3>
+
+<p>ToolboxからViewportをドラッグしてCanvasにドロップします。
+配置すると、Canvas一杯に広がったViewportができます。
+次にセオリー通り、Viewportのレイアウトをborderレイアウトにします。
+画面右下のConfigペインで指定することもできますが、
+Canvas上のViewportをクリックしたときに表示される、歯車アイコンをクリックする方が便利です。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-gearicon.png" alt="gear-icon" /></p>
+
+<p>この歯車アイコンでは、レイアウトに関するプロパティなどを設定する事ができます。
+他のコンポーネントでも利用可能です。
+ここで設定できる内容は、コンポーネントによって異なりますが、
+コンフィグの中でも非常に重要な物が表示されるようになっています。</p>
+
+<h3>initialView</h3>
+
+<p>Configペインを見てみますと、initialViewという設定項目があり、チェックが入った状態になっていると思います。
+Ext JS 4のMVCでは、ApplicationのautoCreateViewportがtrueになっている場合、
+自動的に Viewport.jsというクラスを読み込んで、ビューポートを表示します。
+今回追加した、Viewportクラスのクラス名(userClassName)は、MyViewport になっています。</p>
+
+<p>ビューポートの自動生成に対応させるために、
+Viewportのクラス名をViewportにしたい所ですが、Architectではそれはできません。
+実際にuserClassNameをViewportに設定するとエラーが発生します。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-error.png" alt="Error" /></p>
+
+<p>Architectが生成したコードを見てみると、
+Myiewportの他にViewportというクラスも出力されています。
+実は、initialViewという設定項目がtrueになっているビューがあると、
+そのクラスを継承した、Viewportクラスを自動生成してくれるのです。</p>
+
+<h3>コンポーネントの配置</h3>
+
+<p>このViewportの上にパネルなどを配置してみます。</p>
+
+<ul>
+<li>FormPanelを一つCanvasにドロップします。</li>
+<li>Panelを一つProject InspectorのViewport上にドロップします。</li>
+</ul>
+
+<p>こうすると、FormPanelのregionはcenter、Panelのreginはwestになると思います。
+二つ目のPanelをProject Inspectorにドロップしたのは、
+Canvasは最初にドロップしたFormPanelで覆われているので、
+そこにドロップすると、その子アイテムとして追加されてしまうからです。</p>
+
+<h3>Formのアイテムを追加</h3>
+
+<p>次に、FormPanelの上に、Text Fieldを二つほどドロップします。
+それぞれのText Fieldのname属性を設定しましょう。
+最初のをfield1 後のをfield2とでもしましょう。</p>
+
+<h3>Toolbarの追加</h3>
+
+<p>さらに、FormPanelの上に、Toolbarをドロップしましょう。
+その後、ToolbarにButtonを二つドロップします。
+ボタンのitemIdとtext属性を設定します。</p>
+
+<dl>
+<dt>一つ目</dt>
+<dd><tt>text: 'Message'</tt><br />
+<tt>itemId: 'msgButton'</tt></dd>
+
+<dt>二つ目</dt>
+<dd><tt>text: 'Window'</tt><br />
+<tt>itemId: 'windowButton'</tt></dd>
+</dl>
+
+<h3>Panelの設定</h3>
+
+<p><tt>region: west</tt>のPanelを折りたためるようにしてみます。
+Panelを選択して、Configペインでcollapsibleコンフィグを探してチェックを入れます。
+タイトルバーの所にアイコンが表示されて、それによりパネルを折りたたむことができるようになります。
+この状態で、collapsedのチェックを入れると、初期状態が折りたたまれた状態になります。</p>
+
+<p>次にサイズ変更できるようにしてみます。
+resizableを<tt>true</tt>に設定し、resizeHandlesを <tt>'e'</tt> にしてみます。
+これはリサイズするハンドルをどこに表示するかを指定する物で、<tt>all</tt>を指定するとすべてに表示されます。
+この場合は、<tt>region: west</tt>ですから、右側だけにハンドルを表示させたいので、
+<tt>'e'</tt> (east)を設定しています。</p>
+
+<p>これでいったん保存して、プレビューしてみてください。</p>
+
+<p>ちゃんと、Panelが折りたためるようになっていて、サイズ変更もできるようになっています。</p>
+
+<h2>Controllerの設定</h2>
+
+<h3>References(refs)</h3>
+
+<p>Viewに配置した
+refsを追加するには、次の二つの方法があります。</p>
+
+<ul>
+<li>Configペインで追加する</li>
+<li>Toolboxから追加する</li>
+</ul>
+
+<p>ConfigペインのReferenceの+ボタンをクリックすると、
+簡単なウィザードが起動します。</p>
+
+<blockquote>
+  <p><em>Step 1 of 2 Enter a name of reference</em></p>
+</blockquote>
+
+<p>と表示されたら、Referenceの名前をつけ、Nextボタンをクリックします。</p>
+
+<blockquote>
+  <p><em>Step 2 of 2 Enter a selector</em></p>
+</blockquote>
+
+<p>と表示されたら、コンポーネント クエリー式を入力します。
+すると次のようなrefsコンフィグが定義されます。</p>
+
+<pre><code>refs: [
+    {
+        ref: 'hoge',
+        selector: 'hoge#fuga'
+    }
+],
+</code></pre>
+
+<p>Inspectorからではなく、ToolboxからController ReferenceをProject Inspector上の該当のControllerにドラッグ
+アンド ドロップしても追加することもできます。
+この場合には、ウィザードは起動しません。</p>
+
+<p>どちらの方法をとっても、ConfigペインのReferencesの下に今追加したReferenceが表示されると思います。
+また、Project Inspectorにも表示されます。
+Configペイン上でのReferenceの<img src="https://s.w.org/images/core/emoji/14.0.0/72x72/27a1.png" alt="➡" class="wp-smiley" style="height: 1em; max-height: 1em;" />ボタンをクリックするか、Project InspectorでReferenceを選択すると、
+ConfigペインにReferenceの設定情報が表示されます。
+refとselectorのコンフィグがあると思います。ウィザードを使っていない場合は、
+ここでrefとselectorを設定します。</p>
+
+<p>refで設定した文字列を使って、selectorで指定したコンポーネントを簡単に参照することができます。
+例えば、ref: &#8216;hoge&#8217; の場合は、this.getHoge() でコンポーネントを取得できます。
+selectorには、Ext.CompornentQueryで使える式を設定します。</p>
+
+<blockquote>
+  <h3>コラム: コンポーネント クエリー</h3>
+  
+  <p>コンポーネント クエリーとは、文字列によるクエリー式で、コンポーネントを検索するものです。</p>
+
+<pre><code>button#okButton // itemIdがokButtonであるボタンを探す
+textfield[name=firstname] // name属性がfirstnameのテキストフィールドを探す
+mywindow button#cancel    // mywindowに配置されたitemIdがcancelのボタン
+</code></pre>
+  
+  <p>のように記述します。buttonとかmywindowとかいうのはxtypeです。
+  ビューを定義するときには、userAliasやitemIdの設定をきちんとしておくと
+  コンポーネント クエリーを記述するのが楽になります。
+  詳しくはAPIのドキュメントを参照してください。</p>
+</blockquote>
+
+<h3>Actions</h3>
+
+<p>イベント ハンドラーを設定します。
+Referencesと同様、ConfigペインからでもToolboxからのドロップでも追加できます。</p>
+
+<p>ConfigペインのActionsの +ボタンをクリックします。
+メニューがポップアップして、Controller Action かApplication Actionかを問い合わせてきます。
+Viewのコンポーネントのイベントを記述する際は、Controller Actionを選択します。
+(Application Actionの方は、別な稿で説明しようと思います)</p>
+
+<p>＞ Step 1 of 2 Choose a target type</p>
+
+<p>と表示されたら、対象のコンポーネントのタイプを選択してNextボタンをクリックします。</p>
+
+<blockquote>
+  <p>Step 2 of 2 Choose an event by name</p>
+</blockquote>
+
+<p>と表示されたら、イベント名を選択して、Finishボタンをクリックします。</p>
+
+<p>Referencesと同じように、Actionsに追加したActionも、ConfigペインやProject Inspectorに表示され、
+それを選択すると、Configペインでパラメーターを設定できます。</p>
+
+<p>Controllerでのイベント ハンドラーは、Referencesと同様、
+コンポーネント クエリーを使って対象のオブジェクトを指定します。
+Refsでのselectorにあたるのが、controlQueryです。
+ここに対象となるコンポーネントを特定するクエリー式を設定します。
+ウィザードで指定した場合、ここはtarget typeで指定したコンポーネントのxtypeになっています。
+そのままですと、コンポーネントの特定ができないので、適切な値に変更します。</p>
+
+<pre><code>button#msgButton
+</code></pre>
+
+<p>これで、msgButtonを指すようになりました。</p>
+
+<p>targetTypeでは、コンポーネントのタイプを指定し、
+nameコンフィグには、イベント名を設定します。
+targetTypeを正しく設定すると、nameのコンボボックスに設定できるイベントがリストされます。</p>
+
+<p>fnには、ハンドラーの関数名を設定します。
+ウィザードで作った場合には、onButtonClickなどの名前が自動でつけられますが、
+必要に応じて変更します。</p>
+
+<p>また、Actionを選択した状態では、中央のビューをCodeに切り替えると、
+Actionのハンドラーのコードを入力することができます。
+ArchitectのCodeビューでは、通常はRead Onlyと表示されていて、
+手でコードを修正することはできませんが、
+ハンドラーやinitメソッドなどの入力が必要な部分では、入力が可能になります。
+さっそく次のように入力してみます。</p>
+
+<pre><code>Ext.Msg.alert('ボタンが押されました');
+</code></pre>
+
+<p>プレビューして、ツールバーのMessageボタンをクリックすると、
+アラート ダイアログが表示されます。</p>
+
+<blockquote>
+  <p>Actionsで追加するイベントは、
+  セレクターが同じイベントの場合は次のようにちゃんとまとめてくれます。
+  賢いですね。</p>
+
+<pre><code>"gridpanel": {
+    itemdblclick: this.onGridpanelItemDblClick,
+    select: this.onGridpanelSelect
+}
+</code></pre>
+</blockquote>
+
+<p>長くなりましたので、続きは別稿にします。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha Architect 入門(基礎編)</title>
+		<link>/560</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 26 May 2012 06:39:25 +0000</pubDate>
+				<category><![CDATA[Architect]]></category>
+		<guid isPermaLink="false">/?p=560</guid>
+
+					<description><![CDATA[Ext Designer がバージョンアップしてSencha Architectになりました。 単なるバージョンアップではなく、Visual StudioのようなRAD &#38; IDE環境を目指しているように思われま [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext Designer がバージョンアップしてSencha Architectになりました。
+単なるバージョンアップではなく、Visual StudioのようなRAD &amp; IDE環境を目指しているように思われます。
+<span id="more-560"></span></p>
+
+<p>VBで初めてプログラムを作ったとき、
+フォームにボタンを配置して、そのクリック イベントを記述して、
+ってのをやりませんでしたか？
+そのようなことが、Ext JSでもできる環境が出てきたと言うことです。</p>
+
+<p>さらに、ArchitectからはMVCへの対応がなされていて、
+Designerの時のようにViewだけではなく、
+アプリケーション全体の構築をArchitect上でできるようになっています。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect01.png" alt="Architect" /></p>
+
+<h2>Viewのデザイン</h2>
+
+<p>この部分が一番、Architectの得意とするところです。</p>
+
+<p>標準では画面の左側にToolboxがあり、
+その中からオブジェクトをプロジェクトに追加していきます。
+コンポーネントなどを追加したら、画面中央のCanvasに表示されます。
+また、画面右上にはProject Inspectorがあり、
+プロジェクトの全体像を把握することができます。
+追加したオブジェクトのコンフィグは、
+画面右下にあるConfig Inspectorで設定します。</p>
+
+<h3>Toolbox</h3>
+
+<p>標準では画面左側に表示されるToolbox。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-toolbox.png" alt="Toolbox" align="right" style="margin-left: 10px"/></p>
+
+<p>Toolboxには、コンポーネント、コンテナなどのオブジェクトが並べられています。
+オブジェクトをプロジェクトに追加するには、次の3つの方法があります。</p>
+
+<ol>
+<li>Toolboxのオブジェクトを選択して、
+中央のCanvasにドロップします。</li>
+<li>Toolboxのオブジェクトを選択して、
+画面右側のProject Inspectorにドロップします。</li>
+<li>Project Inspectorで対象となるオブジェクトを選択した後、
+Toolbox上で追加したいオブジェクトをダブルクリックします。</li>
+</ol>
+
+<p>この辺りの操作感はVisual StudioやDeiphiなどのRADツールと同様です。
+最初の方法が一番わかりやすいのですが、ドロップ先のコンテナーの状態によっては、
+適切な場所にドロップできないことがあります。
+また、Behaviorsグループに存在するような、非ヴィジュアルなオブジェクトはCanvasにドロップできません。
+そんな時は、2番目3番目の方法をとるといいでしょう。</p>
+
+<p>Toolboxでは、ツールのグループが表示されており、グループを選択すると、それに所属するオブジェクトが右側に表示されます。
+あるオブジェクトは複数のグループに所属していて、例えばToolbarは、ContainersにもFormsにも表示されます。
+グループの下のCUSTOMと書かれているところの +ボタンをクリックすると自分でグループを作成することもできます。</p>
+
+<p>また大変便利なのが、Toolbox上部のFilterテキストボックスです。グループ内の部品をその名前でフィルタリングできます。
+グループでEverithingを選択してから指定すると、すべての部品の中から該当する部品をリストアップしてくれます。</p>
+
+<h3>Canvasとコードビュー</h3>
+
+<p>画面中央のペインはCanvasです。
+ここにビューが表示されます。
+中央ペインの右上にある Code をクリックすると、現在選択されているオブジェクトのコードが表示されます。</p>
+
+<p>コードは主にRead onlyとなっていて、ユーザーが直接コーディングすることはできません。
+ただ、イベント ハンドラーなど一部においては、コード入力が可能になります。
+コードの入力に関しては、実践編をご覧ください。</p>
+
+<h3>Project Inspector</h3>
+
+<p>プロジェクトの全体像を管理するProject Inspectorには、プロジェクト上のすべてのものが表示されます。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-project.png" alt="Project Inspector" /></p>
+
+<p>初期状態の図を見ると、ApplicationとかControllerなどと表示されています。
+Architectで作成したプロジェクトは、MVCに則った形式で出力されます。
+そして、コントローラーを配置したViewだけでなく、ControllerやModel、Storeといったオブジェクトも設定できます。</p>
+
+<p>Ext JSのMVCでは、いろいろと約束事がありますので、このツールを使って作っていれば、
+そのルールに沿った物ができるというのはいいことでしょう。
+Architectが紡ぎ出すコードはなかなかに良いExt JSのサンプルプロジェクトになります。</p>
+
+<p>Project Inspector上でアイテムをドラッグすると、
+配置したコンポーネントが所属するコンテナーを変更したり、
+順序を変更することができます。</p>
+
+<h3>コンフィグオプションの設定</h3>
+
+<p>画面の右下のConfigペインで、各コンポーネントのコンフィグ オプションを設定します。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-config.png" alt="Config" /></p>
+
+<p>コンフィグ オプションとは、そのコンポーネントの外見や振る舞いに関する各種のパラメーターです。
+これらを適切に設定する事がとても重要になります。
+Ext JSやSencha Touchのコードでは、コンフィグ オプションはオブジェクト リテラルで記述されますが、
+ここでは、プロパティ グリッド上で値を設定することができます。</p>
+
+<p>Ext JS 4やSencha Touch2では、不要なコンフィグを書かなくてもいいように、
+コンフィグの初期値が設定されていて、
+初期値のままの場合には、コンフィグ オブジェクトにその項目を指定する必要はありません。
+Architectでもデフォルト値のままにしておくと、そのコンフィグは生成されるコードに含まれません。
+レイアウトなどを試行錯誤していて、不要なコンフィグが残ってしまう場合がありますので、
+たまに生成されたコードをみて不要なコンフィグはクリアするようにしましょう。</p>
+
+<p>コンフィグプロパティの上にマウスカーソルをホバーさせると、？マークが標示されます。
+そのボタンをクリックすると、そのコンフィグに関する説明がポップアップします。</p>
+
+<p>Architectは、こうしたGUI上で画面のデザインをすることができますが、
+このコンフィグオプションの設定などについては、Ext JSの基本的知識を必要とします。
+先ほど出てきたレイアウトなどについても同様です。
+ただ、GUI上に部品を配置し、コンフィグオプションを設定すると即座に表示が更新されるというのは、
+画面デザインをするにあたり、非常に便利であることは確かです。
+沢山のコンポーネントを配置した複雑なフォームでも
+試行錯誤もやりやすくなります。</p>
+
+<h3>userClassName</h3>
+
+<p>これはExt JSのコンフィグではなく、Architectが使うパラメーターです。
+トップレベルのコンポーネントは、クラスとして定義されます。
+その際のクラス名をここで指定します。ここで指定した値が、生成されるコードでのクラス名になります。</p>
+
+<pre><code>Ext.define('MyApp.view.MyViewport', {
+    extend: 'Ext.container.Viewport',
+
+    layout: {
+</code></pre>
+
+<h3>userAlias</h3>
+
+<p>これも同名のコンフィグがExt JSにあるのではなく、Architectが使うパラメーターです。
+コンポーネントに設定された場合、次のようにwidget.をつけてaliasコンフィグに設定されます。</p>
+
+<pre><code>Ext.define('MyApp.view.MyViewport', {
+    extend: 'Ext.container.Viewport',
+    alias: 'widget.myviewport',
+</code></pre>
+
+<p>これは、コンポーネントのxtypeをmyviewportとしたことになります。</p>
+
+<h3>イベント ハンドラーの設定</h3>
+
+<p>ボタンのイベント ハンドラーを設定するには、ボタンのhandlerコンフィグオプションを設定することで対応できます。
+しかしMVCアーキテクチャではViewで発生したイベントは、通常Controllerで処理します。
+Controllerにイベントリスナを設定するのです。
+ハンドコーディングの場合は、Controllerのinitメソッド内でcontrolメソッドを使って定義しますが、
+Architectでリスナを設定してやると、そういったコードが生成されます。</p>
+
+<p>イベント ハンドラーについては実践編で説明します。</p>
+
+<h2>Controllerの設定</h2>
+
+<p>ArchitectではControllerの定義もできます。
+Controllerとは、で発火したイベントを処理して、Modelに伝えたり、Modelのデータを取り出してViewに渡したりします。</p>
+
+<p>Controllerに装備された重要な機能をArchitectから設定する事ができます。</p>
+
+<h3>References(refs)</h3>
+
+<p>Controllerのrefsコンフィグの指定です。
+ビュー上のオブジェクトを簡単に取得できるgetterメソッドを生成してくれます。</p>
+
+<h3>Actions</h3>
+
+<p>Controllerにイベント ハンドラを定義します。
+Contoller ActionとApplication Actionを定義できます。
+Controller Actionというのは、Viewに配置したコンポーネントなどで発火したイベントの処理を記述します。
+Application Actionというのは、それ以外のアプリケーション ワイドなイベントを処理します。</p>
+
+<h3>init / onLaunch</h3>
+
+<p>Controllerのinit/onLaunchメソッドでは、コントローラーが初期化されるときと起動するときのアクションを定義できます。
+前項でActionsを指定した場合には、initメソッドの中にイベント ハンドラを設定するためのコードが生成されますが、
+ここのinitで定義した内容は、その次に実行されます。</p>
+
+<p>Codeビューでコードを入力します。</p>
+
+<p>onLaunchは、
+です。</p>
+
+<h3>Views / Medels / Stores</h3>
+
+<p>これらの定義をすると、getHogeView(), getHogeModel(), getHogeStore() という
+特別なgetterメソッドが定義され、それぞれクラス定義やインスタンスを簡単に参照できるようになります。</p>
+
+<p>詳しくはAPIドキュメントの各項目を参照してください。</p>
+
+<h2>Model(Model/Store)</h2>
+
+<p>Ext DesignerでもStoreの定義をすることができましたが、
+Architectでもそれが可能です。</p>
+
+<p>Project InspectorのModels / Storesの下の階層に配置されます。</p>
+
+<h2>Project Settings</h2>
+
+<p>ツールバーのSettingボタンをクリックするか、メニューの Edit > Project Settings を選ぶと
+プロジェクトの設定ができます。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-setting.png" alt="Project Settings" /></p>
+
+<h3>Ext JS Path</h3>
+
+<p>Ext JSのライブラリが保存されているpathを指定します。
+新しいプロジェクトを作った場合には、Cacheflyに設定されていますが、
+実際のプロジェクトでは、サーバー上にライブラリを置くことになると思いますので、
+そのパスを指定します。</p>
+
+<p>ここで指定した内容を元に、htmlファイルのscriptタグが生成されます。</p>
+
+<h3>URL prifix</h3>
+
+<p>Webサーバーに配置されたときのURLのプリフィクスを指定します。</p>
+
+<p>http://localhost/myprojects/sampleproject1</p>
+
+<p>のような感じで指定します。
+これを指定しておくことでPreview機能を利用できます。</p>
+
+<h3>Deploy path</h3>
+
+<p>プロジェクトのソースコードをエクスポートする先のパスを指定します。
+このパスを指定しておくと、ツールバーのDeployボタン(またはF5キー)
+で生成されたソースコードをエクスポートすることができます。</p>
+
+<dl>
+<dt>参照</dt>
+<dd><a href="http://docs.sencha.com/architect/2-0/#!/guide/project_basics">Project Basics</a></dd>
+</dl>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

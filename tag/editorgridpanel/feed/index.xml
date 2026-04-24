@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>EditorGridPanel &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/editorgridpanel/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Fri, 26 Aug 2011 22:38:12 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>EditorGridPanel 二題</title>
+		<link>/222</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 08 Jun 2011 05:38:40 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Grid]]></category>
+		<category><![CDATA[EditorGridPanel]]></category>
+		<category><![CDATA[Ext3]]></category>
+		<guid isPermaLink="false">/?p=222</guid>
+
+					<description><![CDATA[本館のブログで，EditorGridPanlでEnterキーの動作を変更する &#124; Sunvisor Lab. という記事を書きました。EditorGridPanel での Enterキーの挙動を変更するというエントリーで [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>本館のブログで，<a href="http://www.sunvisor.net/node/409">EditorGridPanlでEnterキーの動作を変更する | Sunvisor Lab.</a> という記事を書きました。EditorGridPanel での Enterキーの挙動を変更するというエントリーです。</p>
+
+<p>その件に関する追加情報と，EditorGridPanelで編集モードに入ったときに，項目を選択状態にする件についてです。</p>
+
+<p><span id="more-222"></span></p>
+
+<h2>続）EditorGridPanel の Enter キーの動作を変更する</h2>
+
+<p>そのエントリーの中では，インスタンス化された EditorGridPanel のメソッドを再定義することで思ったような挙動をさせることをしていました。この方法では，あるEditrotGridPanelに対してのみ効果を発揮します。他のところで使用されているEditrotGridPanelは以前の挙動のままです。では，アプリケーション全体でEditrotGridPanelの挙動を変えたい場合はどうすればよいでしょうか。</p>
+
+<p>インスタンス化される前に，メソッドを入れ替えてやります。クラス自体の定義を変えてやれば，その後インスタンス化したもの全体に影響しますからね。この方法でメソッドを入れ替えるには，Ext.override メソッドを使います。</p>
+
+<div>
+[js]
+Ext.override(Ext.grid.CellSelectionModel, {
+
+    onEditorKey: function(field, e){
+
+        var k = e.getKey(),
+                g = this.grid,
+                ed = g.activeEditor,
+                newCell,
+                me = this;
+
+        if( k == e.TAB ){
+            me.handleKeyDown(e);
+        }else if( k == e.UP || k == e.DOWN || k == e.LEFT || k == e.RIGHT ){
+            if( ed ) ed.completeEdit();
+            me.handleKeyDown(e);
+        }else if( k == e.ENTER){
+            var s = this.selection;
+            var r = s.cell[0], c = s.cell[1];
+            newCell = g.walkCells(r + 1, c, 1, this.isSelectable, this);
+            if( newCell ){
+                me.select(newCell[0], newCell[1]);
+                if( ed ) ed.completeEdit();
+                me.handleKeyDown(e);
+            }
+        }
+    }
+});
+[/js]
+</div>
+
+<p>なんだか最初の方法よりもスマートです。こっちで行くことにしましょう。</p>
+
+<p>でも，全部のEditrotGridPanelでこの動作は必要ないけど，いくつかのところでいるんだよねってときはどうしましょう。インスタンスごとに新しい挙動をオン・オフできるようにしたいということです。</p>
+
+<p>そんな時は，プラグインを使いうんだそうです。プラグインを使えば，あるコンポーネントに機能を追加できる上に，その動きを制御することもできるんだって。さらにスマートなイメージがします。もうちょっと勉強して使えるようになろう。そう言っている内にExt JS 4の時代になるなきっと。</p>
+
+<h2>編集モードに入ったときに全部選択しておいて</h2>
+
+<p>上記のやり方でEnterキーの動作を変更したグリッドを使ってもらっていたら，</p>
+
+<p>「Enterで値の訂正に入ったときに，選択状態が何も選択されていない状態だから，入力する前に古い値を一生懸命削除しなきゃならんのがめんどうなんだよね。編集モードに入ったら，全て選択されている状態にはならんもんなん？」</p>
+
+<p>という要望をうけました。前の記事でも目的として書いていたように</p>
+
+<pre><code>&lt;数値&gt;&lt;Enter&gt;&lt;数値&gt;&lt;Enter&gt;&lt;数値&gt;&lt;Enter&gt;&lt;数値&gt;&lt;Enter&gt;&lt;数値&gt;&lt;Enter&gt;
+</code></pre>
+
+<p>という入力ができるのが目的ですから，この要望は当然です。</p>
+
+<p>これの解決は意外と簡単でした。ColumnModelのコンフィグで，次のように selectOnFocus コンフィグを
+true にするだけです。</p>
+
+<div>
+[js]
+    {
+        xtype: &#8216;gridcolumn&#8217;,
+        dataIndex: &#8216;money1&#8217;,
+        header: &#8216;金額1&#8217;,
+        sortable: false,
+        width: 100,
+        editor: {
+            xtype: &#8216;numberfield&#8217;,
+            selectOnFocus: true
+        }
+    },
+[/js]
+</div>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

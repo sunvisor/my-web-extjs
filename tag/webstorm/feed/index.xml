@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>WebStorm &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/webstorm/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Thu, 03 Dec 2015 01:02:58 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Sencha JetBrains プラグインの話</title>
+		<link>/872</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Thu, 03 Dec 2015 01:02:26 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[WebStorm]]></category>
+		<guid isPermaLink="false">/?p=872</guid>
+
+					<description><![CDATA[これは、 Sencha Advent Calendar 2015 の 3日目の記事です。 僕は、もの午後頃着いたときから Vimmer でした。（嘘 一旦 Vimmer になってしまうと、指が覚えたあの世界から抜け出すこ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>これは、
+<a href="http://www.adventar.org/calendars/1041">Sencha Advent Calendar 2015</a>
+の 3日目の記事です。</p>
+
+<p>僕は、もの午後頃着いたときから Vimmer でした。（嘘</p>
+
+<p>一旦 Vimmer になってしまうと、指が覚えたあの世界から抜け出すことは本当に難しいものです。
+しかし、今 JavaScript / Sencha Ext JS での開発には、PHPStorm を使うようになりました。
+<span id="more-872"></span></p>
+
+<h3>昔の IDE</h3>
+
+<p>JavaScript を始めたとき（それは、僕の場合 Ext JS を使い始めたのと同義なんですが）IDE を使ってコーディングを始めました。
+Spket IDE という Eclipse のプラグインで、Ext JS の補完ができるといった情報を元にいろいろ試し、その後 WebStorm で Ext JS の補完ができるというので、PHPStorm を購入して使ってもいました。</p>
+
+<p>しかし、それらの補完は動的言語である JavaScript の宿命で、さらにその上で独自のクラスシステムを構築する Ext JS であるため、完全なものからはほど遠く、「ないよりマシ」な程度のものでした。</p>
+
+<h3>Vim との出会い</h3>
+
+<p>そんな時、Ext JS Perfectday という勉強会があり、そこの懇親会で Vim で開発している話を聞きました。
+その後は、Vim + neocomplcache での環境で開発を進めてきました。</p>
+
+<p>Vim + neocomplcache の素晴らしいところは、ノンインテリジェンスの補完だと言うことです。基本的にこれまで入力してきた単語がキャッシュされて補完候補として使われます。開いたファイルの中にある単語も使われるのかな？そんな感じです。
+Ext JS の場合ですと、皆さんご存じのように、クラス名や xtype は文字列リテラルの中に書かれます。</p>
+
+<div>[js]
+Ext.define(&#8216;MyApp.view.MyPanel&#8217;, {
+    xtype: &#8216;mypanel&#8217;
+       :
+});
+[/js]</div>
+
+<p>それを使う時には、次のように xtype を指定しますが、これも文字列の中です。</p>
+
+<div>[js]
+    items: [{
+        xtype: &#8216;mypanel&#8217;
+    }]
+[/js]</div>
+
+<p>賢い IDE の補完は文字列の中を補完してはくれません。
+neocomplcache は、リテラルの中でも補完してくれるので、Ext JS をコーディングするときには非常に使いやすかったのです。</p>
+
+<p>だから僕は、ずっと Vim で JavaScript を書き続けてきました。</p>
+
+<h3>mixin の登場</h3>
+
+<p>IDE の利点は、補完だけではありません。InteliJ IDEA などで Java の開発をすると、静的な言語である Java の利点で、クラスのメソッドの補完だけではなく、クラス呼び出しの際のシグネチャなどもわかります。無名クラスを使ったコールバック処理などの場合は、コードスニペットが挿入されたりもします。</p>
+
+<p>さらに、メソッド名の上で ⌘B を押せば、そのメソッドの定義部分を表示してくれます。これは他人の書いたプログラムを追いかけるときに非常に便利です。</p>
+
+<p>Ext JS の場合はどうでしょう。IDE が Ext JS のクラスをフルサポートしてくれていないため、上記のようなことは望むべくもありませんでした。
+ただ、クラス名さえわかっていれば、そのメソッドを探し出すのはさほど難しくありません。もしそのクラスになければ、親クラスをたどっていきます。少々面倒ですが、できないことはありません。</p>
+
+<p>しかし、Ext JS 4 から、<code>mixin</code> が登場しました。ご存じの通り、あるクラスに機能を横からつけることができる機能です。これが入って来ると、とたんにソースコードを追いかけるのが難しくなります。</p>
+
+<p>複数人で大規模なシステムを開発しはじめると、クラスの継承階層は深くなり、<code>mixin</code> も多く使われるようになります。そうなってくると、「このメソッドの実体はどこにあるねん！」ということは頻繁に起こります。</p>
+
+<p>「なんだよ、こんなとこにあったのかよぉ、もぉ勘弁して〜」</p>
+
+<p>僕は、心の中で何度叫んだことでしょう。</p>
+
+<h3>JetBrains プラグイン</h3>
+
+<p>しかし、皆さまご安心ください。これからはそんな心配をする必要はありません。
+Sencha 公式の JatBrains 対応のプラグインがあるからです。</p>
+
+<p>プラグインについては次のブログに詳しく説明されていますので、ご参照ください。</p>
+
+<p><a href="https://goo.gl/CaHnH3">Sencha Ext JS JetBrains Plugin | 株式会社ゼノフィ</a></p>
+
+<p>最初に説明した、xtype の補完は、この JetBrains プラグインでもできます。というか、こちらはインテリジェンスに補完してくれます。素晴らしいですね。</p>
+
+<p>そして、JetBrains プラグインでは、メソッドなどの定義場所にジャンプするのも簡単です。Sencha クラスシステムを理解しているので、そのメソッドが親クラスや <code>mixin</code> の中にあっても見つけ出してジャンプしてくれます。</p>
+
+<p>これにより開発の効率は大幅にアップします。</p>
+
+<p>Sencha での開発を生業にしている方は、是非このプラグインを使ってください。</p>
+
+<p>あ、忘れてた。
+これ、無料では使えないんです。Sencha Ext JS のライセンスが必要です。
+しかも、Pro 以上。(;´д｀)</p>
+
+<p>稼がないとですね〜。</p>
+
+<p>明日は、江川さんの記事です。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>WebStormでExtJS補完をするメモ</title>
+		<link>/197</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 18 May 2011 19:43:35 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[未分類]]></category>
+		<category><![CDATA[WebStorm]]></category>
+		<guid isPermaLink="false">/?p=197</guid>
+
+					<description><![CDATA[WebStormを使ってExtJS補完をするメモです。ここではExtJS3の補完設定をします。 Settingsダイアログを開きます。 Project Stttings の中にある，JavaScript Librarie [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>WebStormを使ってExtJS補完をするメモです。ここではExtJS3の補完設定をします。<span id="more-197"></span></p>
+
+<ol>
+    <li>Settingsダイアログを開きます。</li>
+    <li>Project Stttings の中にある，JavaScript Libraries を選択します。</li>
+    <li>Add&#8230; ボタンをクリックします。
+<img decoding="async" loading="lazy" class="alignnone size-full wp-image-198" title="WSExt1" src="/wp-content/uploads/2011/05/WSExt1.png" alt="" width="535" height="465" srcset="/wp-content/uploads/2011/05/WSExt1.png 669w, /wp-content/uploads/2011/05/WSExt1-300x260.png 300w" sizes="(max-width: 535px) 100vw, 535px" /></li>
+    <li>Name の欄にはExtJS4として，Attach&#8230; ボタンをクリックして
+<ul>
+    <li>ext-all-debug.js</li>
+    <li>adapter/ext/ext-base-debug.js</li>
+    <li>examples/ux/ux-all-debug.js</li>
+</ul>
+をアタッチします。</li>
+    <li>OKをクリックして保存します。</li>
+    <li>次に，Settingsダイアログに戻りJavaScript Libraries の下にある Usage Scope を選択します。
+<a href="/wp-content/uploads/2011/05/WSExt2.png"><img decoding="async" loading="lazy" class="alignnone size-full wp-image-199" title="WSExt2" src="/wp-content/uploads/2011/05/WSExt2.png" alt="" width="555" height="158" srcset="/wp-content/uploads/2011/05/WSExt2.png 694w, /wp-content/uploads/2011/05/WSExt2-300x85.png 300w" sizes="(max-width: 555px) 100vw, 555px" /></a></li>
+    <li>プロジェクト全体あるいは必要なディレクトリのLibrary欄をクリックするとExtJS3を選択できますので，そこでExtJS3を選択します。</li>
+</ol>
+
+<p>以上で，プロジェクトペインにあるExternal Libraries の中にExtJS3が表示されるようになり，Extのライブラリの補完ができるようになります。同様にExtJS4についてもライブラリの設定をしておけば，ディレクトリ毎に必要なライブラリを選択することができます。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

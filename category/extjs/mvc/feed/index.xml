@@ -1,0 +1,2873 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>MVC &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/category/extjs/mvc/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Wed, 29 Feb 2012 07:59:54 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Architecting Your App in Ext JS 4, Part 3</title>
+		<link>/491</link>
+					<comments>/491#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Thu, 09 Feb 2012 06:20:51 +0000</pubDate>
+				<category><![CDATA[Architecting Your App in Ext JS 4]]></category>
+		<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[MVC]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=491</guid>
+
+					<description><![CDATA[SenchaのAPIドキュメンテーションにある Architecting Your App in Ext JS 4, Part 3 の翻訳をしました。これでMVC三部作の翻訳完了です。 とか思ったら、最後に &#8220 [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>SenchaのAPIドキュメンテーションにある
+<a href="http://docs.sencha.com/ext-js/4-0/#!/guide/mvc_pt3">Architecting Your App in Ext JS 4, Part 3</a>
+の翻訳をしました。これでMVC三部作の翻訳完了です。</p>
+
+<p>とか思ったら、最後に &#8220;We will continue&#8230;&#8221; とある。まだ続くのかもしれません。
+<span id="more-491"></span></p>
+
+<h1>Architecting Your App in Ext JS 4, Part 3</h1>
+
+<p><a href="/489">Part 1</a>
+<a href="/476">Part 2</a>
+の中で、PandoraスタイルアプリケーションをExt JS 4の新しい機能を用いて構築する方法を調べました。
+複数のビュー、ストア、モデルのある複雑なUIにModel-View-Controllerアーキテクチャを適用することから始めました。
+コントローラーからビューをコントロールする、
+コントローラーがリスニングできるアプリケーションワイドなイベントを発火するのような、
+アプリケーションを構築する基本的なテクニックを見てきました。
+このパートでは、アプリケーションのMVCアーキテクチャの内部のコントローラーロジックの実装を続けます。</p>
+
+<h2>参照を取得する</h2>
+
+<p>アプリケーションの実装を再開する前に、Ext JS 4のMVCパッケージで利用可能な追加機能のいくつかを見てみましょう。
+前のアーティクルにおいて、
+Ext.application
+のコンフィグにsotresとmodels配列を追加することで、
+アプリケーションに<strong>ストア</strong>や<strong>モデル</strong>を自動的にロードする方法を見てきました。
+この方法でそれぞれのストアの生成されたインスタンスには、
+その名前と同じstoreIdが与えられることについても説明しました。</p>
+
+<h3><code>app/Application.js</code></h3>
+
+<pre id="ext-gen1387"><code id="ext-gen1386" class="prettyprint"><a href="#!/api/Ext-method-application" rel="Ext-method-application" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">application</span></a><span class="pun" id="ext-gen1430">({</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+    models</span><span class="pun">:</span><span class="pln" id="ext-gen1433"> </span><span class="pun" id="ext-gen1428">[</span><span class="str" id="ext-gen1427">'Station'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'Song'</span><span class="pun" id="ext-gen1429">],</span><span class="pln" id="ext-gen1421">
+    stores</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str" id="ext-gen1426">'Stations'</span><span class="pun" id="ext-gen1425">,</span><span class="pln"> </span><span class="str" id="ext-gen1424">'RecentSongs'</span><span class="pun">,</span><span class="pln"> </span><span class="str" id="ext-gen1423">'SearchResults'</span><span class="pun">]</span><span class="pln" id="ext-gen1432">
+    </span><span class="pun">...</span><span class="pln">
+</span><span class="pun" id="ext-gen1431">});</span></code></pre>
+
+<p>storesやmodels配列に追加すると、これらのクラスをインスタンス化するとともに、
+自動的にゲッターも生成されます。
+controllersやviewsにも当てはまります。
+sotres, models, controllers, views の各コンフィグはコントローラークラスにもあって、
+アプリケーションのインスタンスと同じ方法で正しく動作します。
+StationsストアをStationコントローラーの中から参照するためには、
+コントローラーのsotres配列にストアを追加するだけでよいということです。</p>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1389"><code id="ext-gen1388" class="prettyprint"><span class="pun">...</span><span class="pln">
+stores</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Stations'</span><span class="pun">],</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>こうすると、自動的に生成されたゲッターメソッド
+<code>getStationsStore</code>
+を使って、コントローラーの中であればどこからでもStationsストアへの参照を取得できます。
+名前の規則は次のように単純でわかりやすくなっています。</p>
+
+<pre id="ext-gen1391"><code id="ext-gen1390" class="prettyprint"><span class="pln">views</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'StationsList'</span><span class="pun">]</span><span class="pln"> </span><span class="com">// creates getter named 'getStationsListView' -&gt; returns reference to StationsList class</span><span class="pln">
+models</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Station'</span><span class="pun">]</span><span class="pln">     </span><span class="com">// creates getter named 'getStationModel'     -&gt; returns reference to Station model class</span><span class="pln">
+controllers</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Song'</span><span class="pun">]</span><span class="pln">   </span><span class="com">// creates getter named 'getSongController'   -&gt; returns the Song controller instance</span><span class="pln">
+stores</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Stations'</span><span class="pun">]</span><span class="pln">    </span><span class="com">// creates getter named 'getStationsStore'    -&gt; returns the Stations store instance</span></code></pre>
+
+<p>重要で注意すべき、viewsとmodelsのゲッターはクラスへのリファレンスを返し、
+storesとcontrollersのゲッターは実際のインスタンスを返すことです。</p>
+
+<h2>ビューインスタンスの参照</h2>
+
+<p>前のセクションで、stores, models, controllers, views コンフィグで
+簡単にそれらの参照を取得できるように、
+どのように自動的にゲッターが生成されるのか解説しました。
+<code>getStationsListView</code>
+ゲッターメソッドはビュークラスへの参照を返します。
+このアプリケーションの処理では、StationsList内の最初のアイテムを選択したいと考えています。
+この場合は、ビュークラスへの参照は必要なくて、
+ビューポート内にある実際のStationListインスタンスへの参照が必要になります。</p>
+
+<p>Ext JS 3では、存在するコンポーネントインスタンスへの参照を取得する非常に一般的なアプローチは
+<a href="#!/api/Ext-method-getCmp" rel="Ext-method-getCmp" class="docClass">Ext.getCmp</a>
+メソッドでした。
+このメソッドは引き続き動作しますが、Ext JS 4においては推奨される方法ではありません。
+<a href="#!/api/Ext-method-getCmp" rel="Ext-method-getCmp" class="docClass">Ext.getCmp</a>
+を使ってアプリケーションの中で参照するためには、全てのコンポーネントにユニークなIDを与えなければなりません。
+新しいMVCパッケージでは、
+Ext JS 4の新しい機能である
+<a href="#!/api/Ext.ComponentQuery" rel="Ext.ComponentQuery" class="docClass">ComponentQuery</a>
+を活用する事によって
+コントローラー内にビューインスタンスへのリファレンスを置くことができます。</p>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1393"><code id="ext-gen1392" class="prettyprint"><span class="pun">...</span><span class="pln">
+refs</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+    </span><span class="com">// A component query</span><span class="pln">
+    selector</span><span class="pun">:</span><span class="pln"> </span><span class="str">'viewport &gt; #west-region &gt; stationslist'</span><span class="pun">,</span><span class="pln">
+    </span><span class="kwd">ref</span><span class="pun">:</span><span class="pln"> </span><span class="str">'stationsList'</span><span class="pln">
+</span><span class="pun">}]</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p><code>refs</code>コンフィグで、ビューのインスタンスへの参照をセットアップできます。
+これによりコントローラーのアクションの中からページ上のコンポーネントを参照し操作できます。
+参照したいコンポーネントを指定するにはselectorプロパティの中でComponentQueryを使うことができます。
+オブジェクトの中に他に必要な情報は
+<code>ref</code>
+プロパティです。
+refs配列内にある各アイテムに対して自動的に生成されるゲッターの名前の一部として使われます。
+例えば、
+<code>ref: 'stationsList'</code>
+(注: 大文字のLに注目)
+と定義すると、
+<code>getStationsList</code>
+というゲッターがコントローラー上に生成されます。
+一方、コントローラー内に参照を設定しない場合には、
+<code><a href="#!/api/Ext-method-getCmp" rel="Ext-method-getCmp" class="docClass">Ext.getCmp</a></code>
+をコントローラーアクション内で使い続けることになります。
+しかし、この方法はオススメしません。
+なぜならプロジェクト内でユニークなコンポーネントIDの管理をしなければならなくなってしまい、
+プロジェクトが大きくなると問題を起こすことがあるからです。</p>
+
+<p>忘れてはいけない大事なことは、これらのゲッターはページ上にビューが実際に存在するかどうかとは関係なく生成されると言うことです。
+ゲッターをコールしたときにselectorがページ上のコンポーネントの一致すると、
+結果はキャッシュされるのでその後のゲッターの呼び出しはより速くなります。
+しかし、selectorがページ上のビューと一致しなかった場合は、ゲッターはnullを返します。
+これが意味することは、ビュー上に依存するロジックがありビューがページ上にまだ存在しない可能性がある場合には、
+ゲッターが結果を返した場合だけ実行されるようにするチェックロジックを追加する必要があると言うことです。
+また複数のコンポーネントがselectorに一致した場合には、最初の一つだけが返されます。
+従って、取得したい一つのビューだけを特定するselectorを作るのがよい方法です。
+最後に、参照しているコンポーネントが廃棄(destroy)された場合、
+ページ上に一致する他のコンポーネントがない限り、ゲッターは再びnullを返すようになります。</p>
+
+<h2>アプリケーション起動時にコントローラーロジックをカスケードする</h2>
+
+<p>アプリケーションの開始時、ユーザーの既存のステーションをロードしたいと思います。
+アプリケーションの
+<code>onReady</code>
+メソッドの中にこのロジックを置くことができますが、
+MVCアーキテクチャには
+全てのコントローラー、モデル、ストアがインスタンス化されて初期ビューがレンダリングされた直後に
+各コントローラーで発火する
+<code>onLaunch</code>
+メソッドがあります。
+これによりグローバルアプリケーションロジックとコントローラー特有のロジックを綺麗に分離することができます。</p>
+
+<h3>Step 1</h3>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1395"><code id="ext-gen1394" class="prettyprint"><span class="pun">...</span><span class="pln">
+onLaunch</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// Use the automatically generated getter to get the store</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> stationsStore </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getStationsStore</span><span class="pun">();</span><span class="pln">
+    stationsStore</span><span class="pun">.</span><span class="pln">load</span><span class="pun">({</span><span class="pln">
+        callback</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onStationsLoad</span><span class="pun">,</span><span class="pln">
+        scope</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>StationコントローラーのonLaunchメソッドはStrationストアのloadメソッドを呼び出す最適な場所に思えます。
+ご覧のように、ストアがロードされた直後にコールバックが実行されるようにも設定しています。</p>
+
+<h3>Step 2</h3>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1397"><code id="ext-gen1396" class="prettyprint"><span class="pun">...</span><span class="pln">
+onStationsLoad</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> stationsList </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getStationsList</span><span class="pun">();</span><span class="pln">
+    stationsList</span><span class="pun">.</span><span class="pln">getSelectionModel</span><span class="pun">().</span><span class="kwd">select</span><span class="pun">(</span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>このコールバックの中で自動的に生成されたゲッターを使ってStationsListインスタンスを取得し、
+最初のアイテムを選択しています。
+これによりStationsListの
+<code>selectionchange</code>
+イベントが発火します。</p>
+
+<h3>Step 3</h3>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1399"><code id="ext-gen1398" class="prettyprint"><span class="pun">...</span><span class="pln">
+init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">control</span><span class="pun">({</span><span class="pln">
+        </span><span class="str">'stationslist'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            selectionchange</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onStationSelect
+        </span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">...</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">},</span><span class="pln">
+
+onStationSelect</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">selModel</span><span class="pun">,</span><span class="pln"> selection</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">application</span><span class="pun">.</span><span class="pln">fireEvent</span><span class="pun">(</span><span class="str">'stationstart'</span><span class="pun">,</span><span class="pln"> selection</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);</span><span class="pln">
+</span><span class="pun">},</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>アプリケーションイベントはアプリケーションの中にイベントをリッスンするようなコントローラーが多く張るような場合にとても便利です。
+これらのコントローラーで同じビューイベントをリッスンする代わりに、
+一つのコントローラーがビューイベントをリッスンして他のコントローラーがリッスンできるように
+アプリケーションワイドなイベントを発火します。
+またコントローラーが他のコントローラーとお互いについて知ったり依存したりせずに連携できるようになります。
+<code>onStationSelect</code>
+アクションの中で、
+<code>stationstart</code>
+というアプリケーションイベントを発火しています。</p>
+
+<h3>Step 4</h3>
+
+<h3><code>app/controller/Song.js</code></h3>
+
+<pre id="ext-gen1401"><code id="ext-gen1400" class="prettyprint"><span class="pun">...</span><span class="pln">
+refs</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+    </span><span class="kwd">ref</span><span class="pun">:</span><span class="pln"> </span><span class="str">'songInfo'</span><span class="pun">,</span><span class="pln">
+    selector</span><span class="pun">:</span><span class="pln"> </span><span class="str">'songinfo'</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">ref</span><span class="pun">:</span><span class="pln"> </span><span class="str">'recentlyPlayedScroller'</span><span class="pun">,</span><span class="pln">
+    selector</span><span class="pun">:</span><span class="pln"> </span><span class="str">'recentlyplayedscroller'</span><span class="pln">
+</span><span class="pun">}],</span><span class="pln">
+
+stores</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'RecentSongs'</span><span class="pun">],</span><span class="pln">
+
+init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+    </span><span class="com">// We listen for the application-wide stationstart event</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">application</span><span class="pun">.</span><span class="pln">on</span><span class="pun">({</span><span class="pln">
+        stationstart</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onStationStart</span><span class="pun">,</span><span class="pln">
+        scope</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">},</span><span class="pln">
+
+onStationStart</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">station</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> store </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getRecentSongsStore</span><span class="pun">();</span><span class="pln">
+
+    store</span><span class="pun">.</span><span class="pln">load</span><span class="pun">({</span><span class="pln">
+        callback</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onRecentSongsLoad</span><span class="pun">,</span><span class="pln">
+        </span><span class="kwd">params</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            station</span><span class="pun">:</span><span class="pln"> station</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">'id'</span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">},</span><span class="pln">
+        scope</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>Songコントローラーのinitメソッドで、
+<code>stationstart</code>
+アプリケーションイベントのリスナーを設定しています。
+これが起こったときには、
+RecentSongsストアにこのステーションの曲をロードする必要があります。
+それを
+<code>onStationStart</code>
+メソッドで処理します。
+RecentSongsストアへの参照を取得してそのloadメソッドをコールし、
+ロードが終了した直後に発火するコントローラーアクションを定義しています。</p>
+
+<h3>Step 5</h3>
+
+<h3><code>app/controller/Song.js</code></h3>
+
+<pre id="ext-gen1403"><code id="ext-gen1402" class="prettyprint"><span class="pun">...</span><span class="pln">
+onRecentSongsLoad</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">songs</span><span class="pun">,</span><span class="pln"> request</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> store </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getRecentSongsStore</span><span class="pun">(),</span><span class="pln">
+        selModel </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getRecentlyPlayedScroller</span><span class="pun">().</span><span class="pln">getSelectionModel</span><span class="pun">();</span><span class="pln">
+
+    selModel</span><span class="pun">.</span><span class="kwd">select</span><span class="pun">(</span><span class="pln">store</span><span class="pun">.</span><span class="kwd">last</span><span class="pun">());</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>RecentSongsストアのなかにステーションの曲がロードされたときに、
+RecentlyPlayedScrollerの最後の曲を選択します。
+そうするために
+RecentlyPlayedScroller <code>dataview</code> 上のセレクションモデルを取得し、
+そのselectメソッドにRecentSongsストア内の最後のレコードを渡してコールしています。</p>
+
+<h3>Step 6</h3>
+
+<h3><code>app/controller/Song.js</code></h3>
+
+<pre id="ext-gen1405"><code id="ext-gen1404" class="prettyprint"><span class="pun">...</span><span class="pln">
+init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">control</span><span class="pun">({</span><span class="pln">
+        </span><span class="str">'recentlyplayedscroller'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            selectionchange</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onSongSelect
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">},</span><span class="pln">
+
+onSongSelect</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">selModel</span><span class="pun">,</span><span class="pln"> selection</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getSongInfo</span><span class="pun">().</span><span class="pln">update</span><span class="pun">(</span><span class="pln">selection</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>スクローラーの中の最後の曲を選択したとき、
+<code>selectionchange</code>
+コントロールメソッド
+(このイベントのリスナーはすでにセットアップしていて onSongSelectメソッドの中にあります)
+の中で、
+SongInfoビューの中のデータがアップデートすることによって
+アプリケーションフローが完了します。</p>
+
+<h2>新しいステーションを始める</h2>
+
+<p>これで、アプリケーションフローを追加実装するのが簡単になりました。
+新しいステーションを作成して選択するロジックを追加するのは次のようになります。</p>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1407"><code id="ext-gen1406" class="prettyprint"><span class="pun">...</span><span class="pln">
+refs</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+    </span><span class="kwd">ref</span><span class="pun">:</span><span class="pln"> </span><span class="str">'stationsList'</span><span class="pun">,</span><span class="pln">
+    selector</span><span class="pun">:</span><span class="pln"> </span><span class="str">'stationslist'</span><span class="pln">
+</span><span class="pun">}],</span><span class="pln">
+
+init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// Listen for the select event on the NewStation combobox</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">control</span><span class="pun">({</span><span class="pln">
+        </span><span class="pun">...</span><span class="pln">
+        </span><span class="str">'newstation'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">select</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onNewStationSelect
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">},</span><span class="pln">
+
+onNewStationSelect</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">field</span><span class="pun">,</span><span class="pln"> selection</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> selected </span><span class="pun">=</span><span class="pln"> selection</span><span class="pun">[</span><span class="lit">0</span><span class="pun">],</span><span class="pln">
+        store </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getStationsStore</span><span class="pun">(),</span><span class="pln">
+        list </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getStationsList</span><span class="pun">();</span><span class="pln">
+
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">selected </span><span class="pun">&amp;&amp;</span><span class="pln"> </span><span class="pun">!</span><span class="pln">store</span><span class="pun">.</span><span class="pln">getById</span><span class="pun">(</span><span class="pln">selected</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">'id'</span><span class="pun">)))</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// If the newly selected station does not exist in our station store we add it</span><span class="pln">
+        store</span><span class="pun">.</span><span class="pln">add</span><span class="pun">(</span><span class="pln">selected</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+
+    </span><span class="com">// We select the station in the Station list</span><span class="pln">
+    list</span><span class="pun">.</span><span class="pln">getSelectionModel</span><span class="pun">().</span><span class="kwd">select</span><span class="pun">(</span><span class="pln">selected</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<h2>概要</h2>
+
+<p>これまで先進的なコントローラ技術を使用してビューからロジックを分離することによって、
+アプリケーションのアーキテクチャがわかりやすく保守しやすくなることを説明しました。
+この段階でアプリケーションはすでにかなり機能しています。
+新しいステーションを検索し追加でき、ステーションを選択するとそれを開始できます。
+ステーションの曲はロードされ、曲とアーティストの情報が表示されます。</p>
+
+<p>このシリーズの次のパートではスタイリングやカスタムコンポーネントの作成に焦点を当てて、
+アプリケーションの改良を続けます。</p>
+
+<p><a href="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt3/code.zip">プロジェクトファイルをダウンロード</a></p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/491/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Architecting Your App in Ext JS 4, Part 2</title>
+		<link>/476</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Thu, 09 Feb 2012 06:10:28 +0000</pubDate>
+				<category><![CDATA[Architecting Your App in Ext JS 4]]></category>
+		<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[MVC]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=476</guid>
+
+					<description><![CDATA[SenchaのAPIドキュメンテーションにある Architecting Your App in Ext JS 4, Part 2 の翻訳をしました。 Ext JS 4 でアプリケーションを設計する Part 2 この前 [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>SenchaのAPIドキュメンテーションにある
+<a href="http://docs.sencha.com/ext-js/4-0/#!/guide/mvc_pt2">Architecting Your App in Ext JS 4, Part 2</a>
+の翻訳をしました。
+<span id="more-476"></span></p>
+
+<h1>Ext JS 4 でアプリケーションを設計する Part 2</h1>
+
+<p><a href="/489">この前のアーティクル</a>ではExt JSを使ってPandoraスタイルのアプリケーションを設計する方法を調べました。
+Medel-View-Controllerアーキテクチャについてと、複数のビューとモデルがある複雑なUIアプリケーションに提供する方法を調べました。
+このアーティクルではアプリケーションの見た目の設計を越えて、
+<a href="#!/api/Ext-method-application" rel="Ext-method-application" class="docClass" id="ext-gen1332">Ext.application</a>
+とViewportクラスから始めて、どのようにデザインしコーディングするのかを調べます。</p>
+
+<p>それではアプリケーションを書き始めましょう。</p>
+
+<h2>アプリケーションを定義する</h2>
+
+<p>Ext JS 3では
+<a href="#!/api/Ext-method-onReady" rel="Ext-method-onReady" class="docClass">Ext.onReady</a>
+メソッドがアプリケーションのエントリーポイントで、
+開発者はアプリケーションの構造を考えなければなりませんでした。
+Ext JS 4はでMVCライクなパターンが導入されました。</p>
+
+<p>このパターンはアプリケーションを作成するベストプラクティスに従うのに役立ちます。</p>
+
+<p>新しいMVCパッケージで記述されたアプリケーションのエントリポイントは、
+<a href="#!/api/Ext-method-application" rel="Ext-method-application" class="docClass">Ext.application</a>
+メソッドを使います。
+このメソッドは
+<a href="#!/api/Ext.app.Application" rel="Ext.app.Application" class="docClass">Ext.app.Application</a>
+のインスタンスを生成し、ページの準備ができたらlaunchメソッドをコールします。
+<a href="#!/api/Ext-method-onReady" rel="Ext-method-onReady" class="docClass">Ext.onReady</a>
+を使う方法からこの方法にかわり、
+自動的にビューポートを生成するとかネームスペースを設定するとかの新しい機能も追加されます。</p>
+
+<h3><code>app/Application.js</code></h3></h3>
+
+<pre id="ext-gen1266"><code id="ext-gen1265" class="prettyprint"><a href="#!/api/Ext-method-application" rel="Ext-method-application" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">application</span></a><span class="pun">({</span><span class="pln">
+    name</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Panda'</span><span class="pun">,</span><span class="pln">
+    autoCreateViewport</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">,</span><span class="pln">
+    launch</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// This is fired as soon as the page is ready</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<p>nameコンフィグは新しいネームスペースを生成します。
+すべてのビュー、モデル、ストア、コントローラーはこのネームスペースの中で有効です。
+autoCreateViewportをtrueに設定すると、フレームワークはapp/view/Viewport.jsファイルをインクルードします。
+このファイルには、Panda.view.Viewportという名前でクラスを定義します、
+ネームスペースはアプリケーションのnameコンフィグによって指定されたものと一致します。</p>
+
+<h2>Viewportクラス</h2>
+
+<p>UIに必要なビューを見るとき、それぞれのパーツに注目します。
+アプリケーションのViewportはこれらのパーツの接着剤として働きます。
+必要なビューやアプリケーション全体のレイアウトをまとめるためのコンフィグレーション定義をロードします。
+徐々にビューを定義しビューポートに追加するのが、UIの基本構造を生成する手っ取り早い方法だと思います。</p>
+
+<p>このプロセスの中で重要なのはビューの骨組みでありそれぞれのビューそのものではありません。
+これはほとんど彫刻のようです。
+ビューの非常にラフなシェイプを作る事から始めて、あとから詳細を作っていきます。</p>
+
+<h2>ビルディングブロックの生成</h2>
+
+<p>前のアーティクルで行った作業を活用して、いくつかのビューを一度に定義してみます。</p>
+
+<p></p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt2/balanced.png" alt=""></p>
+
+<p></p>
+
+<h3><code>app/view/NewStation.js</code></h3>
+
+<pre id="ext-gen1268"><code id="ext-gen1267" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.view.NewStation'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.form.field.ComboBox" rel="Ext.form.field.ComboBox" class="docClass"><span class="str">Ext.form.field.ComboBox</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    </span><span class="kwd">alias</span><span class="pun">:</span><span class="pln"> </span><span class="str">'widget.newstation'</span><span class="pun">,</span><span class="pln">
+    store</span><span class="pun">:</span><span class="pln"> </span><span class="str">'SearchResults'</span><span class="pun">,</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln"> more configuration </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<h3><code>app/view/SongControls.js</code></h3>
+
+<pre id="ext-gen1270"><code id="ext-gen1269" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.view.SongControls'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.container.Container" rel="Ext.container.Container" class="docClass"><span class="str">Ext.Container</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    </span><span class="kwd">alias</span><span class="pun">:</span><span class="pln"> </span><span class="str">'widget.songcontrols'</span><span class="pun">,</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln"> more configuration </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<h3><code>app/view/StationsList</code></h3>
+
+<pre id="ext-gen1272"><code id="ext-gen1271" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.view.StationsList'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.grid.Panel" rel="Ext.grid.Panel" class="docClass"><span class="str">Ext.grid.Panel</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    </span><span class="kwd">alias</span><span class="pun">:</span><span class="pln"> </span><span class="str">'widget.stationslist'</span><span class="pun">,</span><span class="pln">
+    store</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Stations'</span><span class="pun">,</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln"> more configuration </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<h3><code>app/view/RecentlyPlayedScroller.js</code></h3>
+
+<pre id="ext-gen1274"><code id="ext-gen1273" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.view.RecentlyPlayedScroller'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.view.View" rel="Ext.view.View" class="docClass"><span class="str">Ext.view.View</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    </span><span class="kwd">alias</span><span class="pun">:</span><span class="pln"> </span><span class="str">'widget.recentlyplayedscroller'</span><span class="pun">,</span><span class="pln">
+    itemTpl</span><span class="pun">:</span><span class="pln"> </span><span class="str">'&lt;div&gt;&lt;/div&gt;'</span><span class="pun">,</span><span class="pln">
+    store</span><span class="pun">:</span><span class="pln"> </span><span class="str">'RecentSongs'</span><span class="pun">,</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln"> more configuration </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<h3><code>app/view/SongInfo.js</code></h3>
+
+<pre id="ext-gen1276"><code id="ext-gen1275" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.view.SongInfo'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.panel.Panel" rel="Ext.panel.Panel" class="docClass"><span class="str">Ext.panel.Panel</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    </span><span class="kwd">alias</span><span class="pun">:</span><span class="pln"> </span><span class="str">'widget.songinfo'</span><span class="pun">,</span><span class="pln">
+    tpl</span><span class="pun">:</span><span class="pln"> </span><span class="str">'&lt;h1&gt;About &lt;/h1&gt;&lt;p&gt;&lt;/p&gt;'</span><span class="pun">,</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln"> more configuration </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<p>いくつかのコンポーネントコンフィグはこのアーティクルの範囲外なので載せていません。</p>
+
+<p>上記のコンフィグの中で、三つのストアが設定されているのに気づくでしょう。
+前のアーティクルで用意されたストア名にマップします。
+この時点でストアを生成しましょう。</p>
+
+<p></p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt2/stores.png" alt=""></p>
+
+<p></p>
+
+<h2>モデルとストア</h2>
+
+<p>サーバーサイドとして動作するモックデータの入った静的なjsonファイルで始めるのが便利です。
+その後、動的なサーバーサイドを実装する際の参照としてこのファイルを使うことができます。</p>
+
+<p>このアプリケーションではStatinとSongという2つのモデルを使うことにします。
+またこれら2つのモデルを使う3つのストアが必要で、それがデータコンポーネントとバインドされます。
+それぞれのストアはサーバーサイドからデータをロードします。
+モックデータファイルは次のようなものになります。</p>
+
+<h2>静的データ</h2>
+
+<h3><code>data/songs.json</code></h3>
+
+<pre id="ext-gen1278"><code id="ext-gen1277" class="prettyprint"><span class="pun">{</span><span class="pln">
+    </span><span class="str">'success'</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">,</span><span class="pln">
+    </span><span class="str">'results'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="pln">
+        </span><span class="pun">{</span><span class="pln">
+            </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Blues At Sunrise (Live)'</span><span class="pun">,</span><span class="pln">
+            </span><span class="str">'artist'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Stevie Ray Vaughan'</span><span class="pun">,</span><span class="pln">
+            </span><span class="str">'album'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Blues At Sunrise'</span><span class="pun">,</span><span class="pln">
+            </span><span class="str">'description'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Description for Stevie'</span><span class="pun">,</span><span class="pln">
+            </span><span class="str">'played_date'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'1'</span><span class="pun">,</span><span class="pln">
+            </span><span class="str">'station'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1</span><span class="pln">
+        </span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">...</span><span class="pln">
+    </span><span class="pun">]</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<h3><code>data/stations.json</code></h3>
+
+<pre id="ext-gen1280"><code id="ext-gen1279" class="prettyprint"><span class="pun">{</span><span class="pln">
+    </span><span class="str">'success'</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">,</span><span class="pln">
+    </span><span class="str">'results'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="pln">
+        </span><span class="pun">{</span><span class="str">'id'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1</span><span class="pun">,</span><span class="pln"> </span><span class="str">'played_date'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">4</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Led Zeppelin'</span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">{</span><span class="str">'id'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">2</span><span class="pun">,</span><span class="pln"> </span><span class="str">'played_date'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">3</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'The Rolling Stones'</span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">{</span><span class="str">'id'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">3</span><span class="pun">,</span><span class="pln"> </span><span class="str">'played_date'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">2</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Daft Punk'</span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">]</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<h3><code>data/searchresults.json</code></h3>
+
+<pre id="ext-gen1282"><code id="ext-gen1281" class="prettyprint"><span class="pun">{</span><span class="pln">
+    </span><span class="str">'success'</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">true</span><span class="pun">,</span><span class="pln">
+    </span><span class="str">'results'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="pln">
+        </span><span class="pun">{</span><span class="str">'id'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Led Zeppelin'</span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">{</span><span class="str">'id'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">2</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'The Rolling Stones'</span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">{</span><span class="str">'id'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">3</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Daft Punk'</span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">{</span><span class="str">'id'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">4</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'John Mayer'</span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">{</span><span class="str">'id'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">5</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Pete Philly &amp;amp; Perquisite'</span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">{</span><span class="str">'id'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">6</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Black Star'</span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">{</span><span class="str">'id'</span><span class="pun">:</span><span class="pln"> </span><span class="lit">7</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Macy Gray'</span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">]</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<h2>モデル</h2>
+
+<p>Ext JS 4のモデル(Model)はExt JS 3のレコード(Record)と非常に似ています。
+一つの違いはモデルにプロキシーを指定できることです、またバリデーションやアソシエーションも指定できます。
+このExt JS 4アプリケーションのSongモデルは次のようになります。</p>
+
+<h3><code>app/model/Song.js</code></h3>
+
+<pre id="ext-gen1284"><code id="ext-gen1283" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.model.Song'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.data.Model" rel="Ext.data.Model" class="docClass"><span class="str">Ext.data.Model</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    fields</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'id'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'artist'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'album'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'played_date'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'station'</span><span class="pun">],</span><span class="pln">
+
+    proxy</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'ajax'</span><span class="pun">,</span><span class="pln">
+        url</span><span class="pun">:</span><span class="pln"> </span><span class="str">'data/recentsongs.json'</span><span class="pun">,</span><span class="pln">
+        reader</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'json'</span><span class="pun">,</span><span class="pln">
+            root</span><span class="pun">:</span><span class="pln"> </span><span class="str">'results'</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<p>こうするとストアなしでもこのモデルのインスタンスをロードしたりセーブしたりできるので、
+一般的にはこのようにする方法が良いと言えます。
+また、同じモデルを使った複数のストアの場合、それぞれでプロキシーを再設定する必要がありません。</p>
+
+<p>次にStationモデルも定義しましょう。</p>
+
+<h3><code>app/model/Station.js</code></h3>
+
+<pre id="ext-gen1286"><code id="ext-gen1285" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.model.Station'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.data.Model" rel="Ext.data.Model" class="docClass"><span class="str">Ext.data.Model</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    fields</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'id'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'name'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'played_date'</span><span class="pun">],</span><span class="pln">
+
+    proxy</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'ajax'</span><span class="pun">,</span><span class="pln">
+        url</span><span class="pun">:</span><span class="pln"> </span><span class="str">'data/stations.json'</span><span class="pun">,</span><span class="pln">
+        reader</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'json'</span><span class="pun">,</span><span class="pln">
+            root</span><span class="pun">:</span><span class="pln"> </span><span class="str">'results'</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<h2>ストア</h2>
+
+<p>Ext JS 4では複数のストアが同じデータモデルを使うことができ、そのデータを違うソースからロードすることもできます。
+このサンプルでは、StationモデルはSearchResultsとStationストアで使われていて、それぞれ別の場所からデータをロードします。
+一つは検索結果をもう一つはユーザーのお気に入りのステーションを返します。
+これをまとめるために、ストアの一つでモデルに定義されたプロキシーをオーバーライドする必要があります。</p>
+
+<h3><code>app/store/SearchResults.js</code></h3>
+
+<pre id="ext-gen1288"><code id="ext-gen1287" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.store.SearchResults'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.data.Store" rel="Ext.data.Store" class="docClass"><span class="str">Ext.data.Store</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    requires</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Panda.model.Station'</span><span class="pun">,</span><span class="pln">
+    model</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Panda.model.Station'</span><span class="pun">,</span><span class="pln">
+
+    </span><span class="com">// Overriding the model's default proxy</span><span class="pln">
+    proxy</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'ajax'</span><span class="pun">,</span><span class="pln">
+        url</span><span class="pun">:</span><span class="pln"> </span><span class="str">'data/searchresults.json'</span><span class="pun">,</span><span class="pln">
+        reader</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'json'</span><span class="pun">,</span><span class="pln">
+            root</span><span class="pun">:</span><span class="pln"> </span><span class="str">'results'</span><span class="pln">
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<h3><code>app/store/Stations.js</code></h3>
+
+<pre id="ext-gen1290"><code id="ext-gen1289" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.store.Stations'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.data.Store" rel="Ext.data.Store" class="docClass"><span class="str">Ext.data.Store</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    requires</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Panda.model.Station'</span><span class="pun">,</span><span class="pln">
+    model</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Panda.model.Station'</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<p>SearchResultsストア定義の中で、違うプロキシーコンフィグを指定することでStationモデルのプロキシー定義をオーバーライドしています。
+ストアのloadメソッドをコールしたときに、モデル自身に定義されたプロキシーの代わりにストアのプロキシーが使われます。</p>
+
+<p>サーバーサイドでは検索結果とユーザーのお気に入りのステーションの両方を取り出す一つのAPIを持たせるように実装することもできます。
+この場合には、両方のストアはモデル上のデフォルトのプロキシー定義を使い、
+ストアをロードするときに単に違うパラメータを渡すようにします。</p>
+
+<p>最後にRecentSongストアを作りましょう。</p>
+
+<h3><code>app/store/RecentSongs.js</code></h3>
+
+<pre id="ext-gen1292"><code id="ext-gen1291" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.store.RecentSongs'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.data.Store" rel="Ext.data.Store" class="docClass"><span class="str">Ext.data.Store</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    model</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Panda.model.Song'</span><span class="pun">,</span><span class="pln">
+
+    </span><span class="com">// Make sure to require your model if you are</span><span class="pln">
+    </span><span class="com">// not using Ext JS 4.0.5</span><span class="pln">
+    requires</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Panda.model.Song'</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<p>Ext JSの現在のバージョンではストアの&#8217;model&#8217;プロパティは自動的に依存関係を生成しないので、
+モデルを動的にロードできるようにrequireを指定する必要がある点に注意してください。</p>
+
+<p>また慣例的にストアの名前は複数形にし、モデル名は単数形にします。</p>
+
+<h2>アプリケーションにストアとモデルを追加する</h2>
+
+<p>モデルとストアを定義しましたので、アプリケーションに追加する番です。
+Application.jsファイルを再度開きます。</p>
+
+<h3><code>app/Application.js</code></h3>
+
+<pre id="ext-gen1294"><code id="ext-gen1293" class="prettyprint"><a href="#!/api/Ext-method-application" rel="Ext-method-application" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">application</span></a><span class="pun">({</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+    models</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Station'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'Song'</span><span class="pun">],</span><span class="pln">
+    stores</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Stations'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'RecentSongs'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'SearchResults'</span><span class="pun">]</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<p>Ext JS 4 MVC パッケージを使うもう一つの利点はApplicationがstoreやmodelコンフィグに設定されたストアやモデルを自動的にロードしてくれることです。
+次に、ロードされた各ストアのインスタンスを生成してその名前と同じstoreIdを設定します。
+それにより、ストアをこの稿のビューでやったように、データコンポーネントにバインドするときにストアの名前を使うことができます。
+例) store: &#8216;SearchResults&#8217;</p>
+
+<h2>接着剤を適用する</h2>
+
+<p>次はビュー、モデル、ストアを一緒に接着する番です。
+ビューを一つひとつビューボートに追加することから始めましょう。
+こうするとビューのコンフィグの不具合をデバッグするのが簡単になります。
+それでは、できあがったPandaアプリケーションのビューポートを通して見てみましょう。</p>
+
+<pre id="ext-gen1296"><code id="ext-gen1295" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.view.Viewport'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.container.Viewport" rel="Ext.container.Viewport" class="docClass"><span class="str">Ext.container.Viewport</span></a><span class="str">'</span><span class="pun">,</span></code></pre>
+
+<p>Viewportクラスは通常
+<a href="#!/api/Ext.container.Viewport" rel="Ext.container.Viewport" class="docClass">Ext.container.Viewport</a>
+を拡張します。
+これはブラウザウィンドウの利用可能なスペース全てを確保します。</p>
+
+<pre id="ext-gen1298"><code id="ext-gen1297" class="prettyprint"><span class="pln">    requires</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="pln">
+        </span><span class="str">'Panda.view.NewStation'</span><span class="pun">,</span><span class="pln">
+        </span><span class="str">'Panda.view.SongControls'</span><span class="pun">,</span><span class="pln">
+        </span><span class="str">'Panda.view.StationsList'</span><span class="pun">,</span><span class="pln">
+        </span><span class="str">'Panda.view.RecentlyPlayedScroller'</span><span class="pun">,</span><span class="pln">
+        </span><span class="str">'Panda.view.SongInfo'</span><span class="pln">
+    </span><span class="pun">],</span></code></pre>
+
+<p>ビューボートでのビューの依存関係をセットアップします。
+こうすることによって、前もってビューにaliasプロパティを使って設定してあるのでxtypeを使うことができるようになります。</p>
+
+<pre id="ext-gen1300"><code id="ext-gen1299" class="prettyprint"><span class="pln">    layout</span><span class="pun">:</span><span class="pln"> </span><span class="str">'fit'</span><span class="pun">,</span><span class="pln">
+
+    initComponent</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">items </span><span class="pun">=</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'panel'</span><span class="pun">,</span><span class="pln">
+            dockedItems</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+                dock</span><span class="pun">:</span><span class="pln"> </span><span class="str">'top'</span><span class="pun">,</span><span class="pln">
+                xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'toolbar'</span><span class="pun">,</span><span class="pln">
+                height</span><span class="pun">:</span><span class="pln"> </span><span class="lit">80</span><span class="pun">,</span><span class="pln">
+                items</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+                    xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'newstation'</span><span class="pun">,</span><span class="pln">
+                    width</span><span class="pun">:</span><span class="pln"> </span><span class="lit">150</span><span class="pln">
+                </span><span class="pun">},</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                    xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'songcontrols'</span><span class="pun">,</span><span class="pln">
+                    height</span><span class="pun">:</span><span class="pln"> </span><span class="lit">70</span><span class="pun">,</span><span class="pln">
+                    flex</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1</span><span class="pln">
+                </span><span class="pun">},</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                    xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'component'</span><span class="pun">,</span><span class="pln">
+                    html</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Panda&lt;br&gt;Internet Radio'</span><span class="pln">
+                </span><span class="pun">}]</span><span class="pln">
+            </span><span class="pun">}],</span><span class="pln">
+            layout</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'hbox'</span><span class="pun">,</span><span class="pln">
+                align</span><span class="pun">:</span><span class="pln"> </span><span class="str">'stretch'</span><span class="pln">
+            </span><span class="pun">},</span><span class="pln">
+            items</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+                width</span><span class="pun">:</span><span class="pln"> </span><span class="lit">250</span><span class="pun">,</span><span class="pln">
+                xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'panel'</span><span class="pun">,</span><span class="pln">
+                layout</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                    type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'vbox'</span><span class="pun">,</span><span class="pln">
+                    align</span><span class="pun">:</span><span class="pln"> </span><span class="str">'stretch'</span><span class="pln">
+                </span><span class="pun">},</span><span class="pln">
+                items</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+                    xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'stationslist'</span><span class="pun">,</span><span class="pln">
+                    flex</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1</span><span class="pln">
+                </span><span class="pun">},</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                    html</span><span class="pun">:</span><span class="pln"> </span><span class="str">'Ad'</span><span class="pun">,</span><span class="pln">
+                    height</span><span class="pun">:</span><span class="pln"> </span><span class="lit">250</span><span class="pun">,</span><span class="pln">
+                    xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'panel'</span><span class="pln">
+                </span><span class="pun">}]</span><span class="pln">
+            </span><span class="pun">},</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'container'</span><span class="pun">,</span><span class="pln">
+                flex</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1</span><span class="pun">,</span><span class="pln">
+                layout</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                    type</span><span class="pun">:</span><span class="pln"> </span><span class="str">'vbox'</span><span class="pun">,</span><span class="pln">
+                    align</span><span class="pun">:</span><span class="pln"> </span><span class="str">'stretch'</span><span class="pln">
+                </span><span class="pun">},</span><span class="pln">
+                items</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+                    xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'recentlyplayedscroller'</span><span class="pun">,</span><span class="pln">
+                    height</span><span class="pun">:</span><span class="pln"> </span><span class="lit">250</span><span class="pln">
+                </span><span class="pun">},</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+                    xtype</span><span class="pun">:</span><span class="pln"> </span><span class="str">'songinfo'</span><span class="pun">,</span><span class="pln">
+                    flex</span><span class="pun">:</span><span class="pln"> </span><span class="lit">1</span><span class="pln">
+                </span><span class="pun">}]</span><span class="pln">
+            </span><span class="pun">}]</span><span class="pln">
+        </span><span class="pun">};</span><span class="pln">
+
+        </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">callParent</span><span class="pun">();</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<p>ViewportはContainerの拡張でContainerはdockedItemを持つことができないので、Viewportの唯一の子アイテムとしてPanelを追加します。
+layoutにfitを指定してパネルのサイズをビューポートと同じにします。</p>
+
+<p>アーキテクチャの面で最も重要なことの一つは、
+実際のビューの中ではレイアウト指定のコンフィグを定義しないという事実にあります。
+ビューの中でflex, width, height のようなプロパティを定義しないことによって、
+アプリケーション全体のレイアウトを一箇所で簡単に調整でき、
+アーキテクチャの保守性と柔軟性を追加します。</p>
+
+<h2>アプリケーションロジック</h2>
+
+<p>Ext JS 3では、
+ボタンのハンドラーを使ったり、
+サブコンポーネントのリスナーをバインドしたり、
+ビューを拡張するためにメソッドをオーバーライドしたりと、
+アプリケーションのロジックをビューに追加することがよくありました。
+しかし、HTMLマークアップの中にインラインでCSSスタイルを定義するべきでないのと同じように、
+アプリケーションロジックはビュー定義と分離する方が望ましいのです。
+Ext JS 4では、MVCパッケージのコントローラーが提供されます。
+ビューや他のコントローラーで発火したイベントをリスニングし、
+これらのイベントを実行するためにアプリケーションロジックを実装する役割を果たします。
+これにはいくつかの恩恵があります。</p>
+
+<p>恩恵の一つは、アプリケーションロジックがビューのインスタンスにバインドしないと言うことです。
+これは、アプリケーションロジックがデータの同期など他のことを処理し続けている間でも、
+必要に応じてビューを廃棄したりインスタンス化したりすることができるということを意味します。</p>
+
+<p>また、Ext JS 3ではそれぞれのアプリケーションロジックのレイヤーを追加する度に、
+ビューをネストしなければならないことがありました。
+アプリケーションロジックをコントローラーに移動することによって、
+これらを中央集権化して保守や変更を簡単にすることができます。</p>
+
+<p>最後にControllerベースクラスは
+アプリケーションロジックを実装するのを容易にする
+多くの機能を提供します。</p>
+
+<h2>Controllersを生成する</h2>
+
+<p>ここまででUI、モデル、ストアのセットアップのための基本アーキテクチャができました。
+次はアプリケーションをコントロールする番です。</p>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1302"><code id="ext-gen1301" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.controller.Station'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.app.Controller" rel="Ext.app.Controller" class="docClass"><span class="str">Ext.app.Controller</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="pun">...</span><span class="pln">
+    </span><span class="pun">},</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<h3><code>app/controller/Song.js</code></h3>
+
+<pre id="ext-gen1304"><code id="ext-gen1303" class="prettyprint"><a href="#!/api/Ext-method-define" rel="Ext-method-define" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">define</span></a><span class="pun">(</span><span class="str">'Panda.controller.Song'</span><span class="pun">,</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    extend</span><span class="pun">:</span><span class="pln"> </span><span class="str">'</span><a href="#!/api/Ext.app.Controller" rel="Ext.app.Controller" class="docClass"><span class="str">Ext.app.Controller</span></a><span class="str">'</span><span class="pun">,</span><span class="pln">
+    init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="pun">...</span><span class="pln">
+    </span><span class="pun">},</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<p>アプリケーションにコントローラーをインクルードすると、
+フレームワークは自動的にコントローラーをロードしそのinitメソッドをコールします。
+initメソッドの中で、ビューやアプリケーションのイベントのリスナーを設定する必要があります。
+大きなアプリケーションでは、実行時に追加のコントローラーをロードしたくなることもあります。
+そんな時にはgetController()メソッドを使うことができます。</p>
+
+<pre id="ext-gen1306"><code id="ext-gen1305" class="prettyprint"><span class="pln">someAction</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> controller </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getController</span><span class="pun">(</span><span class="str">'AnotherController'</span><span class="pun">);</span><span class="pln">
+
+    </span><span class="com">// Remember to call the init method manually</span><span class="pln">
+    controller</span><span class="pun">.</span><span class="pln">init</span><span class="pun">();</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<p>実行時に追加のコントローラーをロードするときには、
+手動でロードされたコントローラのinitメソッドをコールするのを忘れないようにしましょう。</p>
+
+<p>サンプルアプリケーションの場合には、
+アプリケーションの定義の中にcontrollers配列を追加して、
+フレームワークにコントローラーのロードと初期化をさせています。</p>
+
+<h3><code>app/Application.js</code></h3>
+
+<pre id="ext-gen1308"><code id="ext-gen1307" class="prettyprint"><a href="#!/api/Ext-method-application" rel="Ext-method-application" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">application</span></a><span class="pun">({</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+    controllers</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Station'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'Song'</span><span class="pun">]</span><span class="pln">
+</span><span class="pun">});</span></code></pre>
+
+<h2>リスナーを設定する</h2>
+
+<p>コントローラーのinit関数のナックでcontrolメソッドを使って、UIのパーツをコントロールしてみましょう。</p>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1310"><code id="ext-gen1309" class="prettyprint"><span class="pun">...</span><span class="pln">
+init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">control</span><span class="pun">({</span><span class="pln">
+        </span><span class="str">'stationslist'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            selectionchange</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onStationSelect
+        </span><span class="pun">},</span><span class="pln">
+        </span><span class="str">'newstation'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">select</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onNewStationSelect
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>controlメソッドにはコンポーネントクエリーをキーとしたオブジェクトを渡します。
+このサンプルではコンポーネントクエリーにはただ単にビューのxtypeを指定しています。
+しかし、コンポーネントクエリーを使うと、UI上の特定のものを指定することができます。
+コンポーネントクエリーについてより詳しく学ぶには、APIドキュメントを参照してください。</p>
+
+<p>各クエリーはリスナー設定とバインドされます。
+それぞれのリスナー設定の中で、リッスンしたいイベント名をキーにします。
+利用可能なイベントはクエリーで特定したコンポーネントが提供するものになります。
+この場合は、Gridのselectionchangeイベント(StationListビューからの)や
+ConboBoxのselectイベント(NewStationビューからの)を使います。
+コンポーネントで利用できるイベントを探すには、各コンポーネントのAPIドキュメントのeventセクションを参照してください。</p>
+
+<p></p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt2/apidocs-events.png" alt=""></p>
+
+<p></p>
+
+<p>リスナー設定の値部分はイベントが発火したときに実行される関数です。
+この関数のスコープは常にコントローラー自身になります。</p>
+
+<p>Songコントローラーのリスナーをセットアップしましょう。</p>
+
+<h3><code>app/controller/Song.js</code></h3>
+
+<pre id="ext-gen1312"><code id="ext-gen1311" class="prettyprint"><span class="pun">...</span><span class="pln">
+init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">control</span><span class="pun">({</span><span class="pln">
+        </span><span class="str">'recentlyplayedscroller'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            selectionchange</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onSongSelect
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">application</span><span class="pun">.</span><span class="pln">on</span><span class="pun">({</span><span class="pln">
+        stationstart</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onStationStart</span><span class="pun">,</span><span class="pln">
+        scope</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>RecentlyPlayedScrollerのselectionchangeイベントのリスナーとともに、
+アプリケーションイベントのリスナーもここでセットアップします。
+それをするためにアプリケーションインスタンスのonメソッドを使います。
+各コントローラーからはthis.application参照を使ってアプリケーションのインスタンスにアクセスできます。</p>
+
+<p>アプリケーションイベントは多くのコントローラーを持つイベントに非常に便利です。
+それぞれのコントローラーで同じビューをリスニングする代わりに、
+一つだけのコントローラーがビューのイベントをリッスンして、
+他のコントローラーがリッスンできるアプリケーションワイドなイベントを発火します。
+またコントローラー同士がお互いの存在に依存せずにコミュニケートすることができるようになります。</p>
+
+<p>Songコントローラーは
+新しいステーションが開始すると、曲のスクロールや曲の情報を更新する必要があるので、
+その情報が必要です。</p>
+
+<p>このstationstartアプリケーションイベントを発火する役目を持つ
+Stationコントローラーが、実際にどのように行うかを見てみましょう。</p>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1314"><code id="ext-gen1313" class="prettyprint"><span class="pun">...</span><span class="pln">
+onStationSelect</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">selModel</span><span class="pun">,</span><span class="pln"> selection</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">application</span><span class="pun">.</span><span class="pln">fireEvent</span><span class="pun">(</span><span class="str">'stationstart'</span><span class="pun">,</span><span class="pln"> selection</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>selectionchangeイベントが提供する選択されたアイテムの一つを取得して、
+stationstartイベントが発火されるときに、その引数として渡しています。</p>
+
+<h2>結論</h2>
+
+<p>このアーティクルではアプリケーションを校正する基本的なテクニックを見てきました。
+もちろん、まだ沢山やることがあります。
+このシリーズの次のパートではさらなるコントローラーのテクニックを紹介し、コントロールあーアクションを実装したりビューの詳細を追加したりしてPandaアプリケーションの続きを書きます。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Architecting Your App in Ext JS 4, Part 1</title>
+		<link>/489</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Thu, 09 Feb 2012 06:00:07 +0000</pubDate>
+				<category><![CDATA[Architecting Your App in Ext JS 4]]></category>
+		<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[MVC]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=489</guid>
+
+					<description><![CDATA[SenchaのAPIドキュメンテーションにある Architecting Your App in Ext JS 4, Part 1 の翻訳をしました。 Architecting Your App in Ext JS 4, [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>SenchaのAPIドキュメンテーションにある
+<a href="http://docs.sencha.com/ext-js/4-0/#!/guide/mvc_pt1">Architecting Your App in Ext JS 4, Part 1</a>
+の翻訳をしました。
+<span id="more-489"></span></p>
+
+<h1>Architecting Your App in Ext JS 4, Part 1</h1>
+
+<p>アプリケーションのスケーラビリティ、保守性、フレキシビリティは、
+アプリケーションのアーキテクチャーのクオリティによって最も左右されます。
+残念なことにそれは結果論として扱われることがままあります。
+コンセプトの検証のためのコードやプロトタイプのコードが、大規模なアプリケーションになり、
+サンプルコードは多くのアプリケーションの中にコピペされます。
+プロジェクトの開始時に早く仕事を進めたいからと、そういった誘惑にかられることもあるでしょう。</p>
+
+<p>しかし、それで節約した時間は、プロジェクトの後の方でアプリケーションのメンテナンス、拡張、リファクタリングに費やす時間に比べて相対的に短いものです。
+強固なアーキテクチャーを書く用意をするための一つの方法は、
+確かな規則に従い、
+アプリケーションのビュー、モデル、ストア、コントローラーを実装する前に定義することです。
+このアーティクルでは、ポピュラーなアプリケーションを見て、
+強固な基盤を作り上げるために、
+どのようにユーザーインターフェースを設計するのかを説明します。</p>
+
+<h2>コードの組織化</h2>
+
+<p>アプリケーションのアーキテクチャーとは
+構造と一貫性を提供することであり、
+実際にはクラスとフレームワークコードです。
+良いアーキテクチャーを構築するといくつかの重要な利点のロックが解除されます。</p>
+
+<ul>
+<li>すべてのアプリケーションは同じ方式で動作するので一度学ぶだけでよい。</li>
+<li>同じ方式で動作するのでアプリケーション間でコードを共有しやすい。</li>
+<li>Ext JSビルドツールを使って出荷用の最適化バージョンを作成することができる。</li>
+</ul>
+
+<p>Ext JS 4では、アプリケーションを構築する際に従うべき規則を定義しています。
+もっとも見落とせないのは統一されたディレクトリ構造です。
+この単純な構造では全てのクラスをappフォルダーの中に配置し、
+その中のサブフォルダーはモデル、ビュー、コントローラー、ストアなどのネームスペースになります。</p>
+
+<p>Ext JS 4はアプリケーションを構造化するベストプラクティスを提供しますが、
+ファイルやクラスの名前付けに関する、推奨する規則を変更することもできます。
+例えば、プロジェクトの中でコントローラーに&#8221;Controller&#8221;というサフィックスを追加したいと思ったとします。
+この場合は例えば&#8221;Users&#8221;が&#8221;UsersController&#8221;になります。
+この場合にはコントローラーのファイルとクラスにサフィックスを追加するのを忘れないようにしてください。
+アプリケーションを書き始める前にこれらの規則を定義し、一貫してそれに従うことが重要です。
+クラスの名前をどのようにつけてもかまいませんが、フォルダーの名前付け規則(controller, model, store, view)に従うことを強く推奨します。</p>
+
+<p>そうするとSDKツール(ベータ版)を使って最適化ビルドができるようになります。</p>
+
+<h2>バランスを取る</h2>
+
+<h3>ビュー</h3>
+
+<p>アプリケーションのUIを複数のビューに分解するというのはいい方法です。
+よくワイヤーフレームやデザイナーが作ったUIモックアップが提供されます。
+(とても魅力的な)PandraアプリケーションをExt JSを使ってリビルドするように言われ、
+次のようなモックアップがUIデザイナーから提供されたと想像してください。</p>
+
+<p></p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt1/base_layout.png" alt=""></p>
+
+<p></p>
+
+<p>実現したいことはビューの分割を細かすぎず粗すぎないようにバランスをとることです。
+まず、UIビューを多くのビューに分けすぎた場合に何が起こるか見てみましょう。</p>
+
+<p></p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt1/too-granular.png" alt=""></p>
+
+<p></p>
+
+<p>UIを多くの小さなビューに分割しすぎるとコントローラーからビューの管理や参照や制御をするのが難しくなります。
+またビューはそれぞれ1つのファイルになりますので、沢山のビューを作ると言うことは、
+UIの断片やビューロジックが定義されたビューファイルを探すのが難しくなります。</p>
+
+<p>一方、ビューをあまりに粗く分けることもしたくありません。
+変更する際のフレキシビリティに影響を与えるからです。</p>
+
+<p></p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt1/too-general.png" alt=""></p>
+
+<p></p>
+
+<p>このシナリオでは、各ビューが簡易化されすぎています。
+ビューのいくつかのパーツにカスタムビューロジックが必要になったとき、
+ビュークラスは結局多すぎる責務をもつことになり、
+結果、ビュークラスのメンテナンスが難しくなります。
+さらに、デザイナーがUIの配置についての考えを変えた場合、
+ビューの定義やビューのロジックに大幅な(そして面倒な)リファクタリングをしなければならないはめになります。</p>
+
+<p>リファクタリングすることなくいつでもビューの再配置ができるようにするのが良いバランスです。
+例えば、広告を独立したビューにすると、簡単に移動できますし後で削除することもできます。</p>
+
+<p></p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt1/balanced.png" alt=""></p>
+
+<p></p>
+
+<p>このバージョンでは、それぞれの役割毎にUIを分割しました。
+UIをマークアップするビューの一般的なアイデアがある場合は
+実装する時に粒度を調整する事ができます。</p>
+
+<p>2つのビューが1つでよいと気づくときもあるでしょうし、
+ビューが大きすぎて複数のビューに分割すべきだとわかるときもあるでしょうが、
+最初の段階ではこの方法は良い基本となるでしょう。
+そこで、このようにしたいと思います。</p>
+
+<h3>モデル</h3>
+
+<p>これでビューの基本的構造と配置ができました。次はモデルについてみてみます。
+UIの中で動的なデータのタイプを見ることで、
+アプリケーションに必要な違うモデルのアイデアを得ることができます。</p>
+
+<p></p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt1/models.png" alt=""></p>
+
+<p></p>
+
+<p>2つのモデルを使うことにしました。SongとStationです。
+ArtistとAlbumというモデルを定義することもできます。
+しかし、ビューの時と同じようにモデルを定義するときに細かくしすぎたくないのです。
+この場合では、分離したアーティストやアルバムの情報はありません。
+なぜなら、アプリケーションはアーティストを指定して曲を選択する機能がないからです。
+そのかわり、データはステーションによって組織化されます。
+曲が中央点でありアーティストやアルバムは曲のプロパティです。
+ということは、1つのモデルの中に曲、アーティスト、アルバムのデータをまとめることができます。
+これによりアプリケーションのデータ面を非常にシンプルになります。
+また、独立したアーティストやアルバムのデータをロードしないので、
+サーバーサイドに実装するAPIもシンプルになります。
+結論。このサンプルではモデルは2つだけにします。SongとStationです。</p>
+
+<h3>ストア</h3>
+
+<p>アプリケーションが使うモデルについて考えました。次はストアについて考えましょう。</p>
+
+<p></p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt1/stores.png" alt=""></p>
+
+<p></p>
+
+<p>必要なストアを見つけるのは比較的簡単です。
+良い戦略はページ上のコンポーネントにバインドする全てのデータを決定することです。
+この場合、ユーザーのお気に入りのステーションの全てのリストがあり、
+最近再生した曲のスクローラーがあり、
+検索結果を表示する検索フィールドがあります。
+これらのビューはストアとバインドする必要があります。</p>
+
+<h3>コントローラー</h3>
+
+<p>アプリケーションのコントローラー全体で、
+アプリケーションの責務を分割するいつくかの方法があります。
+このサンプルに必要なコントローラーについて考えてみます。</p>
+
+<p></p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt1/controllers.png" alt=""></p>
+
+<p></p>
+
+<p>ここには2つの基本的なコントローラがあります。SongController と StationController です。
+Ext JS 4では1つのコントローラーが同時にいくつかのビューをコントロールできます。
+StationController は新しいステーションを生成するのとユーザーのお気に入りステーションをStationsListビューにロードするのをハンドリングします。
+SongControllerはSongInfoビューとRecentSongストアを管理するのと、ユーザーのお気に入りへの追加や削除、曲のポーズやスキップの世話をします。
+コントローラーはアプリケーションイベントを発火したりリッスンしたりして互いにやりとりします。
+別な考えとして再生を管理するコントローラーやステーションを検索する
+コントローラーを追加することも考えられますが、
+このように責任を分解するので良いと思います。</p>
+
+<h2>念には念を</h2>
+
+<p>コードを書く前にアプリケーション・アーキテクチャを計画することが重要だという
+我々の考えを共有することが、役に立つことを望みます。
+アプリケーションの詳細を徹底的に話し合うことが、より柔軟で保守性の高いアーキテクチャを構築するのを援助することがわかりました。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>addProvider呼び出しとデプロイ</title>
+		<link>/421</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Tue, 06 Dec 2011 08:11:05 +0000</pubDate>
+				<category><![CDATA[Direct]]></category>
+		<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[MVC]]></category>
+		<category><![CDATA[未分類]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=421</guid>
+
+					<description><![CDATA[過去のエントリ (scriptタグで読み込むファイルとデプロイについて) で、Ext JS 4のMVCをExt.Directと一緒に使う際の、addProviderの呼び出し方についてや、Senchaコマンドを用いた デ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>過去のエントリ
+(<a href="/401" >scriptタグで読み込むファイルとデプロイについて</a>)
+で、Ext JS 4のMVCをExt.Directと一緒に使う際の、addProviderの呼び出し方についてや、Senchaコマンドを用いた
+デプロイについて言及しました。
+今回、実際にExt JS 4のMVCを使ったアプリケーションを作成し、それをデプロイすることになったので、
+過去の記述通りにいかなかった部分があり、現在把握している状況を書き留めることにします。
+<span id="more-421"></span></p>
+
+<h2>認証との関係</h2>
+
+<p>今回のアプリケーションでは、ユーザー認証があり、認証されていない状態ではログイン画面にジャンプするようになっています。
+Senchaコマンドのcreate jsbでは、Phantomjsで実際にhtmlファイルを読み込んで、
+Ext.Loaderを動かした結果に基づいてjsb3ファイルを作成しているようです。
+普通にsencha create jsb をhttpで始まるurlで実行すると、認証されていないのでちゃんとjsb3ファイルを生成する事ができません。</p>
+
+<p>仕方がないので、デプロイ用のhtmlファイルを作成し、開発環境ではそのurlからのアクセスに関しては認証済みとして扱うような
+記述をしてログイン認証なしでも動作するようにして、jsb3ファイルの生成に成功しました。</p>
+
+<h2>addProvider</h2>
+
+<p>MVC フレームワークにおいて、addProvider をどこで実行するかと言うことについては、
+<a href="/329" >MVCでExt.Directを使う</a>
+で記述しました。
+その中ではApplicationのonLoadで実行するという風に結論づけたのですが、 @kotsutsumi さんからのアドバイスで、
+別途、onReadyを作ってそこで実行するという方法を教わり、その方がずっとすっきりすると言うことがわかりまして、
+そうすることにしました。
+(<a href="http://togetter.com/li/218847" >MVCでのDirectについて &#8211; Togetter</a>)</p>
+
+<p>なにがすっきりするかというと、onLoadにてaddProviderする場合には、Storeのコンフィグが読み込まれる時点では
+addProviderされていないため、directFnやapiコンフィグを設定できないのです。
+そのため、最初はコンフィグを空にしておいて、あとで設定しなければなりません。
+しかし、別途onReadyを記述してそこでaddProviderしておくと、StoreのコンフィグにdirectFnやapiで、Directメソッドを指定できます。
+余分なコードが減ってすっきりするわけです。</p>
+
+<p>しかし、Loaderで動かしているうちはよかったのですが、
+デプロイする段になって問題が発生しました。
+onReadyで指定すると、デプロイ時にjsファイルをマージするとうまく動作しないことがわかったのです。</p>
+
+<p>問題の本質は、は、Storeの定義（というかProxyの定義）とaddProviderが実行される順番です。
+Loaderで実行している場合は、onReadyが全部実行されてから、LoaderがStore定義を読みに行くので、
+問題なく動作します。
+しかし、デプロイするためにファイルをマージした場合には、その順番が後先になってしまい、エラーが発生するのです。</p>
+
+<p>Ext.Loaderでアプリケーションのファイルが読み出される場合、onReadyでaddProviderしても正常に動作します。
+Proxyの定義が読み込まれる前にonReadyが実行されるからです。</p>
+
+<p>それらのファイルをマージして、Ext.Loaderのenable: falseにして実行すると、
+onReadyが実行される前に、StoreやModelに定義されたProxyに指定されたサーバーサイド関数がさきに読み込まれてしまいます。</p>
+
+<h2>解決策</h2>
+
+<p>このエラーを避けて動作する状態でデプロイするにはどうしたらよいのか。
+というところが、この記事のテーマです。</p>
+
+<p>まず、onReadyに書いていたaddProviderを、平のところに書くようにします。
+そしてそれを書く位置は、Ext.direct関連のモジュールが読み込まれた後、
+Proxyでサーバーサイド関数を定義する前、である必要があります。</p>
+
+<p>Senchaコマンドは、Ext本体の部分もふくめて、必要なJavaScriptのファイルをすべて集めてマージしてくれるのでとても便利です。</p>
+
+<p>ところが、そこで生成されるファイルは、Ext JS本体とapp.jsやappフォルダ以下の自分が書いたファイルを分離してはくれません。
+多分、Loaderが読み込んでゆく順番にファイルを配置するのだと思います。</p>
+
+<p>僕としては、まずExtJS関連のファイルを全部読んで、次にaddProviderして、その次に自分のアプリケーションのファイルを
+読んでくれるとうれしいのですが、それをうまくやる方法がありません（やり方がわかりません）。</p>
+
+<p>思った通りにマージできないのなら、Senchaコマンドなぞに頼らず自分でマージしちゃおう、
+と思ったのですが、Loaderで書いたアプリケーションをそれが依存する順番にきれいにマージするのって結構難しかったりします。
+で、Senchaコマンドの力を借りつつも、上記の問題を解決する方法がないかと考えてなんとかたどり着きました。</p>
+
+<p>まず、sencha create jsb3 でjsb3ファイルを作ります。このファイルの中身はJSONファイルで、
+builds配列の1つめの要素にあるfiles配列に読み込むファイルが列挙されています。
+このファイルのリストを読みながらファイルをマージするスクリプトを書けば、
+自分の思い通りにマージできます。</p>
+
+<div>[php]
+foreeach($jsb-&gt;builds[0]-&gt;files as $file){
+    $fileName = $file-&gt;name;
+    $fullPath = WEBAPP . $file-&gt;path . $fileName;
+    if( substr($file-&gt;path, 0, 3) == &#8216;ext&#8217; ){
+        $contents = file_get_contents($fullPath);
+        fwrite($fp, $contents);
+    }
+}
+[/php]</div>
+
+<p>こんな感じでやると、pathがextで始まるファイルだけをマージできます。
+同様にappに配置されたファイルをマージすることも出来ますね。
+そして、</p>
+
+<ol>
+<li>必要なExtJSファイル(jsb3ファイルを元に抽出)</li>
+<li>addProviderをするファイル</li>
+<li>app.js</li>
+<li>app以下のファイル(jsd3ファイルを元に抽出)</li>
+</ol>
+
+<p>の順でマージします。もちろんこれはスクリプトにします。</p>
+
+<p>このようにすると、マージされたファイルでもエラー無く動作します。
+本当にこのやり方でいいのかどうかわかりません。
+もっとうまいやり方がありそうな気もします。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>scriptタグで読み込むファイルとデプロイについて</title>
+		<link>/401</link>
+					<comments>/401#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 12 Oct 2011 06:12:20 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[MVC]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=401</guid>
+
+					<description><![CDATA[Twitterの僕のタイムラインでは、Loader使っている場合にちょいと遅いぞとか、 Loader使う時には、どのjsファイルを読み込めばいいんだ？とか いろいろ話が出てます。 ですので、そのあたりのことと、デプロイの [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Twitterの僕のタイムラインでは、Loader使っている場合にちょいと遅いぞとか、
+Loader使う時には、どのjsファイルを読み込めばいいんだ？とか
+いろいろ話が出てます。
+ですので、そのあたりのことと、デプロイの際にはどんなことをやるのかをまとめてみました。
+<span id="more-401"></span></p>
+
+<h2>scriptタグで読み込むファイルはどれ</h2>
+
+<p>ここらあたりのことは、オフィシャルブログの
+Using Ext.Loader for Your Application
+に書いてあります。このサイトに翻訳があります。</p>
+
+<p><a href="/using-ext-loader/">アプリケーションでExt.Loaderを使う</a></p>
+
+<dl>
+<dt>ext-all-debug-w.comments.js</dt>
+<dd>フレームワーク全体のデバッグバージョン、コメント付きです。</dd>
+
+<dt>ext-all-debug.js</dt>
+<dd>上記と同じですが、コメントがありません。</dd>
+
+<dt>ext-all.js</dt>
+<dd>フレームワーク全体が連結・ミニファイされています。</dd>
+
+<dt>ext-debug.js</dt>
+<dd>このファイルはExt JS の基本部分だけが入っています。</dd>
+
+<dt>ext.js</dt>
+<dd>ext-debug.js のミニファイバージョン。</dd>
+</dl>
+
+<p>allがついているとフレームワーク全体。debugがついているとミニファイされていない。というルールになっています。
+Ext.Loaderはとても賢くて、ロードしようとするクラス定義がすでに読み込まれていたらなにもせず、
+読み込まれていなければ、必要なjsファイルを読みに行きます。</p>
+
+<p>ですから、ext-debug.jsを読み込んでいたら、必要になったjsファイルを、src以下のフォルダから読み込むので、
+数百というオーダーのリクエストが発生します。
+そのかわりクラス毎にソースファイルが分かれているので、デバッグで後追いするときにわかりやすくなります。</p>
+
+<p>ext-all-debug.jsを読み込んでいたら、フレームワーク全体が読み込まれていますから、
+Ext JS内のクラスが必要になった時にロードされることはありません。
+読み込み時のリクエスト数が劇的に減ります。数百がext-all-debug.js一本になりますから。
+ただしExt JS 4の時みたいに、何万行もあるソースの中から目的のクラスの場所を探さなければならなくなります。</p>
+
+<p>実験したらわかりますが、ローディングにかかる時間はものすごい差があります。
+デバッグの場面によってどちらを使うかを切り替えるといいんでしょうね。</p>
+
+<p>次にミニファイ版ですが、ext-all.jsはExt JS 4のフレームワーク全体を読み込みますから、
+本番環境ではこれをつかうのだろうなと想像できます。
+では、ext.js ファイルはなんのためにあるのでしょう。
+ext.jsは基本部分しか入っていませんから、他の部分はLoaderを使ってロードするしかありません。
+しかし、前述したようにExt.Loaderを使ったプログラムはリクエスト数がはんぱないので、本番環境ではとても使えません。</p>
+
+<p>このファイルは実は、デプロイ作業時にSenchaコマンドによって作られたファイルと一緒に使うのです。</p>
+
+<h2>デプロイ</h2>
+
+<p>次にLoader使ったプログラムを最終的にデプロイするにはどうすりゃいいんだ？
+というあたりを書いてみたいと思います。
+オフィシャルドキュメントの
+Getting Started
+に話が書いてあります。中途半端な訳がこのサイトにあります。</p>
+
+<p><a href="/extjs4-getting-started/">Getting Started</a></p>
+
+<p>Ext.Loaderを使ってプログラムを書いていると、とくにMVCアーキテクチャで、
+構造化されたディレクトリ構造の中に必要なファイルを配置して、わかりやすくプログラムを作成できて本当に便利です。
+ですが、アプリケーションの規模が大きくなってきたら、当然、読み込むファイル数も増えてきます。
+そうするとやっぱりロードが遅くなるのは自明です。
+やっぱり、JavaScriptのコードをミニファイ・マージする必要があります。</p>
+
+<p>Senchaコマンドは、自分が作ったアプリケーションのJavaScriptファイルをミニファイ・マージしてくれます。
+しかも、その時にExt JS 4フレームワークの中の必要なファイルもマージしてくれて、
+Ext JS + 自前のアプリがセットされた、app-all.js というファイルを作ってくれるのです。</p>
+
+<p>手順としては、sencha create jsb で jsb3 ファイルを作成し、shencha build でミニファイ・マージする、
+という流れになります。早速、Getting Started のとおりやってみると、</p>
+
+<div>[bash]
+    $ sencha create jsb -a index.html -p app.jsb3
+    undefined:0 TypeError: &#8216;null&#8217; is not a constructor
+[/bash]
+
+</div>
+
+<p>動かないのかよ(´･ω･`)</p>
+
+<p>本家のフォーラムを読んでいたら、書いてあった</p>
+
+<p><a href="http://www.sencha.com/forum/showthread.php?140600-Deployment-Error-with-Sensha-SDK-Tool-null-is-not-a-constructor" >Deployment Error with Sensha SDK Tool &#8211; &#8216;null&#8217; is not a constructor</a></p>
+
+<p>というわけで、http://〜で指定してみる。/</p>
+
+<div>[bash]
+    $ sencha create jsb -a http://localhost/~ext4direct/index.html -p app.jsb3
+[/bash]
+
+</div>
+
+<p>無事終了。これで
+次にビルドします。</p>
+
+<div>[bash]
+    $ sencha build -c -p app.jsb3 -d .
+
+    Loading the Project Name Project
+    Loaded 0 Packages
+    Loaded 2 Builds
+      * Parse all-classes.js with options:
+        &#8211; debug: true
+        &#8211; debugLevel: 1
+      * Parse app-all.js with options:
+        &#8211; debug: false
+        &#8211; debugLevel: 1
+    Copy resources&#8230;
+    Done building!
+[/bash]
+
+</div>
+
+<p>-c オプションは、&#8221;Don&#8217;t compress the targets&#8221; です。
+現在のバージョンで試したところ、ミニファイまでやると日本語の一部で不具合が出ます。
+ですからこのオプションをつけています。
+ここで2つのファイルが作成されます。</p>
+
+<p>app-all.js と all-classes.js です。</p>
+
+<p>app-all.js は本来ですとミニファイされるのですが、-c をつけて作成しているので、ミニファイされていません。
+Getting Started によると、この二つの差はミニファイしているかどうかの違いだと書いていますので、同じファイルのはずですが、
+ファイルのサイズが違っています。
+実は、ミニファイの有無いがいにもちょっとだけ違いがありました。
+app-all.jsには、app.jsの内容が含まれるのに対し、all-classes.jsにはapp.jsの内容は含まれません。</p>
+
+<p>次にこの app-all.js をGoogle Closure Compiler でミニファイします。</p>
+
+<div>[bash]
+    $ mv app-all.js app-all-debug.js
+    $ java -jar ~/bin/compiler.jar &#8211;compilation_level WHITESPACE_ONLY &#8211;js app-all-debug.js &#8211;js_output_file app-all.js
+[/bash]
+
+</div>
+
+<p>もとのapp-all.js をapp-all-debug.jsとリネームした後にミニファイしました。
+&#8211;compilation_level WHITESPACE_ONLY を指定しているのは、そうしないとエラーがでたからです。
+こうして、アプリケーションのミニファイ・マージしたJavaScriptファイルができました。
+index.html を変更します。</p>
+
+<p>app-all.js に必要なファイルがすべて含まれるのであれば、ロードされるJavaScriptファイルは、わずか2つ
+(ext.jsとapp-all.jsだけ)になります。</p>
+
+<p><a href="/wp-content/uploads/2011/10/deploy.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2011/10/deploy.png" alt="" title="deploy" width="269" height="363" class="alignnone size-full wp-image-403" srcset="/wp-content/uploads/2011/10/deploy.png 269w, /wp-content/uploads/2011/10/deploy-222x300.png 222w" sizes="(max-width: 269px) 100vw, 269px" /></a></p>
+
+<p>が、やってみると、ちょっと漏れがあるようで、いくつかのファイルがマージされていませんでした。
+(でも Ext.Loader が働くのでちゃんと実行は出来ます)
+まだ、Senchaコマンドの動きは完璧ではないのでしょうか、それとも僕の作り方がまずいのでしょうか。</p>
+
+<p>Senchaコマンドが完璧になってくれれば、デプロイは相当に楽になりそうです。
+現在の状況でも、うまく付き合えばそこそこには便利ですね。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/401/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>MVCでExt.Directを使う</title>
+		<link>/329</link>
+					<comments>/329#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 22 Aug 2011 23:19:35 +0000</pubDate>
+				<category><![CDATA[Direct]]></category>
+		<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[MVC]]></category>
+		<category><![CDATA[xFrameworkPX]]></category>
+		<guid isPermaLink="false">/?p=329</guid>
+
+					<description><![CDATA[2011年9月17日 Ext JS / Sencha Perfect Day #007 でLTした時の資料です。Ext JS 4 のMVCアーキテクチャにおいて、Ext.Directを使う方法を解説しています。 このエン [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>2011年9月17日 Ext JS / Sencha Perfect Day #007 でLTした時の資料です。Ext JS 4 のMVCアーキテクチャにおいて、Ext.Directを使う方法を解説しています。
+<span id="more-329"></span></p>
+
+<p>このエントリーを書いた後に、別なアドバイスを @kotsutsumi さんから頂きました。
+最後の部分もご覧ください。</p>
+
+<h2>はじめに</h2>
+
+<h3>Ext.Directとは</h3>
+
+<p>とは、とかいって解説するような立場にはありませんので、@kotsutsumiさんの言葉を引用します。</p>
+
+<ul>
+<li>RPC（Remote Procedure Call、リモートプロシージャコール）が行える便利な機能</li>
+<li>サーバー通信は、Ext.Ajaxを利用するか、Ext.data.Store経由での通信のみで、サーバー処理との連動は以外とコストがかかる。</li>
+<li>Ext.Directを使うとサーバーサイドの関数をJavaScriptの関数のように呼び出すことができて、可読性もよい。</li>
+<li>Ext.Directを使うためには、Ext.Direct Packを使うかサーバーサイドを自分で実装する必要がある。</li>
+</ul>
+
+<p>また、複数のリクエストをまとめてサーバーに送信するような仕組みが備わっているそうです。</p>
+
+<h3>サーバーサイドはxFrameworkPXで</h3>
+
+<p>現在開発が進んでいる
+<a href="https://github.com/xenophy/NextJS" >NextJS</a>
+でもExt.Directをサポートしていますが、
+この稿を書いている段階では、まだ動かせていないので、今回は
+@kotsutsumiさんの開発したPHPフレームワーク
+<a href="https://github.com/xenophy/xFrameworkPX" >xFrameworkPX</a>
+を使います。</p>
+
+<p>再び、@kotsutsumiさんの言葉。</p>
+
+<ul>
+<li>xFrameworkPXにはxFrameworkPX_Controller_ExtDirectクラスが存在する。</li>
+<li>モジュールを作成して、コントローラーに登録するだけでモジュール名でJS側からアクセスできる。</li>
+<li>サーバーサイドのやりとり（api.phpとかrouter.phpの部分）は、ちゃんとオリジナルで実装して動作確認済。</li>
+<li>MVCのModel部分をExt側から透過的に利用できるため、開発が高速。</li>
+</ul>
+
+<p>僕は、実際に業務でExt3とxFrameworkPXの組み合わせで開発をしていますが、大変楽ちんです。
+xFrameworkPX_Controller_ExtDirectクラスを一つ宣言するだけで、
+作り上げたモジュール(Model)のpublicメソッドがそのままクライアントサイドから利用できるようになります。</p>
+
+<p>なお、ここの解説の全ソースは、GitHubに登録してあります。</p>
+
+<p><a href="https://github.com/sunvisor/Ext4DirectWithMVC">https://github.com/sunvisor/Ext4DirectWithMVC</a></p>
+
+<h2>Directを利用するための準備</h2>
+
+<p>最初にサーバー側のメソッドをコールするというのをやってみます。
+PXのExtDirectコントローラーを用意し、そこでモジュールを読み込みます。</p>
+
+<div>[php]
+    class extdirect extends xFrameworkPX_Controller_ExtDirect
+    {
+        public $direct = array(
+            &#8216;namespace&#8217; =&gt; &#8216;AM&#8217;
+        ); 
+        public $modules = array(
+            &#8216;users&#8217; =&gt; array( &#8216;conn&#8217; =&gt; &#8216;default&#8217; )
+        );
+    }
+[/php]</div>
+
+<p>こんな感じです。namespaceによって、ダイレクトメソッドの名前空間も設定しています。
+モジュールに次のメソッドを用意します。</p>
+
+<div>[php]
+    public function getHero()
+    {
+        return &#8216;Thomas&#8217;;
+    }
+[/php]</div>
+
+<h3>APIを読み込みます</h3>
+
+<div>[html]
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;Ext JS 4 RPC Sample&lt;/title&gt;
+            &lt;meta charset=&quot;UTF-8&quot; /&gt;
+            &lt;link href=&quot;ext4/resources/css/ext-all.css&quot; rel=&quot;stylesheet&quot;&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;ext4/ext-all-debug.js&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;direct.js&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;extdirect.html&quot;&gt;&lt;/script&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+
+        &lt;/body&gt;
+    &lt;/html&gt;
+[/html]</div>
+
+<p>9行目の extdirect.html を読み込んでいるところが、APIの読み込みです。</p>
+
+<h3>Directプロバイダーを追加します。</h3>
+
+<div>[js]
+    Ext.ns(&#8216;Ext.app&#8217;, &#8216;AM&#8217;);
+
+    Ext.onReady(function() {
+
+        Ext.direct.Manager.addProvider(Ext.app.REMOTING_API);
+
+        AM.users.getHero(function(result){
+            Ext.Msg.alert(&#8216;主人公は&#8217; + result + &#8216;です&#8217;);
+        });
+
+    });
+[/js]</div>
+
+<p>おなじみのExt.onReadyの中でプロバイダーを追加しています。
+1行目では、名前空間を設定しています。
+この例ではサーバーサイドのExtDirectコントローラーは、
+ダイレクトメソッドの名前空間をAMとしていますし、
+プロバイダの名前空間はExt.appになっていますので、その両方を設定しています。</p>
+
+<p>そしてその直後に、リモートプロシージャーをコールしています。
+みてください、こんなに簡単にサーバー側のメソッドをコールできるのです。
+サーバーからの戻り値は、コールバック関数を用意してそこで読み取ります。</p>
+
+<h3>実行結果</h3>
+
+<p><a href="http://www.sunvisor.net/~ext4direct/rpc.html">http://www.sunvisor.net/~ext4direct/rpc.html</a></p>
+
+<h2>MVCアーキテクチャでDirectを使う</h2>
+
+<p>さて、これからが本題です。Ext JS 4 から導入された
+<a href="/application_architecture/">MVCアーキテクチャ</a>
+の中で、Ext.Directを使う方法です。</p>
+
+<p>MVCに限らず、Ext JS でデータを扱うときにはStoreを使いますね。
+サーバーからのデータをStoreに格納して処理しますが、
+それをExt.Directでどうやるのか、というところが本稿の本題です。</p>
+
+<h3>APIを読み込みます。</h3>
+
+<div>[html]
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;My Ext JS 4 Application&lt;/title&gt;
+            &lt;meta charset=&quot;UTF-8&quot; /&gt;
+            &lt;link href=&quot;ext4/resources/css/ext-all.css&quot; rel=&quot;stylesheet&quot;&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;ext4/ext-debug.js&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;app.js&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;extdirect.html&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;ext-lang-ja.js&quot;&gt;&lt;/script&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+
+        &lt;/body&gt;
+    &lt;/html&gt;
+[/html]</div>
+
+<p>RPCのサンプルと同様です。
+app.jsを読み込んだ後に、extdirect.htmlを読み込んでいます。</p>
+
+<h3>Directプロバイダーを追加します。</h3>
+
+<p>MVCでは、Ext.onReadyを使いません。
+では、どこでプロバイダーの追加をすればいいのでしょうか。</p>
+
+<div>[js]
+    Ext.ns(&#8216;Ext.app&#8217;, &#8216;AM&#8217;);
+
+    Ext.application({
+        name: &#8216;AM&#8217;,
+        autoCreateViewport: true,
+
+        controllers: [
+            &#8216;Users&#8217;
+        ],
+
+        launch: function() {
+            
+            // Ext.Direct プロバイダーの追加
+            Ext.direct.Manager.addProvider(Ext.app.REMOTING_API);
+
+        }
+    });
+[/js]</div>
+
+<p>上記は、app.jsのコードです。
+MVCのアプリケーションでは、app.jsが起点になります。
+Applicationのlaunchメソッドはアプリケーションが起動するときに実行されるメソッドです。
+そのlaunchメソッドの中でプロバイダーの追加を行います。</p>
+
+<h3>StoreのAPIにDirectメソッドを設定します。</h3>
+
+<p>Ext.Directを使ったストアでは、directFnコンフィグかapiコンフィグに
+Ext.Directのメソッドを設定します。
+単にデータを読み取るだけの用途ならばdirectFnを使い、
+データの更新をする場合はapiを使うと思ってください。
+そこで、Storeの定義において、<u>次のように定義したくなりますがちょっと待ってください</u>。</p>
+
+<div>[js]
+    Ext.define(&#8216;AM.store.Users&#8217;, {
+        extend: &#8216;Ext.data.Store&#8217;,
+        model: &#8216;AM.model.User&#8217;,
+        autoLoad: false,
+        
+        proxy: {
+            type: &#8216;direct&#8217;,
+            api: {
+                create: AM.users.addRec,
+                read: AM.users.getAll,
+                update: AM.users.updateRec,
+                destroy: AM.users.removeRec
+            },
+            reader: {
+                type: &#8216;json&#8217;,
+                root: &#8216;data&#8217;,
+                successProperty: &#8216;success&#8217;
+            }
+        }
+    });
+[/js]</div>
+
+<p>これだと、Storeが定義される時点ではまだダイレクトプロバイダーが設定されていないので
+<u>エラーが発生します</u>。</p>
+
+<p>定義の時点では次のようにapiは空にしておきます。</p>
+
+<div>[js]
+    Ext.define(&#8216;AM.store.Users&#8217;, {
+        extend: &#8216;Ext.data.Store&#8217;,
+        model: &#8216;AM.model.User&#8217;,
+        autoLoad: false,
+        
+        proxy: {
+            type: &#8216;direct&#8217;,
+            directFn: Ext.emptyFn,  // リモートメソッドは空にしておく
+            reader: {
+                type: &#8216;json&#8217;,
+                root: &#8216;data&#8217;,
+                successProperty: &#8216;success&#8217;
+            }
+        }
+    });
+[/js]</div>
+
+<p>当然ながらautoLoadコンフィグもfalseにしてあります。
+そして、アプリケーションが起動してからStoreのAPIにDirectメソッドを設定します。
+どこで？
+それは、コントローラーのonLaunchメソッドで行います。</p>
+
+<div>[js]
+    onLaunch: function () {
+        var store = this.getUsersStore();
+
+        // Proxyにサーバー関数をセット
+        store.getProxy().api = {
+            create: AM.users.addRec,
+            read: AM.users.getAll,
+            update: AM.users.updateRec,
+            destroy: AM.users.removeRec
+        };
+        store.load();
+    },
+[/js]</div>
+
+<p>ここでは、StoreのAPIにDirectメソッドを設定して、loadメソッドを実行しています。</p>
+
+<h3>別な方法（というかこちらがおすすめ）</h3>
+
+<p>この記事を書いてからしばらく後に、twitter で @kotsutsumi さんとやりとりをしていたら、</p>
+
+<blockquote>
+  <p>launchでaddProviderしてもいいんだけど、別途Ext.application定義しているファイルで、
+  Ext.onReadyで処理した方がよいですよ</p>
+</blockquote>
+
+<p>と教えてもらいました。
+その会話は次のtogetterを参照してください。</p>
+
+<p><a href="http://togetter.com/li/218847">http://togetter.com/li/218847</a></p>
+
+<h3>initとonLaunchについて</h3>
+
+<p>ApplicationクラスのコンストラクタでExt.onReady() が作成されます。
+そのonReadyの処理の流れは次のようになります。</p>
+
+<ul>
+<li>最初に各コントローラーのinitがコールされます。</li>
+<li>その次にApplicationのonBeforeLaunchを呼び出します。onLaunchでは次の処理が実行されます。
+
+<ul>
+<li>QuickTipのinit</li>
+<li>CreateViewport</li>
+<li>Applicationのlaunchメソッドを実行</li>
+<li>Applicationのlaunchイベントを発火</li>
+<li>各コントローラーのonLaunchをコール。</li>
+</ul></li>
+</ul>
+
+<p>さきほど、Applicationのlaunchメソッドにおいて、ダイレクトプロバイダーを追加しましたので
+メソッドを設定するのは、その後ということになりますので、
+initではなくonLaunchでメソッドを設定する必要があるわけです。</p>
+
+<h2>サーバーサイドの実装</h2>
+
+<p>Storeと通信をする際には、どんなデータが送られてくるのでしょうか。
+またサーバー側ではどのようなデータを返したらよいのでしょうか。</p>
+
+<h3>Readアクション</h3>
+
+<p>データの読み取りの場合、
+サーバー側には、paramOrderコンフィグで設定された、パラメータが送られてきます。
+抽出条件や、ページングの情報などが渡されることが多いでしょう。
+サーバー側で受け取るパラメータの仕様を決めたら、
+Ext JS のparamOrderコンフィグにそれを設定します。</p>
+
+<p>サーバーから返すデータは次のような形式で返します。</p>
+
+<div>[js]
+    {
+        success: true,
+        total: 2,
+        data: [
+            {
+                id: 1,
+                name: &#8216;Thomas&#8217;,
+                email: &#8216;thomas@sodo.com&#8217;
+            }, {
+                id: 2,
+                name: &#8216;Edword&#8217;,
+                email: &#8216;edword@sodo.com&#8217;
+            }
+        ]
+    }
+[/js]</div>
+
+<p>この中の data という要素がレコードのデータになりますが、
+このプロパティ名は、Readerのroot コンフィグで設定します。
+total という要素にはレコードの総数がセットしますが、
+このプロパティ名は、ReaderのtotalPropertyコンフィグで設定します。
+デフォルトは&#8217;total&#8217;です。
+successという要素には、成功したかどうかをセットします。
+このプロパティ名は、ReaderのsuccessPropertyでセットします。
+デフォルトは&#8217;success&#8217;です。</p>
+
+<div>[php]
+    public function getAll() 
+    {
+        $fields = $this-&gt;_getFields(true);
+        $r = $this-&gt;get(
+            &#8216;all&#8217;,
+            array(
+                &#8216;fields&#8217; =&gt; $fields
+            )
+        );
+        return array(
+            &#8216;total&#8217; =&gt; count($r),
+            &#8216;data&#8217; =&gt; $r,
+            &#8216;success&#8217; =&gt; true
+        );        
+    }
+[/php]</div>
+
+<h3>更新系アクション</h3>
+
+<p>update, create, delete といった更新系のアクションでは、
+対象となるデータがサーバーに送信されます。
+Storeのsyncメソッドを実行すると、それまでにStoreに対して加えられた変更が
+上記の3つのアクションに分解されて、それぞれのリクエストがサーバーに送信されます。</p>
+
+<p>各アクションでは、
+一件のデータであれば、一つのオブジェクトが、
+複数のデータがあれば、オブジェクトの配列がサーバーに送信されます。
+WriterのallowSingleコンフィグをfalseにすると、
+1件の場合でも配列で送られるようになります。</p>
+
+<p>update アクションの場合は、更新されたレコードが送信されます。
+WriterのwriteAllFieldsコンフィグがtrueの場合は、Storeの全てのフィールドが、
+falseの場合は変更のあったフィールドのみが送信されます。
+デフォルトはtrueです。</p>
+
+<div>[php]
+    public function updateRec($arg)
+    {
+        if( is_array($arg) ){
+            foreach($arg as $rec){
+                $this-&gt;_updateOne($rec);
+            }
+        } else {
+            $this-&gt;_updateOne($arg);
+        }
+        
+        return array(
+            &quot;success&quot; =&gt; true,
+            &quot;data&quot; =&gt; $arg
+        );
+    }
+
+    private function _updateOne($arg)
+    {
+        $rec = (array)$arg;
+        $fields = $this-&gt;_getFields(false);
+        $id = $this-&gt;primaryKey;
+
+        $bind = array();
+        foreach($fields as $field){
+            $bind[$field] = $rec[$field];
+        }
+
+        $param = array(
+            &#8216;field&#8217; =&gt; $fields,
+            &#8216;value&#8217; =&gt; $this-&gt;_getValues(false),
+            &#8216;bind&#8217; =&gt; $bind,
+            &#8216;where&#8217; =&gt; $id . &#8216;=&#8217; . $rec[$id]
+        );
+
+        $this-&gt;update($param);
+    }
+[/php]</div>
+
+<p>Ext3では、オブジェクトが渡されその中のrootコンフィグで設定した要素の中に
+レコードが入ってきましたが、
+Ext4では、変更のあったレコードそのものがやってきます。</p>
+
+<p>create アクションの場合も、追加されたレコードのデータが送信されます。</p>
+
+<div>[php]
+    public function addRec($arg)
+    {
+        $id = $this-&gt;primaryKey;
+
+        if( is_array($arg) ){
+            foreach($arg as &amp;$rec){
+                $rec-&gt;$id = $this-&gt;_addOne($rec);
+            }
+        } else {
+            $arg-&gt;$id = $this-&gt;_addOne($arg);
+        }
+
+        return array(
+            &quot;success&quot; =&gt; true,
+            &quot;data&quot; =&gt; $arg
+        );
+    }
+
+    private function _addOne($arg)
+    {
+        $rec = (array)$arg;
+
+        $param = array(
+            &#8216;field&#8217; =&gt; $this-&gt;_getFields(true),
+            &#8216;value&#8217; =&gt; $this-&gt;_getValues(true),
+            &#8216;bind&#8217; =&gt; $rec
+        );
+        $r = $this-&gt;insert($param, true);
+        $this-&gt;insert($param);
+
+        return $this-&gt;lastId();
+    }
+[/php]</div>
+
+<p>delete アクションの場合は、削除されたレコードのidだけが送信されます。</p>
+
+<div>[php]
+    public function removeRec($arg)
+    {
+        $id = $this-&gt;primaryKey;
+
+        $conds = array();
+        if( is_array($arg) ){ 
+            foreach($arg as $rec){
+                $conds[] = $rec-&gt;$id;
+            }
+        } else {
+            $conds[] = $arg-&gt;$id; 
+        }
+        $this-&gt;remove($conds);
+        
+        return array(
+            &quot;success&quot; =&gt; true,
+            &quot;data&quot; =&gt; $arg
+        );
+    }
+[/php]</div>
+
+<h3>更新系アクションの戻り値</h3>
+
+<p>更新系アクションでは、</p>
+
+<div>[js]
+    {
+        success: true,
+        data: &lt;送られてきたデータ&gt;
+    }
+[/js]</div>
+
+<p>というデータを返します。dataのプロパティ名は例によって、
+rootコンフィグで設定したプロパティ名です。
+基本的に送られてきたデータと同じものを
+返さないと、その後の処理がうまくいきません。</p>
+
+<p>注意しなければならないのは、createアクションの場合です。
+createアクションで送られてくるレコードのidフィールドは空になっています。
+サーバー側では、それを登録した結果のidフィールドの値をセットしてから返さなければなりません。</p>
+
+<p>Ext3では、サーバーに送られてきたデータが1つだけであっても、
+戻り値は必ず配列で返す必要がありましたが、
+Ext4では単独レコードの場合は配列でなくてもよいようです。</p>
+
+<h2>参考資料・関連ページ</h2>
+
+<ul>
+<li><a href="http://goo.gl/tlV5r">Ext.application and Ext.direct: How to setup?</a></li>
+<li><a href="http://goo.gl/vxg2q">ExtDirect with Ext4 MVC and php &#8211; Video</a>
+
+<ul>
+<li><a href="http://dev.sk-typo3.de/ext4/workshop/">Demo</a></li>
+<li><a href="http://dev.sk-typo3.de/ext4/workshop.zip">Download Sample</a></li>
+</ul></li>
+<li><a href="https://github.com/sunvisor/Ext4DirectWithMVC">この記事のサンプルのソース</a></li>
+<li><a href="http://www.sunvisor.net/~ext4direct/">この記事のサンプルを実際に動かす</a></li>
+</ul>
+
+<h2>メモ</h2>
+
+<p>以下は、この記事を書いたときに気づいたことのメモです。</p>
+
+<h3>getHogeStore</h3>
+
+<p>コントローラーで、getHogeStore()という関数を使うと、そのコントローラーが
+保持するHogeというStoreを取得できる。</p>
+
+<h3>refs</h3>
+
+<p>コントローラーで、refsを定義するとコントロールの参照が簡単になる。</p>
+
+<div>[js]
+    refs: [
+        { ref: &#8216;hoge&#8217;, selector: &#8216;gridpanel&#8217; }
+    ]
+[/js]</div>
+
+<p>のように設定すると、</p>
+
+<div>[js]
+    this.getHoge();
+[/js]</div>
+
+<p>でコントロールを参照できる。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/329/feed</wfw:commentRss>
+			<slash:comments>3</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>続）Ext JS4 MVC でのViewport.jsって？</title>
+		<link>/209</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Tue, 24 May 2011 07:27:01 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[MVC]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=209</guid>
+
+					<description><![CDATA[Ext JS4 MVC でのViewport.jsって？ のエントリーでうやむやのまま終わってたViewport.js の件，調べてみました。なおこのエントリーの中には，PerfectDay で @kotsutsumi  [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p><a href="/mvc_viewportjs/">Ext JS4 MVC でのViewport.jsって？</a> のエントリーでうやむやのまま終わってたViewport.js の件，調べてみました。なおこのエントリーの中には，PerfectDay で @kotsutsumi さんに教えられたことがもとになっています。（多謝）</p>
+
+<p>viewport.js はどのように使うのか。なんでほとんど空っぽの viewport.js を置いているのか。 viewport.js        があるのに，appのlaunchメソッドの中でわざわざviewportを定義しているではないか。        どっちか，いらないのじゃないか？という謎解きに挑戦ｗ<span id="more-209"></span></p>
+
+<h3>ためしに完成品のサンプルから viewport.js を削除して，autoCreateViewport を false にしてみる。</h3>
+
+<p>やろうと思ったら，単に viewport.js を削除しただけでも，エラーが出ませんでした。4.0.1 になったら        出なくなったみたい。いろいろ調べたら，4.0.1は，autoCreateViewport の初期値がすでに false で あることが判明しました。</p>
+
+<p>ExtJS4の仕様としては，autoCreateViewport が false の時には，Viewport.js があっても        読みに行きません。 autoCreateViewport が true の時だけ，Viewport.js を探して読みに行くのです。</p>
+
+<p>だからViewportの定義をViewport.jsでやりたい場合は，autoCreateViewportを明示的に true にしてやります。</p>
+
+<h3>つぎに，launch での viewport の作成をしないで，viewport.js で作成するようにしてみる。</h3>
+
+<p>app.js の launch メソッドを次のように全部空にして，</p>
+
+<div>[js]
+launch: function() {
+    /*
+    Ext.create(&#8216;Ext.container.Viewport&#8217;, {
+        layout: &#8216;fit&#8217;,
+        items: [
+            {
+                xtype: &#8216;userlist&#8217;
+            }
+        ]
+    });
+    */
+}
+[/js]</div>
+
+<p>Viewport.js を次のようにしてみます。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.view.Viewport&#8217;, {
+    extend: &#8216;Ext.container.Viewport&#8217;,
+    alias: &#8216;widget.AM.viewport&#8217;,
+    id: &#8216;AM.Viewport&#8217;,
+    layout: &#8216;fit&#8217;,
+    items: [
+        {
+            xtype: &#8216;userlist&#8217;
+        }
+
+    ]
+});
+[/js]</div>
+
+<p>それでも前と全く同じように動作します。</p>
+
+<p>ということで，ひとまずの結論です。</p>
+
+<ol>
+    <li>MVCのシンプルなサンプルでは，実は，Viewport.js は使ってない。        だから，最初からそれをプロジェクトから削除して，autoCreateViewport = false の状態で 使って良い。</li>
+    <li>もしくは，autoCreateViewport = true にして，Viewport.js をちゃんと働かせるのなら， app.js の        launch メソッドなんかに Viewport の定義なんか書かないで， Viewport.js に書く。</li>
+</ol>
+
+<p>ということになります。2の方がよさげに思いませんか？</p>
+
+<p>PerfectDayでは，この他にもアプリケーション開発の実践的なノウハウを教えてもらえます。是非ご参加を！</p>
+
+<p>僕も教えてもらったことを，ぼちぼちとここでリークさせてもらいます。ｗ</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Ext JS4 MVC でのViewport.jsって？</title>
+		<link>/153</link>
+					<comments>/153#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sun, 08 May 2011 10:06:36 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[MVC]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=153</guid>
+
+					<description><![CDATA[Ext JS 4のDocにある，MVC Application Architecture について，その内容を理解するために翻訳のようなことをしました。結果はこちらです。次に，そのとおりに実行してみました。がうまく動きま [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext JS 4のDocにある，<a href="http://docs.sencha.com/ext-js/4-0/guide/application_architecture" target="_blank">MVC Application Architecture</a> について，その内容を理解するために翻訳のようなことをしました。<a href="/application_architecture/" target="_blank">結果はこちら</a>です。次に，そのとおりに実行してみました。がうまく動きませんでした。<span id="more-153"></span></p>
+
+<h2>Viewport.js が載っていない</h2>
+
+<p>この文書をチュートリアルのように実際に入力して実行しても最初からちゃんと動きません。</p>
+
+<ul>
+    <li>追記：ExtJS 4.0.0 ではその通りちゃんと動きませんが，ExtJS4.0.1では動きます。その理由は，<a href="/mvc_viewportjs2/">こちら</a>ですが後で見てください。</li>
+</ul>
+
+<p><a href="/wp-content/uploads/2011/05/mvc_err1.png"><img decoding="async" loading="lazy" class="alignnone size-medium wp-image-154" title="mvc_err1" src="/wp-content/uploads/2011/05/mvc_err1-300x85.png" alt="" width="300" height="85" srcset="/wp-content/uploads/2011/05/mvc_err1-300x85.png 300w, /wp-content/uploads/2011/05/mvc_err1.png 621w" sizes="(max-width: 300px) 100vw, 300px" /></a></p>
+
+<p>このエラーの6行目で指摘されている，「User.js がないぞ」というのはまったくご指摘のとおりで，まだ作っていないので当然です。しかし1行目のエラーは，Viewport.js がないというエラーは，身に覚えがありません。試しに，app.js の launch メソッドを単純なものにしてもこのエラーは発生します。また，User.js をドキュメント通りに作成しても，6行目のエラーは消えますが，当然ながら1行目のエラーは消えません。</p>
+
+<p>本家の文章には，最初の方にファイル構造の一覧の図がありますが，この図の中にあって解説のない，ファイルがあります。それが Viewport.js です。</p>
+
+<p>SDKのこのサンプルが入っているフォルダを見てみると，このファイルの内容は次のようなものでした。非常に簡単な内容です。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.view.Viewport&#8217;, {
+    extend: &#8216;Ext.container.Viewport&#8217;
+});
+[/js]</div>
+
+<p>そこで，このファイルを作り，Viewport.js として保存してから実行すると，やっとサンプルが動き始めます。なるほど，ここにこういうファイルが必要なのはわかりました。では，このファイルはいつもこの内容で作成しておけばよいのでしょうか。それはわかりません。そのあたりは，今後，勉強していきたいと思います。</p>
+
+<ul>
+    <li>（追記：このエントリーには続きがあります＞<a href="/mvc_viewportjs2/">続）Ext JS4 MVC でのViewport.jsって？</a>あとで見てください）</li>
+</ul>
+
+<p>この件についてググってみたところ，本家のフォーラムで質問が上がっていました。</p>
+
+<p><a href="http://www.sencha.com/forum/showthread.php?131509-extjs-mvc-am&amp;langid=14" target="_blank">http://www.sencha.com/forum/showthread.php?131509-extjs-mvc-am&amp;langid=14</a></p>
+
+<p>これを見てみると，Viewport.js を作らなくても，app.js に</p>
+
+<div>[js]
+autoCreateViewport: false,
+[/js]</div>
+
+<p>と足すとよいって書いてあります。じゃあやってみました。</p>
+
+<div>[js]
+Ext.application({
+    name: &#8216;AM&#8217;,
+
+    appFolder: &#8216;app&#8217;,
+    autoCreateViewport: false,
+
+    controllers: [
+        &#8216;Users&#8217;
+    ],
+
+    launch: function() {
+        Ext.create(&#8216;Ext.container.Viewport&#8217;, {
+            layout: &#8216;fit&#8217;,
+            items: [
+                {
+                    xtype: &#8216;panel&#8217;,
+                    title: &#8216;Users&#8217;,
+                    html : &#8216;List of users will go here&#8217;
+                }
+            ]
+        });
+    }
+});
+[/js]</div>
+
+<p>このようにすると，Viewport.js が見つからないというエラーは発生しません。</p>
+
+<ul>
+    <li>（追記：このエントリーには続きがあります＞<a href="/mvc_viewportjs2/">続）Ext JS4 MVC でのViewport.jsって？</a>）</li>
+</ul>
+]]></content:encoded>
+					
+					<wfw:commentRss>/153/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>MVC Application Architecture</title>
+		<link>/112</link>
+					<comments>/112#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Fri, 29 Apr 2011 13:29:00 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[MVC]]></category>
+		<guid isPermaLink="false">/?p=112</guid>
+
+					<description><![CDATA[前回に続いてSenchaのAPIドキュメンテーションにある MVC Application Architecture を読んでみました。 今回は訳している途中に本家の文章がアップデートされたりして大変でした。ｗ 2012 [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>前回に続いてSenchaのAPIドキュメンテーションにある MVC Application Architecture を読んでみました。
+今回は訳している途中に本家の文章がアップデートされたりして大変でした。ｗ</p>
+
+<p>2012/02/29にコメントでのご指摘を反映して修正しました。</p>
+
+<p><span id="more-112"></span></p>
+
+<hr />
+
+<p>大きなクライアントサイド アプリケーションは、いつも書きにくくて、整理しにくくて、管理しにくいものです。
+機能性や開発者をプロジェクトに追加するときに、急速に制御しきれなくなる傾向があります。
+Ext JS4 には、コードを組織化するだけではなくコードを書く量を減少させる新しいアプリケーション アーキテクチャがあります。</p>
+
+<p>このアプリケーション アーキテクチャは、初めて導入するModelsやControllersでMVCのようなパターンをフォローします。
+多くのMVCアーキテクチャがありますが、その大部分は互いにさしたる違いはありません。
+我々の定義は：</p>
+
+<ul>
+<li><em>モデル</em>は、フィールドとそのデータ（例えば、ユーザー名とパスワードの欄があるUserモデル）のコレクションです。
+モデルは、データ パッケージを通して自分自身を存続する方法を知っていて、アソシエーションを使って他のモデルとリンクできます。
+モデルはExt JS 3のレコードとよく似ていて、通常はストアと一緒使われ、グリッドや他のコンポーネントにデータを提供します。</li>
+<li><em>ビュー</em>は全てのタイプのコンポーネントがそれです。グリッド、ツリー、パネルはみんなビューです。</li>
+<li><em>コントローラー</em>はアプリケーションを動作させるためのコード
+（ビューをレンダリングしたり、モデルをインスタンス化したり、などのアプリケーションロジック）
+を配置する特別な場所です。</li>
+</ul>
+
+<p>このガイドではUserデータを管理する非常に簡単なアプリケーションを作成します。
+最後まで読むと新しいExt JS 4アプリケーション アーキテクチャを使った簡単なアプリケーションの書き方がわかります。</p>
+
+<ul>
+<li>一度学んでしまえば、あらゆるアプリケーションが同じように動作します。</li>
+<li>同じように働いているので、簡単にアプリケーション間でコードを共有できます。</li>
+<li>ビルドツールを使ってアプリケーションの最適化されたバージョンを作成できます。</li>
+</ul>
+
+<h2>ファイル構造</h2>
+
+<p>ExtJS4はすべてのアプリケーションで共通な統一されたディレクトリ構造に従います。
+アプリケーションの基本的なファイル構造に関する詳細な説明は
+<a href="http://dev.sencha.com/deploy/ext-4.0.0/docs/guide/getting_started.html">Getting Started guide</a>
+を調べてください。
+MVCレイアウトではすべてのクラスはappフォルダーに配置されます。
+その中にはモデル、ビュー、コントローラー、ストアのサブフォルダがあります。
+ここでのサンプル アプリケーションのフォルダ構造は、完成すると次のようになります：</p>
+
+<p><img decoding="async" src="http://dev.sencha.com/deploy/ext-4.0.0/docs/folderStructure.png" alt="Folder Structure" /></p>
+
+<p>この例では&#8217;account_manager&#8217;というフォルダーの中に全体のアプリケーションをカプセル化しています。
+Ext ?JS 4 SDKの必要なファイルは ext-4.0フォルダーの中にラップされます。index.htmlの内容は次のようになります。</p>
+
+<div>[html]
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Account Manager&lt;/title&gt;
+
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;ext-4.0/resources/css/ext-all.css&quot;&gt;
+
+    &lt;script type=&quot;text/javascript&quot; src=&quot;ext-4.0/ext-debug.js&quot;&gt;&lt;/script&gt;
+
+    &lt;script type=&quot;text/javascript&quot; src=&quot;app.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;&lt;/body&gt;
+&lt;/html&gt;
+[/html]</div>
+
+<h2>app.js にアプリケーションを作成する</h2>
+
+<p>あらゆるExt JS4アプリケーションはApplicationのクラスのインスタンスから始まります。
+Applicationはアプリケーションのグローバルセッティング（例えばアプリケーション名など）を保存し、
+アプリケーションが使うモデルやビューやコントローラーのすべての参照を保持できます。
+また、Applicationにはlaunchメソッドがあります。
+このメソッドはすべてがロードされたときに自動的に実行されます。</p>
+
+<p>ユーザー アカウントを管理するの簡単なAccount Manager アプリケーションを作成しましょう。
+まず、このアプリケーションにグローバルなネームスペースを選択する必要があります。
+すべてのExt JS 4アプリケーションではグローバル変数は一つだけにして、アプリケーションのクラスのすべてはその中にネストして格納します。
+普通は短いグローバル大域変数がいいので、この例では「AM」を使用します：</p>
+
+<div>[js]
+Ext.application({
+    name: &#8216;AM&#8217;,
+
+    appFolder: &#8216;app&#8217;,
+
+    launch: function() {
+        Ext.create(&#8216;Ext.container.Viewport&#8217;, {
+            layout: &#8216;fit&#8217;,
+            items: [
+                {
+                    xtype: &#8216;panel&#8217;,
+                    title: &#8216;Users&#8217;,
+                    html : &#8216;List of users will go here&#8217;
+                }
+            ]
+        });
+    }
+});
+[/js]</div>
+
+<p>ここではいくつかのことをやっています。
+最初に、Ext.applicationを呼び出し、「AM」という名前のApplicationのクラスのインスタンスを生成しています。
+これで自動的にグローバル変数AMが設定され、appFolderコンフィグオプションで設定された&#8217;app&#8217;に対応するパスでExt.Loaderにネームスペースが登録されます。
+次にUsersコントローラを設定しています
+(コントローラについては次のセクションで扱います)。
+最後にスクリーンいっぱいを覆うPanelが入ったViewportを作成する簡単なlaunchメソッドを設定しました。</p>
+
+<p><img decoding="async" src="http://dev.sencha.com/deploy/ext-4.0.0/docs/panelView.png" alt="Initial view with a simple Panel" /></p>
+
+<p>ほとんどのアプリケーションには、いくつかのコントローラ（通常はモデルごとに一つ）があります。
+アプリケーションが使用しているコントローラを配列で指定すると、アプリケーションが起動する前に、
+コントローラに対応するクラスが自動的にロードされ初期化されます。
+例えばViewportにリスナーをセットアップするときなどに便利です。
+この例では、Usersコントローラは AM.controller.Users クラスにマップされ、
+そのファイルは<code>app/controller/User.js</code>に置かれます。</p>
+
+<h2>コントローラーの定義</h2>
+
+<p>コントローラーはアプリケーションを束ねる接着剤です。
+何をするかというと、（主にビューからの）イベントをリッスンして、アクションを実行します。
+次はUsersコントローラーの最初の形です：</p>
+
+<div>[js]
+Ext.define(&#8216;AM.controller.Users&#8217;, {
+    extend: &#8216;Ext.app.Controller&#8217;,
+
+    init: function() {
+        console.log(&#8216;Initialized Users! This happens before the Application launch function is called&#8217;);
+    }
+});
+[/js]</div>
+
+<p>ブラウザで index.html が表示されてアプリケーションがロードされたとき、Usersコントローラーは自動的にロードされます。
+（Applicationの定義のときに指定しているからです）
+コントローラーのinit関数は、Applicationのlaunch関数が呼ばれる直前にコールされます。</p>
+
+<p>initメソッドは コントローラーとビューとのやりとりのしかたを設定したり、他のコントローラー関数と連携するのに使われます。
+controlメソッドを使うとビュークラスのイベントにハンドラを割り当てることが簡単にできます。
+では、Panelが描画された時にconsole.logするようにUsersコントローラーを変更してみましょう。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.controller.Users&#8217;, {
+    extend: &#8216;Ext.app.Controller&#8217;,
+
+    init: function() {
+        this.control({
+            &#8216;viewport &gt; panel&#8217;: {
+                render: this.onPanelRendered
+            }
+        });
+    },
+
+    onPanelRendered: function() {
+        console.log(&#8216;The panel was rendered&#8217;);
+    }
+});
+[/js]</div>
+
+<p>this.controlを使って、アプリケーションのビューにリスナーをセットアップするようにinitメソッドを変更しました。
+このcontrolメソッドは、新しいComponentQueryを使って、素早く簡単にページ上のコンポーネントへの参照を得ています。
+まだComponentQueryになじみがなければ、このガイドのすべての説明をよく読んでください。
+簡単に言うと、ページ上のコンポーネントを見つけるのにCSSセレクターのような構文が提供されるのです。</p>
+
+<p>initメソッドでは、&#8217;viewport &gt; panel&#8217;という文字が与えられています。
+これは「Viewportの直接の子供である全てのPanelを探せ」という意味です。
+次にイベント名（この場合は単にrender）に割り当てるハンドラ メソッドを指定しています。
+セレクタに合致する全てのコンポーネントにおいてrenderイベントが発火し、onPanelRenderedが実行されます。</p>
+
+<p>実行すると次のように表示されます。</p>
+
+<p><img decoding="async" src="http://dev.sencha.com/deploy/ext-4.0.0/docs/firstControllerListener.png" alt="Controller listener" /></p>
+
+<p>エキサイティングなアプリケーションではありませんが、組織だったコードを使ってこんなに簡単に始められました。
+では、グリッドを追加してみましょう。</p>
+
+<h2>ビューを定義する</h2>
+
+<p>ここまでに、二つのファイル（app.jsとapp/controller/Users.js）を作りました。
+ではシステム内のすべてのユーザーを表示するグリッドを追加したいと思います。
+ロジックより少し整理してビューを使い始める頃合いです。</p>
+
+<p>ビューは単なるExt JSコンポーネントのサブクラスとして定義されたコンポーネントです。
+views/user/List.jsという新しいファイルを作成し、そこに次のコードを書いて、ユーザーを表示するグリッドを作成しましょう。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.view.user.List&#8217; ,{
+    extend: &#8216;Ext.grid.Panel&#8217;,
+    alias : &#8216;widget.userlist&#8217;,
+
+    title : &#8216;All Users&#8217;,
+
+    initComponent: function() {
+        this.store = {
+            fields: [&#8216;name&#8217;, &#8216;email&#8217;],
+            data  : [
+                {name: &#8216;Ed&#8217;,    email: &#8216;ed@sencha.com&#8217;},
+                {name: &#8216;Tommy&#8217;, email: &#8216;tommy@sencha.com&#8217;}
+            ]
+        };
+
+        this.columns = [
+            {header: &#8216;Name&#8217;,  dataIndex: &#8216;name&#8217;,  flex: 1},
+            {header: &#8216;Email&#8217;, dataIndex: &#8216;email&#8217;, flex: 1}
+        ];
+
+        this.callParent(arguments);
+    }
+});
+[/js]</div>
+
+<p>このビュークラスはExtJSコンポーネントのサブクラスとして定義されるコンポーネント以上のものではありません。
+この例ではGridPanelを拡張してこれをxtype（詳しくは後ほど）として使えるようにするためのaliasを設定してます。
+storeとcolumnsのコンフィグで、グリッドがどのようにレンダリングされるかを指定してます。</p>
+
+<p>次にUsersコントローラーにこのビューを追加します。
+&#8216;widget.&#8217;形式でaliasを指定したので、&#8217;panel&#8217;などのように&#8217;userlist&#8217;というxtypeが使えるようになったからです。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.controller.Users&#8217;, {
+    extend: &#8216;Ext.app.Controller&#8217;,
+
+    views: [
+        &#8216;user.List&#8217;
+    ],
+
+    init: &#8230;
+
+    onPanelRendered: &#8230;
+});
+[/js]</div>
+
+<p>次にこれをメインビューポートの中に描画するためにapp.jsを変更します。</p>
+
+<div>[js]
+Ext.application({
+    &#8230;
+
+    launch: function() {
+        Ext.create(&#8216;Ext.container.Viewport&#8217;, {
+            layout: &#8216;fit&#8217;,
+            items: {
+                xtype: &#8216;userlist&#8217;
+            }
+        });
+    }
+});
+[/js]</div>
+
+<p>他に注目すべきなのはviewを&#8217;user.List&#8217;と指定している点です。
+これはアプリケーションに対して、起動時にこれらのファイルを自動的にロードしろと伝えています。
+このアプリケーションは、Ext JS 4の新しいダイナミックローディングシステムを使って、サーバーからこのファイルを自動的に引っ張ってきます。</p>
+
+<p><img decoding="async" src="http://dev.sencha.com/deploy/ext-4.0.0/docs/firstView.png" alt="Our first View" /></p>
+
+<h2>グリッドを制御する</h2>
+
+<p>onPanelRendered関数はいまでもコールされることに注意してください。
+このグリッド クラスは &#8216;viewport &gt; panel&#8217; セレクターにマッチするからです。
+というのは、このグリッド クラスはGridPanelを継承し、そのGridPanelはPanelを継承しているからです。</p>
+
+<p>この状態ではビューポートの直接の子であるすべてのPanelやPanelのサブクラスに対して、リスナーが追加されてしまいます。
+新しいxtypeに対してひもつけるように変更しましょう。
+また、あとでユーザー情報を編集できるように、グリッド上でのダブルクリックをリッスンするようにします。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.controller.Users&#8217;, {
+    extend: &#8216;Ext.app.Controller&#8217;,
+
+    views: [
+        &#8216;user.List&#8217;
+    ],
+
+    init: function() {
+        this.control({
+            &#8216;userlist&#8217;: {
+                itemdblclick: this.editUser
+            }
+        });
+    },
+
+    editUser: function(grid, record) {
+        console.log(&#8216;Double clicked on &#8216; + record.get(&#8216;name&#8217;));
+    }
+});
+[/js]</div>
+
+<p>この変更ではComponentQueryセレクターを（シンプルに&#8217;userlist&#8217;に）、イベント名を（’itemdblclick&#8217;に）、
+ハンドラー関数の名前を（&#8217;editUser&#8217;に）変更していることに注目してください。</p>
+
+<p><img decoding="async" src="http://dev.sencha.com/deploy/ext-4.0.0/docs/doubleClickHandler.png" alt="Double click handler" /></p>
+
+<p>コンソールにログされるのもいいんですが、本当に欲しい機能はユーザー情報の編集です。app/view/user/Edit.js にビューを作ってみます。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.view.user.Edit&#8217;, {
+    extend: &#8216;Ext.window.Window&#8217;,
+    alias : &#8216;widget.useredit&#8217;,
+
+    title : &#8216;Edit User&#8217;,
+    layout: &#8216;fit&#8217;,
+    autoShow: true,
+
+    initComponent: function() {
+        this.items = [
+            {
+                xtype: &#8216;form&#8217;,
+                items: [
+                    {
+                        xtype: &#8216;textfield&#8217;,
+                        name : &#8216;name&#8217;,
+                        fieldLabel: &#8216;Name&#8217;
+                    },
+                    {
+                        xtype: &#8216;textfield&#8217;,
+                        name : &#8216;email&#8217;,
+                        fieldLabel: &#8216;Email&#8217;
+                    }
+                ]
+            }
+        ];
+
+        this.buttons = [
+            {
+                text: &#8216;Save&#8217;,
+                action: &#8216;save&#8217;
+            },
+            {
+                text: &#8216;Cancel&#8217;,
+                scope: this,
+                handler: this.close
+            }
+        ];
+
+        this.callParent(arguments);
+    }
+});
+[/js]</div>
+
+<p>再び既存のコンポーネント（今回はExt.window.Windowクラス）のサブクラスを定義します。
+もう一度、initComponentを使ってオブジェクトitemsとbuttonsを指定します。
+フォームをfitレイアウトで配置します。そのフォームには名前とメルアドを編集するフィールドがあります。
+最後に、SaveとCloseの二つのボタンを作ってます。</p>
+
+<p>このビューをレンダリングしてユーザー情報をその中にロードするようにコントローラーを使います。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.controller.Users&#8217;, {
+    extend: &#8216;Ext.app.Controller&#8217;,
+
+    views: [
+        &#8216;user.List&#8217;,
+        &#8216;user.Edit&#8217;
+    ],
+
+    init: &#8230;
+
+    editUser: function(grid, record) {
+        var view = Ext.widget(&#8216;useredit&#8217;);
+
+        view.down(&#8216;form&#8217;).loadRecord(record);
+    }
+});
+[/js]</div>
+
+<p>まず便利なExt.widget,メソッド（これはExt.create(&#8216;widget.useredit&#8217;)に相当します）を使ってビューを作成します。
+次にComponentQueryの力を借りてもう一度フォームへの参照を得ます。
+Ext JS 4の全てのコンポーネントにはdownメソッドがあります。
+downメソッドは全ての子コンポーネントをすばやく検索するために、ComponentQueryセレクターを受け取ります。</p>
+
+<p>グリッドの行をダブルクリックするとウィンドウが表示されます。</p>
+
+<p><img decoding="async" src="http://dev.sencha.com/deploy/ext-4.0.0/docs/loadedForm.png" alt="Loading the form" /></p>
+
+<h2>モデルとストアの作成</h2>
+
+<p>編集フォームもできたので、そろそろユーザーを編集してその変更を保存するあたりを始めましょう。
+始める前にちょっとだけコードを変更します。</p>
+
+<p>AM.view.user.Listコンポーネントが生成される時、インラインで指定したストアが生成されます。
+これはこれでちゃんと動きますが、このストアがアプリケーションのどこからでも参照できて、
+その中のデータを更新できるようにしたいと思います。
+ストアを別ファイル（<code>app/store/Users.js</code>）に出してしまいましょう。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.store.Users&#8217;, {
+    extend: &#8216;Ext.data.Store&#8217;,
+    fields: [&#8216;name&#8217;, &#8216;email&#8217;],
+    data: [
+        {name: &#8216;Ed&#8217;,    email: &#8216;ed@sencha.com&#8217;},
+        {name: &#8216;Tommy&#8217;, email: &#8216;tommy@sencha.com&#8217;}
+    ]
+});
+[/js]</div>
+
+<p>二つだけ小さな変更をします。1つめはUsersコントローラーに対して、ロード時にこのストアを取り込むように指定することです。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.controller.Users&#8217;, {
+    extend: &#8216;Ext.app.Controller&#8217;,
+    stores: [
+        &#8216;Users&#8217;
+    ],
+    &#8230;
+});
+[/js]</div>
+
+<p>次にストアをidで参照するように?app/view/user/List.js を変更します。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.view.user.List&#8217; ,{
+    extend: &#8216;Ext.grid.Panel&#8217;,
+    alias : &#8216;widget.userlist&#8217;,
+
+    //we no longer define the Users store in the `initComponent` method
+    store: &#8216;Users&#8217;,
+
+    &#8230;
+});
+[/js]</div>
+
+<p>Usersコントローラが定義を管理するストアをインクルードすることによって、ストアは自動的にページにロードされ、storeIdが割り当てられます。
+それによりビューから簡単に参照できる（この例だとシンプルに store:’Users&#8217; とコンフィグに書くだけ）ようになります。</p>
+
+<p>今のところストアの中にインラインでフィールドを定義しています。
+これでもちゃんと動きますが、Ext JS 4にはパワフルなModelクラスがあり、ユーザー情報を編集する時にはアドバンテージをもらたします。
+このセクションの最後に、ストアをapp/model/User.jsに配置されるモデルを使うようにリファクタリングします。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.model.User&#8217;, {
+    extend: &#8216;Ext.data.Model&#8217;,
+    fields: [&#8216;name&#8217;, &#8216;email&#8217;]
+});
+[/js]</div>
+
+<p><!-- p.p1 {margin: 0.0px 0.0px 13.0px 0.0px; line-height: 19.0px; font: 13.0px Georgia} span.s1 {letter-spacing: 0.0px} -->モデルを定義するのはこれだけ、フィールドをインラインで定義せずに、モデルを参照するようにストアを変更します。それにコントローラーにもモデルを参照させます。</p>
+
+<div>[js]
+//the Users controller will make sure that the User model is included on the page and available to our app
+Ext.define(&#8216;AM.controller.Users&#8217;, {
+    extend: &#8216;Ext.app.Controller&#8217;,
+    stores: [&#8216;Users&#8217;],
+    models: [&#8216;User&#8217;],
+    &#8230;
+});
+[/js]</div>
+
+<div>[js]
+// we now reference the Model instead of defining fields inline
+Ext.define(&#8216;AM.store.Users&#8217;, {
+    extend: &#8216;Ext.data.Store&#8217;,
+    model: &#8216;User&#8217;,
+
+    data: [
+        {name: &#8216;Ed&#8217;,    email: &#8216;ed@sencha.com&#8217;},
+        {name: &#8216;Tommy&#8217;, email: &#8216;tommy@sencha.com&#8217;}
+    ]
+});
+[/js]</div>
+
+<p>このリファクタリングによって次のセクションが簡単になりますが、アプリケーションの現在の振る舞いには影響はありません。
+ページをリロードして行をダブルクリックすると予想通りユーザー編集ウィンドウがまだ表示されます。ここらで編集機能を終わります。</p>
+
+<p><img decoding="async" src="http://dev.sencha.com/deploy/ext-4.0.0/docs/loadedForm.png" alt="Loading the form" /></p>
+
+<h2>モデルでデータを保存する</h2>
+
+<p>これでユーザーのグリッドにデータをロードして行をダブルクリックしたときには編集ウィンドウが開くようになりましたので、
+ユーザーが施した変更を保存したいと思います。
+前に定義したユーザー編集ウィンドウには（名前とメルアドのフィールドがある）フォームとsaveボタンがありました。
+saveボタンのクリックをリッスンするようにコントローラーのinitメソッドを変更しましょう。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.controller.Users&#8217;, {
+    init: function() {
+        this.control({
+            &#8216;viewport &gt; userlist&#8217;: {
+                itemdblclick: this.editUser
+            },
+            &#8216;useredit button[action=save]&#8217;: {
+                click: this.updateUser
+            }
+        });
+    },
+
+    updateUser: function(button) {
+        console.log(&#8216;clicked the Save button&#8217;);
+    }
+});
+[/js]</div>
+
+<p>二つ目のComponentQueryセレクター（今回は &#8216;useredit button[action=save]&#8217;）を追加しました。
+最初のセレクター（&#8217;useredit&#8217;というxtypeを使ってユーザー編集ウィンドウにフォーカスするために定義しました）と同じように動作します。
+次にそのウィンドウにある&#8217;save&#8217;アクションのあるボタンを探します。
+ユーザー編集ウィンドウを定義したときsaveボタンに {action: &#8216;save&#8217;} というコンフィグを設定すると、対象のボタンを特定するのが簡単になります。</p>
+
+<p>これでsaveボタンが押されたときにupdateUserメソッドがコールされます。</p>
+
+<p><img decoding="async" src="http://dev.sencha.com/deploy/ext-4.0.0/docs/saveHandler.png" alt="Seeing the save handler" /></p>
+
+<p>これで、ハンドラーが正しくsaveボタンにアタッチされたことがわかりました、ではupdateUserメソッドに実際のロジックを書いていきます。
+このメソッドでは、フォームからデータを取り出し、それでユーザーのデータを更新し、ユーザーストアに保存する必要があります。
+どのようにするか見てみましょう。</p>
+
+<div>[js]
+updateUser: function(button) {
+    var win    = button.up(&#8216;window&#8217;),
+        form   = win.down(&#8216;form&#8217;),
+        record = form.getRecord(),
+        values = form.getValues();
+
+    record.set(values);
+    win.close();
+}
+[/js]</div>
+
+<p>何が行われているのか解析してみましょう。
+クリックイベントはユーザーがクリックしたボタンへの参照を渡してくれます。
+でも本当に欲しいのはデータやウィンドウ自身を含むフォームへのアクセスです。
+これらを簡単に入手するにはまた、ComponentQueryを使えばいいのです。
+最初に、button.up(&#8216;windows&#8217;) でユーザー編集ウィンドウを取得しています。
+次にwin.down(&#8216;form&#8217;)でフォームを取得しています。</p>
+
+<p>次に、現在フォームにロードされているレコードをとって来て、ユーザがフォームにタイプしたものでアップデートします。
+最後にウィンドウを閉じてフォーカスをグリッドに戻します。次は、名前を&#8217;Ed Spencer&#8217;に変更してsaveボタンをクリックしたときに表示される画面です。</p>
+
+<p><img decoding="async" src="http://dev.sencha.com/deploy/ext-4.0.0/docs/updatedGridRecord.png" alt="The record in the grid has been updated" /></p>
+
+<h3>サーバーに保存する</h3>
+
+<p>とても簡単です。サーバーサイドと連携させて終わりにしよう。今のところ、二つのレコードをストアにハードコーディングしてますが、かわりにAJAXを使って読み込むようにしましょう。</p>
+
+<div>[js]
+Ext.define(&#8216;AM.store.Users&#8217;, {
+    extend: &#8216;Ext.data.Store&#8217;,
+    model: &#8216;AM.model.User&#8217;,
+    autoLoad: true,
+
+    proxy: {
+        type: &#8216;ajax&#8217;,
+        url: &#8216;data/users.json&#8217;,
+        reader: {
+            type: &#8216;json&#8217;,
+            root: &#8216;users&#8217;,
+            successProperty: &#8216;success&#8217;
+        }
+    }
+});
+[/js]</div>
+
+<p>&#8216;data&#8217;プロパティを削除してProxyに変えています。
+プロキシはExt JS 4のストアやモデルのデータを読み書きする方法です。
+AJAX、JSON-P、HTML5のローカルストレージなどのプロキシがあります。
+ここでは、data/users.jsonからデータをロードするように設定したシンプルなAJAXプロキシを使ってます。</p>
+
+<p>次にreaderを設定しています。
+readerの役割はストアが理解できるフォーマットにサーバーレスポンスをデコードすることです。
+この例では?JSON reader を使用って、root と successProperty コンフィグを指定しました
+（コンフィグに関する詳しい情報については、Json Readerのドキュメントを見てください)。
+最後に、data/users.jsonファイルを作りその中に前のデータをペーストします。</p>
+
+<div>[js]
+{
+    success: true,
+    users: [
+        {id: 1, name: &#8216;Ed&#8217;,    email: &#8216;ed@sencha.com&#8217;},
+        {id: 2, name: &#8216;Tommy&#8217;, email: &#8216;tommy@sencha.com&#8217;}
+    ]
+}
+[/js]</div>
+
+<p>他の修正点はautoLoadをtrueに設定していることです、これはストアがデータを直ちにデータをロードするようにプロキシに依頼することを意味します。
+ページをリフレッシュすると以前と同じ結果が表示されますが、アプリケーションにデータがハードコーディングされていません。</p>
+
+<p>最後にすることは変更をサーバーに返すことです。
+このサンプルではサーバーサードの静的なJSONファイルを使っているだけなので、データベースの変更を見ることはできませんが、
+少なくとも全てが正しく接続されているか確認することはできます。
+最初に違うurlにアップデートを送り返すようにプロキシをちょっと変更します。</p>
+
+<div>[js]
+proxy: {
+    type: &#8216;ajax&#8217;,
+    api: {
+        read: &#8216;data/users.json&#8217;,
+        update: &#8216;data/updateUsers.json&#8217;
+    },
+    reader: {
+        type: &#8216;json&#8217;,
+        root: &#8216;users&#8217;,
+        successProperty: &#8216;success&#8217;
+    }
+}
+[/js]</div>
+
+<p>これまで通りusers.jsonからデータを読み込んでいますが、更新はupdateUsers.jsonに送られます。
+ここではダミーレスポンスを返ってくるだけですが、動作確認はできます。
+このupdateUsers.jsonファイルは{success:true}と書かれているだけです。
+次の変更点は、編集後にストアに対して同期されたと伝えることです。
+そのためにupdateUserメソッドにもう1行追加します。</p>
+
+<div>[js]
+updateUser: function(button) {
+    var win    = button.up(&#8216;window&#8217;),
+        form   = win.down(&#8216;form&#8217;),
+        record = form.getRecord(),
+        values = form.getValues();
+
+    record.set(values);
+    win.close();
+    this.getUsersStore().sync();
+}
+[/js]</div>
+
+<p>これで、すべてのサンプルを実行しちゃんと動くことを確認しました。
+行を編集しsaveボタンをクリックしてリクエストが正しくupdateUser.jsonに送られていることを確認します。</p>
+
+<p><img decoding="async" src="http://dev.sencha.com/deploy/ext-4.0.0/docs/postUpdatesToServer.png" alt="The record in the grid has been updated" /></p>
+
+<h2>デプロイメント</h2>
+
+<p>新たに導入されたSencha SDK Toolsで、Ext JS4アプリケーションの展開もこれまで以上に簡単になります。
+このツールで、JSB3(JSBuilderファイル形式)形式で、すべての依存関係のマニュフェストを生成して、
+必要な部分だけの最小限のビルドを数分以内に作成します。</p>
+
+<p>操作の詳細については、<a href="http://dev.sencha.com/deploy/ext-4.0.0/docs/guide/getting_started.html">Getting Started</a> を参照してください。</p>
+
+<h2>Next Steps</h2>
+
+<p>私たちはUserデータを管理して、更新をサーバに送り返す、非常に簡単なアプリケーションを作りました。
+私たちは、簡単な状態で始めて、それをよりきれいで組織化されるように徐々にコードをリファクタリングしました。
+この時点で、スパゲッティコードを作らないで、多くの機能を追加することは簡単です。
+Ext JS 4 SDKをダウンロードすると、examples/app/simple folder にこのアプリケーションの完全なソースコードがあります。</p>
+
+<p>次のガイドでは、アプリケーションのコードをより小さくし、保守しやすくすることができる、Controllerの高度な使い方やパターンを紹介します。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/112/feed</wfw:commentRss>
+			<slash:comments>9</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>

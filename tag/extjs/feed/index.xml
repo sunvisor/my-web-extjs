@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Ext JS &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/extjs/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Thu, 20 Sep 2012 22:24:34 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Sencha Cmd がやってきた</title>
+		<link>/589</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Thu, 20 Sep 2012 12:21:03 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Sencha Touch]]></category>
+		<guid isPermaLink="false">/?p=589</guid>
+
+					<description><![CDATA[Sencha Cmd V3 のbetaが本日リリースされました。 以前からあった、Sencha SDK Toolkit (又の名をSencha Command) がリニューアルしたものです。 これは、内部的にはかなりのリ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Sencha Cmd V3 のbetaが本日リリースされました。</p>
+
+<p>以前からあった、Sencha SDK Toolkit (又の名をSencha Command) がリニューアルしたものです。
+これは、内部的にはかなりのリニューアルがあったようで、その動作環境がJavaになったのだそうです。</p>
+
+<p>まず、Sencha Touch のプロダクトしかサポートしていなかった、アプリケーションのジェネレートが、
+Ext JS でもできるようになりました。
+また、デプロイ関連では、前のバージョンでは、Phantom JSを使って使われているクラスを判断していたのを、
+ソースコードの中を見て判断するようになったようです。
+(Sencha Cmdのプロダクトの中を見てみると、まだPhantom.jsが入っているんで、使ってはいるみたいですねぇ)</p>
+
+<p>これまで、結構必要ファイルに漏れがあったので、こんどのものには期待したいところです。
+漏れがあったのは、僕自身のrequiresなどの設定が悪かったせいかもしれませんが、
+いろいろ試したけどだめだったんすよねぇ〜</p>
+
+<p>とまれ、Sencha 社内でも大評判だというこのツールに期待大です。
+<span id="more-589"></span></p>
+
+<p>なお、最新の機能は Ext JS に対応していますが、
+Sencha Touch には未対応なようです。
+後のバージョンではサポートするよというようなことが書いてありました。</p>
+
+<p>そうそう、この情報の元ネタのブログは
+<a href="http://www.sencha.com/blog/all-new-sencha-cmd/">こちら</a>、
+そして、速攻翻訳が
+<a href="http://www.xenophy.com/javascript/3653">こちら</a>
+になります。
+ダウンロード先も書いてあります。</p>
+
+<p>今回はドキュメントも充実しています。
+Ext JS 4.1 のAPIドキュメントのガイドに沢山の記事があります。</p>
+
+<p><a href="http://docs.sencha.com/ext-js/4-1/#!/guide/command">http://docs.sencha.com/ext-js/4-1/#!/guide/command</a></p>
+
+<p>英文なので、僕も全部は読めていませんが、これを一通り読めば良い感じに使えるようになるんじゃないでしょうか。</p>
+
+<h2>必要条件</h2>
+
+<ol>
+<li>Java Run-time</li>
+<li>Compass</li>
+<li>Sencha Cmd</li>
+<li>Ext JS は 4.1.1a または 4.1.2a が必要。無印の4.1.1や4.1.2はだめ。</li>
+</ol>
+
+<p>僕は、当日早速落としたSencha Cmdで試していて、
+全然うまく動かずに泣いていたのですが、
+その日のうちに、バグフィックスのアップデートがされていて、
+それを適用したら直りました。</p>
+
+<p>また、Sencha SDK Toolkit をインストール済みの場合は、
+コマンド名が同じSenchaのため、.profile などを編集して、
+SDK Toolkit が設定したPATHをコメントアウトするなどの対策が必要です。</p>
+
+<h2>つかってみるべ</h2>
+
+<p>インストール後に、</p>
+
+<pre><code>$ sencha
+</code></pre>
+
+<p>で、</p>
+
+<pre><code>Sencha Cmd v3.0.0.141
+
+OPTIONS
+  * --debug, -d - Sets log level to higher verbosity
+  * --plain, -p - enables plain logging output (no highlighting)
+  * --quiet, -q - Sets log level to warnings and errors only
+  * --sdk-path, -s - sets the path to the target framework
+
+CATEGORIES
+  * compile - Compile sources to produce concatenated output and metadata
+  * generate - Generate code like models and controllers or raw templates
+  * theme - Builds a set of theme images from a given html page
+  * app - Perform various application build processes
+  * fs - A set of useful utility actions to work with files.
+  * package - Packages a Sencha Touch application for native app stores
+  * manifest - Extract class metadata
+
+COMMANDS
+  * ant - Invoke Ant with helpful properties back to Sencha Command
+  * build - Builds a project from a JSB3 file.
+  * config - Loads a config file or sets a configuration property
+  * help - Get help on using Sencha Command
+</code></pre>
+
+<p>こんな感じで表示されたらOKです。</p>
+
+<p>で、最初にプロダクトを作ってみます。</p>
+
+<pre><code>$ sencha -sdk ~/Downloads/ExtJS/ext-4.1.1a generate app MyApp ~/devsites/cmd_test/public_html
+</code></pre>
+
+<p>と実行してみました。</p>
+
+<ul>
+<li>-sdk の後はExt JSのディレクトリ。sdkのディレクトリをカレントディレクトリとして実行したら省略可能。</li>
+<li>generate で、アプリケーションのスカッフォルドを生成。</li>
+<li>app の次にアプリケーションのネームスペースと、生成するディレクトリを指定。</li>
+</ul>
+
+<p>コンソールに [INFO] &#8230;. と表示され、完了したら、
+そのディレクトリにアプリケーションの枠組みができあがりました。</p>
+
+<pre><code>  ▾ public_html/
+    ▾ app/
+      ▾ controller/
+          Main.js
+      ▾ view/
+          Main.js
+          Viewport.js
+        app.js
+    ▸ ext/
+    ▸ resources/
+      app.json
+      bootstrap.js
+      index.html
+</code></pre>
+
+<p>index.html の中身は次のとおり</p>
+
+<pre><code>&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;MyApp&lt;/title&gt;
+    &lt;link rel="stylesheet" href="resources/css/default/app.css"&gt;
+    &lt;!-- &lt;x-compile&gt; --&gt;
+        &lt;!-- &lt;x-bootstrap&gt; --&gt;
+            &lt;script src="ext/ext-debug.js"&gt;&lt;/script&gt;
+            &lt;script src="bootstrap.js"&gt;&lt;/script&gt;
+        &lt;!-- &lt;/x-bootstrap&gt; --&gt;
+        &lt;script src="app/app.js"&gt;&lt;/script&gt;
+    &lt;!-- &lt;/x-compile&gt; --&gt;
+&lt;/head&gt;
+&lt;body&gt;&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>bootstrap.js の中身は</p>
+
+<pre><code>Ext.Loader.addClassPathMappings({
+  "Ext.draw.engine.ImageExporter": "ext/src/draw/engine/ImageExporter.js",
+  "Ext.layout.component.Auto": "ext/src/layout/component/Auto.js",
+  "Ext.grid.property.Store": "ext/src/grid/property/Store.js",
+  "Ext.layout.container.Box": "ext/src/layout/container/Box.js",
+  "Ext.direct.JsonProvider": "ext/src/direct/JsonProvider.js",
+  :
+  :
+</code></pre>
+
+<p>な感じです。</p>
+
+<p>app.json はコメントが沢山入っていますが、はずすと次の内容です。</p>
+
+<pre><code>{
+    "name": "MyApp",
+
+    "js": [
+        {
+            "path": "ext/ext-all.js"
+        },
+        {
+            "path": "app/app.js",
+            "update": "delta"
+        }
+    ],
+
+    "css": [
+        {
+            "path": "resources/css/default/app.css",
+            "update": "delta"
+        }
+    ],
+
+    "appCache": {
+        "cache": [
+            "index.html"
+        ],
+        "network": [
+            "*"
+        ],
+        "fallback": []
+    },
+
+    "extras": [
+        "resources/images",
+        "resources/icons",
+        "resources/loading"
+    ],
+
+    "archivePath": "archive",
+
+    "buildPaths": {
+        "testing": "build/testing",
+        "production": "build/production",
+        "package": "build/package",
+        "native": "build/native"
+    },
+
+    "buildOptions": {
+        "product": "touch",
+        "minVersion": 3,
+        "debug": false,
+        "logger": "no"
+    },
+
+    "id": "8b895996-e12d-44d0-ad5d-579508c94e6d"
+}
+</code></pre>
+
+<p>僕としては、最も気になるのは、デプロイの時にちゃんと使えるのかな？
+というところです。
+ブログの文章では、最終的にデプロイをSencha Cmdでやりたい場合は、
+開始からSencha Cmdでジェネレートした方がいいような感じもしましたが、
+既存のプロジェクトのデプロイも含めて、いろいろ実験したいと思います。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

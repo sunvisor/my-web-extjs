@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	ExtJS PerfectDay #006 講義メモ へのコメント	</title>
+	<atom:link href="/318/feed" rel="self" type="application/rss+xml" />
+	<link>/318</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Sun, 29 Mar 2015 10:17:19 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>
+		Johne197 より		</title>
+		<link>/318#comment-186783</link>
+
+		<dc:creator><![CDATA[Johne197]]></dc:creator>
+		<pubDate>Sun, 29 Mar 2015 10:17:19 +0000</pubDate>
+		<guid isPermaLink="false">/?p=318#comment-186783</guid>
+
+					<description><![CDATA[&lt;p&gt;Your style is really unique compared to other folks I&#039;ve read stuff from. cbgadgdgdadg&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>Your style is really unique compared to other folks I&#8217;ve read stuff from. cbgadgdgdadg</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		oicawa より		</title>
+		<link>/318#comment-34</link>
+
+		<dc:creator><![CDATA[oicawa]]></dc:creator>
+		<pubDate>Thu, 22 Sep 2011 01:48:59 +0000</pubDate>
+		<guid isPermaLink="false">/?p=318#comment-34</guid>
+
+					<description><![CDATA[&lt;p&gt;&lt;a href=&quot;/318#comment-33&quot;&gt;sunvisor&lt;/a&gt; への返信。&lt;/p&gt;
+
+&lt;p&gt;回答ありがとうございました。
+ちなみに、昨夜３ヶ月間ほど解決しなかった問題が、こちらの記事の情報から派生した調査で解決しました！
+感謝です！&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p><a href="/318#comment-33">sunvisor</a> への返信。</p>
+
+<p>回答ありがとうございました。
+ちなみに、昨夜３ヶ月間ほど解決しなかった問題が、こちらの記事の情報から派生した調査で解決しました！
+感謝です！</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		sunvisor より		</title>
+		<link>/318#comment-33</link>
+
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 21 Sep 2011 20:47:10 +0000</pubDate>
+		<guid isPermaLink="false">/?p=318#comment-33</guid>
+
+					<description><![CDATA[&lt;p&gt;&lt;a href=&quot;/318#comment-32&quot;&gt;oicawa&lt;/a&gt; への返信。&lt;/p&gt;
+
+&lt;p&gt;そうです。extend指定が抜けてます。(^^;&lt;/p&gt;
+
+&lt;p&gt;なぐりメモをあとで整形した際に追加し忘れました。僕の責任です。m(_ _)m
+ソース直しておきました。&lt;/p&gt;
+
+&lt;p&gt;あと、この記事の時点と現在で一部ExtJSの仕様に変更があることがありますので、
+お気をつけください。&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p><a href="/318#comment-32">oicawa</a> への返信。</p>
+
+<p>そうです。extend指定が抜けてます。(^^;</p>
+
+<p>なぐりメモをあとで整形した際に追加し忘れました。僕の責任です。m(_ _)m
+ソース直しておきました。</p>
+
+<p>あと、この記事の時点と現在で一部ExtJSの仕様に変更があることがありますので、
+お気をつけください。</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		oicawa より		</title>
+		<link>/318#comment-32</link>
+
+		<dc:creator><![CDATA[oicawa]]></dc:creator>
+		<pubDate>Wed, 21 Sep 2011 13:19:13 +0000</pubDate>
+		<guid isPermaLink="false">/?p=318#comment-32</guid>
+
+					<description><![CDATA[&lt;p&gt;一つ質問させてください。
+「MVCアプリケーションｰアプリケーションデザイン（クラス設計）」セクションの「app/controller/controler.js」で、基底コントローラクラスを作ると記載されていますが、configオプションでextendが指定されていません。
+これ、Ext.app.Controllerを継承させるんですよね？&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>一つ質問させてください。
+「MVCアプリケーションｰアプリケーションデザイン（クラス設計）」セクションの「app/controller/controler.js」で、基底コントローラクラスを作ると記載されていますが、configオプションでextendが指定されていません。
+これ、Ext.app.Controllerを継承させるんですよね？</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		oicawa より		</title>
+		<link>/318#comment-31</link>
+
+		<dc:creator><![CDATA[oicawa]]></dc:creator>
+		<pubDate>Wed, 21 Sep 2011 00:02:48 +0000</pubDate>
+		<guid isPermaLink="false">/?p=318#comment-31</guid>
+
+					<description><![CDATA[&lt;p&gt;twitter携帯からこのページの紹介を確認し、我慢できずに仕事前に読ませて頂きました。
+ありがとうございます、「Ext.Loaderによる本格スタブ開発」「クラスシステム ｰ uses・requires」「MVCアプリケーションｰアプリケーションデザイン（クラス設計）」のセクション、かなり参考になりそうです。
+今晩、時間があったら早速いろいろ試してみます。&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>twitter携帯からこのページの紹介を確認し、我慢できずに仕事前に読ませて頂きました。
+ありがとうございます、「Ext.Loaderによる本格スタブ開発」「クラスシステム ｰ uses・requires」「MVCアプリケーションｰアプリケーションデザイン（クラス設計）」のセクション、かなり参考になりそうです。
+今晩、時間があったら早速いろいろ試してみます。</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

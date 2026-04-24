@@ -1,0 +1,344 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Jasmine &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/jasmine/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Wed, 25 Jan 2012 04:48:20 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Jasmineでのユニットテスト</title>
+		<link>/447</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 25 Jan 2012 00:57:08 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Jasmine]]></category>
+		<guid isPermaLink="false">/?p=447</guid>
+
+					<description><![CDATA[本稿は、Sencha公式ドキュメントの Unit Testing with Jasmine の翻訳です。 I. 導入 このチュートリアルでは既存のExtアプリケーションを取り上げ、ユニットテストするJasmineアサーシ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>本稿は、Sencha公式ドキュメントの
+<a href="http://docs.sencha.com/ext-js/4-0/#!/guide/testing">Unit Testing with Jasmine</a>
+の翻訳です。
+<span id="more-447"></span></p>
+
+<h2>I. 導入</h2>
+
+<p>このチュートリアルでは既存のExtアプリケーションを取り上げ、ユニットテストするJasmineアサーションライブラリを紹介します。
+読者はJavaScript, Ext JS 4, MVCアーキテクチャ及びHTML, CSSの基本及びリソースの使い方について精通している人が対象です。</p>
+
+<p><strong>なぜテストするのか?</strong>
+アプリケーションをテストするには多くの理由があります。
+テストはすべてのユースケースを手動で消し込んでゆくことなくアプリケーションの機能性を検証できます。
+さらに、アプリケーションがリファクタリングやアップデートされる時に、
+テストはそれらの変更がシステムに当たらしバグを呼び込まないように検証することが出来ます。</p>
+
+<h2>II. はじめに</h2>
+
+<p>このチュートリアルではExtJSにバンドルされた ExJSのMVCにバンドルされている&#8221;simple&#8221;というアプリケーションを使います。
+このファイルは (ext)/examples/app/siple にあります。このソースをワークスペースなどにコピーしてください。</p>
+
+<p>次のフォルダを追加してください</p>
+
+<div>[text]
+&lt;simple dir&gt;/app-test
+&lt;simple dir&gt;/app-test/specs
+[/text]</div>
+
+<p>Jasmineのスタンドアロンライブラリをダウンロードしてapp-testフォルダーに展開します。</p>
+
+<p>次のファイルを作成します(現在は空のままでいいです、次の段階で中身を書きます)</p>
+
+<div>[text]
+&lt;simple dir&gt;/app-test.js
+&lt;simple dir&gt;/run-tests.html
+[/text]</div>
+
+<p><strong>注</strong>:
+これらのファイル名は任意です。
+どんな名前をつけてもらっても結構です。
+名前はそれが何かを簡単に示しています。
+app-test.jsファイルは本質的にapp.jsのテスト用で、run-tests.htmlは単なるブートストラップです。</p>
+
+<p>プロジェクトは現在、次のような状態でしょう。</p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/testing/folder.jpg" alt="fig" /></p>
+
+<p>ファイルとフォルダーの設定が完了したので、テストの実行環境を作ります。
+それはWebページで、表示したときにテストが実行され結果が報告されます。
+runt-test.htmlを開いて次のマークアップを追加します。</p>
+
+<div>[html]
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title id=&quot;page-title&quot;&gt;Tester&lt;/title&gt;
+
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;app-test/lib/jasmine-1.1.0/jasmine.css&quot;&gt;
+
+    &lt;script type=&quot;text/javascript&quot; src=&quot;extjs/ext-debug.js&quot;&gt;&lt;/script&gt;
+
+    &lt;script type=&quot;text/javascript&quot; src=&quot;app-test/lib/jasmine-1.1.0/jasmine.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;app-test/lib/jasmine-1.1.0/jasmine-html.js&quot;&gt;&lt;/script&gt;
+
+    &lt;!&#8211; include specs here &#8211;&gt;
+
+    &lt;!&#8211; test launcher &#8211;&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;app-test.js&quot;&gt;&lt;/script&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+[/html]</div>
+
+<p>いくつかのキーとなる事があります覚えてください。
+Jasmineリソース、Ext JS フレームワークリソース、app-test.jsです。
+これらはテストにインクルードされる必要があります(この順番が重要です)。
+スペック(Jusmineアサーションjsファイル)をapp-testの前に、その後に残りのファイルをインクルードします。</p>
+
+<p>次にapp-test.jsを開き次のコードをその中に書きます。</p>
+
+<div>[js]
+Ext.require(&#8216;Ext.app.Application&#8217;);
+
+var Application = null;
+
+Ext.onReady(function() {
+    Application = Ext.create(&#8216;Ext.app.Application&#8217;, {
+        name: &#8216;AM&#8217;,
+
+        controllers: [
+            &#8216;Users&#8217;
+        ],
+
+        launch: function() {
+            //include the tests in the test.html head
+            jasmine.getEnv().addReporter(new jasmine.TrivialReporter());
+            jasmine.getEnv().execute();
+        }
+    });
+});
+[/js]</div>
+
+<p>上記のコードでは、Applicationインスタンスへのグローバルリファレンスを作成しJasmineアサーションライブラリーを起動します。
+Applicationオブジェクトを直接作成して参照を保存することによって完了し、ドキュメントが準備されたときに
+<a href="http://docs.sencha.com/ext-js/4-0/#!/api/Ext-method-application">Ext.application()</a>
+メソッドをバイパスします。</p>
+
+<p><strong>注</strong>:
+このApplication定義はapp.jsの通常のApplication定義からのコピペではありません。
+このバージョンはコントローラー、ストア、モデルなどをインクルードするだけです。
+そしてlaunchメソッドがコールされるとJamineテストが実行されます。</p>
+
+<p>動作するテスト環境が整いました。
+確認のためrun-tests.htmlファイルをブラウザで開いてみましょう。
+グリーンのバーに、reads 0 specs, 0 failures in 0s と書かれたJasminのUIが表示されます。</p>
+
+<p><img decoding="async" src="http://docs.sencha.com/ext-js/4-0/guides/testing/jasmine-setup.jpg" alt="fig" /></p>
+
+<h2>III. テストを書く</h2>
+
+<p>specsフォルダ(<simple>/app-test/specs)の下に次の名前で二つの空のテキストファイルを作ります。</p>
+
+<div>[text]
+example.js
+users.js
+[/text]</div>
+
+<p>次に<i>run-tests.html</i>ファイルに戻り次の2行を
+<i>&lt;!&#8211; include specs here &#8211;&gt;</i>
+コメントの下に追加します。</p>
+
+<div>[html]
+&lt;!&#8211; include specs here &#8211;&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;app-test/specs/example.js&quot;&gt;&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; src=&quot;app-test/specs/users.js&quot;&gt;&lt;/script&gt;
+[/html]</div>
+
+<p><strong>注</strong>:
+<em>.spec.jsのように二重の拡張子を使う使用例がありますが、それは必須ではありません。
+この方法はファイルがなんのためのファイルかよく表していますが、
+このケースでは</em>.spec.jsといった二重の拡張子のではなくspecsフォルダーを使っています。</p>
+
+<p><tt>specs/example.js</tt>の中を書くことから始めましょう。
+Jasmineの仕様書文法はとても説明的です。
+それぞれのテストスイートにはdescripe関数があり、それぞれのテストは&#8221;it&#8221;関数によって定義されます。</p>
+
+<p>使用例:</p>
+
+<div>[js]
+describe(&quot;Basic Assumptions&quot;, function() {
+
+    it(&quot;has ExtJS4 loaded&quot;, function() {
+        expect(Ext).toBeDefined();
+        expect(Ext.getVersion()).toBeTruthy();
+        expect(Ext.getVersion().major).toEqual(4);
+    });
+
+    it(&quot;has loaded AM code&quot;,function(){
+        expect(AM).toBeDefined();
+    });
+});
+[/js]</div>
+
+<p>テストするには(それぞれの&#8221;it&#8221;ブロックで) expect(someValue).toBe&lt;something&gt;() をコールするだけです。</p>
+
+<p>次はもう少し複雑な例です。
+非同期なストアをテストしコントローラーから結果を取り出します
+(これはグローバルアプリケーションリファレンスが便利に使えるところです)。
+このコードは<tt>specs/users.js</tt>に記述します。</p>
+
+<div>[js]
+describe(&quot;Users&quot;, function() {
+    var store = null, ctlr = null;
+
+    beforeEach(function(){
+        if (!ctlr) {
+            ctlr = Application.getController(&#8216;Users&#8217;);
+        }
+
+        if (!store) {
+            store = ctlr.getStore(&#8216;Users&#8217;);
+        }
+
+        expect(store).toBeTruthy();
+
+        waitsFor(
+            function(){ return !store.isLoading(); },
+            &quot;load never completed&quot;,
+            4000
+        );
+    });
+
+    it(&quot;should have users&quot;,function(){
+        expect(store.getCount()).toBeGreaterThan(1);
+    });
+
+    it(&quot;should open the editor window&quot;, function(){
+        var grid = Ext.ComponentQuery.query(&#8216;userlist&#8217;)[0];
+
+        ctlr.editUser(grid,store.getAt(0));
+
+        var edit = Ext.ComponentQuery.query(&#8216;useredit&#8217;)[0];
+
+        expect(edit).toBeTruthy();
+        if(edit)edit.destroy();
+    });
+
+});
+[/js]</div>
+
+<p>&#8220;beforeEach&#8221;関数に(この関数はそれぞれの&#8221;it&#8221;の前にコールされます)注目してください。
+この関数はそれぞれのテストのステージをセットアップします、この例では:</p>
+
+<ol>
+<li>コントローラーからストアを取得します。</li>
+<li>ストアを取り出すのに成功したこと(nullまたはundefinedではない)を確認します。</li>
+<li>ストアのロードが完了するのを待ちます。&#8221;waitFor&#8221;関数をご覧ください。このストアは生成されると自動的にデータをロードします。これが準備される前にはテストは実行されません。</li>
+</ol>
+
+<h2>IV. 自動化</h2>
+
+<p>これをPhantomJSと結合するとテストをコマンドラインやcronジョブから実行できるようになります。
+PhantomJSディストリビューションで提供されるrun-jasmin.jsは必要なものの全てです。
+出力を必要に応じて変更することが出来ます。
+<a href="http://docs.sencha.com/ext-js/4-0/guides/testing/run-jasmine.js">ここ</a>
+に変更した例があります。</p>
+
+<p>コマンドラインの例:</p>
+
+<div>[bash]
+phantomjs run-jasmine.js http://localhost/app/run-tests.html
+[/bash]</div>
+
+<p>XHRはfile://プロトコルからは作られないので、テストはWebサーバーからする必要があります、</p>
+
+<h3>PhantomJSのセットアップ</h3>
+
+<p>WindowsやMac(Mac portを使わない場合)では
+<a href="http://code.google.com/p/phantomjs/downloads/list">ここ</a>.
+からバイナリをダウンロードする必要があります。
+ダウンロードしたらどこか使いやすい場所に解凍します。
+(例: <profile dir>/Applications/PhantomeJS.)
+次にPATH環境変数にPhantomJSの実行ファイルを含めるように変更します。
+Macの場合ですとターミナルを開いて、.bashrcまたは.profileを編集し次の行を最後に追加します。</p>
+
+<div>[bash]
+export PATH=$PATH:~/Applications/PhantomJS/bin
+[/bash]</div>
+
+<p>Windowsの場合ですと、システムのプロパティを開いて、詳細設定タブを選択し、環境変数ボタンをクリックします。
+ユーザーの環境変数のPATHを探して編集しその終わりに次のものを追加します。</p>
+
+<div>[bash]
+;%USERPROFILE%\Applications\PhantomJS
+[/bash]</div>
+
+<p>ユーザーの環境変数にPATHのエントリーがない場合はそれを追加して次の値を設定します。</p>
+
+<div>[bash]
+%PATH%;%USERPROFILE%\Applications\PhantomJS
+[/bash]</div>
+
+<p>OKボタンをクリックして編集結果を保存しウィンドウを閉じます。</p>
+
+<h3>PhantomJSのセットアップ (別な方法)</h3>
+
+<p>LinuxユーザーやMac portsユーザーの場合は、ターミナルからPhantomJSをインストールする簡単なコマンドがあります。</p>
+
+<ul>
+<li><p>Debian(Ubuntu) ベースのディストリビューション</p>
+
+<div>[bash]
+sudo apt-get install phantomjs.
+[/bash]</div></li>
+<li><p>RedHat(Fedora) ベースのディストリビューション</p></li>
+</ul>
+
+<div>[bash]
+su -c &#8216;yum install phantomjs&#8217;
+[/bash]</div>
+
+<ul>
+<li>Mac ports では</li>
+</ul>
+
+<div>[bash]
+sudo port install phantomjs.
+[/bash]</div>
+
+<h3>PhantomJSの確認</h3>
+
+<p>確認するには、ターミナル(またはコマンドプロンプト)ウィンドウを開いて次のようにタイプします。</p>
+
+<div>[bash]
+phantomjs &#8211;version
+[/bash]</div>
+
+<p>なんらかの出力(&#8220;command not found&#8221;以外の)が得られたらPhantomJSは使用可能です。</p>
+
+<p><strong id="ext-gen1411">作者について:</strong>
+<a href="http://jonathangrimes.com/" id="ext-gen1409">Jonathan Grimes</a> (<a href="http://www.facebook.com/jonathan.grimes" id="ext-gen1410">facebook</a>, <a href="http://twitter.com/jsg2021">twitter</a>, <a href="https://plus.google.com/u/0/102578638400305127370/about">google+</a>)
+は、現在オンライン教育の統合プラットフォームを構築している新興企業である
+<a href="http://nextthought.com/">NextThought</a>
+のソフトウェアエンジニアです。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,593 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Ext.draw &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/ext-draw/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Wed, 16 Dec 2015 23:02:23 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Sencha Ext JS で美しい線画を描く Part 2</title>
+		<link>/887</link>
+					<comments>/887#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 16 Dec 2015 23:00:41 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Ext.draw]]></category>
+		<category><![CDATA[ExtJS6]]></category>
+		<guid isPermaLink="false">/?p=887</guid>
+
+					<description><![CDATA[昨日、一つ前の記事を翻訳して公開したところ、タイミングの良いことにその Part 2 が今朝 Sencha 本家の方で公開されました。 連載ですので、一旦手をつけたら翻訳も続けないといけないと思うので、Part 2 も翻 [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>昨日、一つ前の記事を翻訳して公開したところ、タイミングの良いことにその Part 2 が今朝 Sencha 本家の方で公開されました。
+連載ですので、一旦手をつけたら翻訳も続けないといけないと思うので、Part 2 も翻訳しました。(文章部分が少なかったので楽でしたw)</p>
+
+<p>元記事は
+<a href="https://www.sencha.com/blog/creating-beautiful-drawings-using-sencha-ext-js-part-2/">Creating Beautiful Drawings Using Sencha Ext JS – Part 2 | Sencha</a>
+です。</p>
+
+<h2><span id="more-887"></span></h2>
+
+<p>この連載の
+<a href="https://www.sencha.com/blog/creating-beautiful-drawings-using-sencha-extjs-part-1/">Part 1</a>
+(<a href="/877">日本語訳</a>) では、
+スプライトとその属性、属性とコンフィグとの違い、属性の変更の仕方を学びました。
+サンプルに施した全ての変更は即座に反映されました。
+この記事では、スプライトをアニメートさせてみましょう。</p>
+
+<h3>Sprite のアニメート</h3>
+
+<p>Draw パッケージでは、
+スプライトの属性に変更を適用するアニメーション モディファイアを使ってスプライトをアニメートできます。</p>
+
+<p>スプライトの
+<a href="https://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.draw.modifier.Animation">アニメーション モディファイア</a>
+には、<code>getAnimation</code> アクセサ—メソッドによってアクセスできます。
+アニメーション モディファイアには、主要な二つのコンフィグがあります。
+<code>duration</code> と <code>easing</code> です。
+では、単純な <code>circle</code> スプライトをアニメートさせましょう。</p>
+
+<div>[js]
+circleSprite.setAnimation({
+    duration: 1000,
+    easing: &#8216;elasticOut&#8217;
+});
+// これで円の半径が自動的にアニメートします
+circleSprite.setAttributes({
+    r: 100
+});
+[/js]</div>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/r0a">fiddleで開く</a></p>
+
+<p><code>elasticOut</code> は、ビルトインの移動モードです。
+<a href="http://examples.sencha.com/extjs/6.0.0/examples/kitchensink/?charts=true#easing-functions">Charts の Kitchen Sink</a>
+ですべてのモードを確認プレビューできます。</p>
+
+<p>また、複数の属性を一度にアニメートできます。
+例えば、元の3つの値を次のように変更してみましょう。</p>
+
+<pre><code>cx: 50,
+cy: 50,
+r: 30
+</code></pre>
+
+<p>移動モードも変更します。</p>
+
+<pre><code>easing: 'bounceOut'
+</code></pre>
+
+<p>では、円の水平方向と垂直方向の中央点を両方ともアニメートさせましょう。</p>
+
+<div>[js]
+circleSprite.setAttributes({
+    cx: 200,
+    cy: 200
+});
+[/js]</div>
+
+<p><style>
+img {
+  max-width: 100%
+}
+</style></p>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/12/draw-pkg-part2-sprite-img1.gif" alt="" title="Sencha Ext JS - Circle Sprite 1" /></p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/r0b">fiddleで開く</a></p>
+
+<p>両方の属性で同じ移動モードと持続時間を設定したので、
+両方の属性が同時にアニメートしましたね。</p>
+
+<p>しかし、属性事に違う持続時間を設定したい場合はどうしたらよいでしょうか？
+アニメーション モディファイアの
+<code>customDurations</code> コンフィグを使うとそれができます。</p>
+
+<div>[js]
+circleSprite.setAnimation({
+    duration: 1000,
+    easing: &#8216;bounceOut&#8217;,
+    customDurations: {
+        cy: 3000
+    }
+});
+[/js]</div>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/12/draw-pkg-part2-sprite-img2.gif" alt="" title="Sencha Ext JS - Circle Sprite 2" /></p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/r0c">fiddleで開く</a></p>
+
+<p>ここでは、垂直方向の中央点 (<code>cy</code>) は、
+他のスプライト属性 (この場合では水平方向の中央点、<code>cx</code>)
+よりも、3倍遅くアニメートします。</p>
+
+<p>同様に、移動モードも特定の属性に設定できます。</p>
+
+<div>[js]
+customEasings: {
+    cx: &#8216;easeOut&#8217;
+}
+[/js]</div>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/12/draw-pkg-part2-sprite-img3.gif" alt="" title="Sencha Ext JS - Circle Sprite 3" /></p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/r0d">fiddleで開く</a></p>
+
+<p>重要な点は、アニメーションの設定はこのガイドで説明したような単純な数値属性に限ったものではありません。
+色や配列や文字列でもアニメートできます。</p>
+
+<p>例として、色と配列を変更してみましょう。</p>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/12/draw-pkg-part2-sprite-img4.gif" alt="" title="Sencha Ext JS - Circle Sprite 4" /></p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/ra0">fiddleで開く</a></p>
+
+<h3>まとめ</h3>
+
+<p>ご覧の通り、スプライトのアニメーションは、めっちゃ簡単でフレキシブルです。
+アニメーション API には美しく現実的なアニメーションを作成するに充分なパワーがあり、そしてそれはすぐに使えます。</p>
+
+<p>楽しんで実験してみてください！</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/887/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Sencha Ext JS で美しい線画を描く Part 1</title>
+		<link>/877</link>
+					<comments>/877#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 16 Dec 2015 10:36:36 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Ext.draw]]></category>
+		<category><![CDATA[ExtJS6]]></category>
+		<guid isPermaLink="false">/?p=877</guid>
+
+					<description><![CDATA[先日、急に熱が出まして、入院する羽目になってしまいました。 今もまだ病室の中なんですが、もうじき退院できそうです。 体調が良くなってきたので、Sencha ブログの翻訳をしてみました。 Sencha 公式ブログの Cre [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>先日、急に熱が出まして、入院する羽目になってしまいました。
+今もまだ病室の中なんですが、もうじき退院できそうです。
+体調が良くなってきたので、Sencha ブログの翻訳をしてみました。</p>
+
+<p>Sencha 公式ブログの
+<a href="https://www.sencha.com/blog/creating-beautiful-drawings-using-sencha-extjs-part-1/">Creating Beautiful Drawings Using Sencha Ext JS – Part 1 | Sencha</a>
+の翻訳です。
+Draw パッケージは、API ドキュメント以外になかなかいい資料がないので、この連載は楽しみです。
+僕としては、この回にもうすでに目からウロコな話がありました。</p>
+
+<h2><span id="more-877"></span></h2>
+
+<p>皆さんの多くは、
+<a href="https://www.sencha.com/products/extjs/">Sencha Ext JS</a>
+の Sencha Charts パッケージのことを既にご存じでしょう。
+これにより
+<a href="http://examples.sencha.com/extjs/6.0.0/examples/kitchensink/?charts=true#column-stacked-3d">3D カラム チャート</a>
+や
+<a href="http://examples.sencha.com/extjs/6.0.0/examples/kitchensink/?charts=true#pie-3d">3D パイ チャート</a>
+のような素晴らしい視覚化を素早く作る事ができます。
+時には、あなたのアプリケーションではチャートでは足りず、
+フローチャート、シートマップ、回路図や、インタラクティブなアニメーションが必要なこともあるでしょう。</p>
+
+<p><style>
+img {
+  max-width: 100%
+}
+</style></p>
+
+<p><img decoding="async" src="//cdn.sencha.com/img/20150813-draw-pkg-part1-img1.png" alt="" title="Creating Beautiful Drawings with Sencha Ext JS" /></p>
+
+<p>もちろん、HTML5 の Canvas や SVG を直接使うこともできますが、
+サポートされないプラットフォームでの問題がよく発生します。
+クロスブラウザーの問題に対処するには、標準ディスプレイと Retina ディスプレイの違い、アニメーションなどがあり、簡単な仕事ではありません。
+複数の描画方法をサポートし、使いやすく抽象化を提供している
+サードパーティのライブラリを使うこともできますが、
+すぐに、これらのライブラリ間の統合に対処するために時間を割かねばならないことがわかるでしょう。</p>
+
+<p>Ext JS の Charts には、描画パッケージが同梱されていて、
+それは、グラフィックを描画するために特定のブラウザーではどの技術を使うのかに頭を悩ませることなく、任意のグラフィックやアニメーションを作成できます。</p>
+
+<p>描画パッケージでは、ブラウザーによって最もふさわしい描画方法
+(Canvas、SVG、VML) が自動的に選択されます。
+舞台裏では、Draw パッケージは HTML5 Canvas に準じた API モデルになっています。
+SVG や VML のエンジンが必要な時には、Canvas API は、自動的に それらにに変換されて呼び出します。</p>
+
+<p>この連載記事では、Sencha Chart に同梱される Draw パッケージのいくつかの機能と、それらがどのように実装され、クロスブラウザーの互換性の問題を心配せずにいられる理由を概観します。</p>
+
+<h3>シンプルな Sprite</h3>
+
+<p>スプライト (Sprite) は、描画するグラフィックオブジェクトを表す基本的なプリミティブです。
+複数のスプライトを組み合わせることで、目的のイメージを作成することができます。
+Draw パッケージには、多くの種類のスプライトがあります。
+それぞれのスプライトは、スプライトの見た目を定義する多くのアトリビュートがあります。
+例えば、次は <em>rect</em> スプライトの例です。</p>
+
+<div>[js]
+{
+    xtype: &#8216;draw&#8217;,
+    width: 250,
+    height: 250,
+    sprites: [{
+        type: &#8216;rect&#8217;,
+        x: 50,
+        y: 50,
+        width: 100,
+        height: 100,
+        lineWidth: 4,
+        strokeStyle: &#8216;green&#8217;,
+        fillStyle: &#8216;yellow&#8217;
+    }]
+}
+[/js]</div>
+
+<p><img decoding="async" src="//cdn.sencha.com/img/20150813-draw-pkg-part1-img2.png" alt="" title="Sprite" /></p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/r1g">Fiddle で開く</a></p>
+
+<p><code>type: 'rect'</code> は、スプライトの
+<a href="https://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.Class-cfg-alias">alias</a>
+に一致し、
+残りのコンフィグ プロパティはスプライトの<em>属性</em>です。
+重要なのは、スプライトの<em>属性(attribute)</em>は、<em>コンフィグ(config)</em> では<strong>ない</strong>ということです。
+属性とコンフィグの違いについては、この連載の後の方でより詳しくせつめいします。
+今のところは、それらの処理や使われ方が違うとだけ言っておきます。</p>
+
+<h3>Draw コンテナー</h3>
+
+<p>前のサンプルでの <em>draw</em> という xtype は、
+<a href="http://docs.sencha.com/extjs/5.0.0/apidocs/#!/api/Ext.draw.Container">Ext.draw.Container</a>
+クラスに対応します。</p>
+
+<p>スプライトを描画する描画サーフェース
+(
+<a href="http://docs.sencha.com/extjs/5.0.0/apidocs/#!/api/Ext.draw.Surface">Ext.draw.Surface</a>)
+のインスタンス)
+のコンテナーです。</p>
+
+<p><em>rect</em> スプライトを追加するために、Draw コンテナーの <em>items</em> コンフィグではなく、<em>sprites</em> コンフィグを使っている点に注目してください。
+これは、Draw コンテナーの <em>items</em> は<em>サーフェース</em>だからです。
+そして、<em>sprites</em> コンフィグに定義されたスプライトは、デフォルトの <em>main</em> サーフェースに追加されます。
+スプライトの <em>surface</em> コンフィグ (そう、これは属性ではありません) で、スプライトをデフォルト以外のスプライトに追加できます。
+例えば、</p>
+
+<div>[js]
+{
+    type: &#8216;rect&#8217;,
+    surface: &#8216;privateSurface&#8217;,
+    x: 50,
+    y: 50,
+    width: 100,
+    height: 100,
+    &#8230;
+}
+[/js]</div>
+
+<p>上記の例では、<em>privateSurface</em> という ID のサーフェースを生成して、rect スプライトを、デフォルトの‘main’サーフェースではなく、そこに追加します。
+<em>surface</em> コンフィグはサーフェースの実際のインスタンスであってもかまいません。
+その場合は、Draw コンテナーがインスタンス化された後に、<em>setSprites</em> メソッドでスプライトを追加するのと同じになります。</p>
+
+<p><em>setSprites</em> は、初期化時の <em>sprites</em> コンフィグや、前に呼び出された <em>setSprites</em> で既に追加されているスプライトを削除しないことに注意してください。
+単に新しいスプライトを追加するだけです。
+This is because the
+これは、<em>sprites</em> コンフィグは宣言的に使われているからです。
+スプライトを操作する必要がある場合には、サーフェースのメソッドで操作可能です。</p>
+
+<h3>複数のサーフェースを使う</h3>
+
+<p>複数のサーフェースを持つ機能は、パフォーマンス (とバッテリー寿命) の面で便利です。
+それは、スプライトの属性を変更すると、サーフェース全体
+(及びその中のスプライト)
+の再描画をもたらすからです。
+ですから、スプライトを複数サーフェースにグループ化するのはいい手です。そうすれば、グループのスプライトを変更しても、対象のサーフェースだけが再描画されます。</p>
+
+<p>Sencha Chart パッケージは、Draw パッケージ上に構築されていて、この機能を非常に良く使っています。
+チャートで
+<a href="http://examples.sencha.com/extjs/6.0.0/examples/kitchensink/?charts=true#line-crosszoom">cross zoom</a>
+といったインタラクションを使うと、チャートのドラッグして選択した時に、ズームの矩形を描画するために使うサーフェースだけが再描画され、シリーズやアクシスのサーフェースは再描画されません。</p>
+
+<p>上記のサンプルをより理解しやすく命令的に書くと、次のように書き換えることができます。</p>
+
+<div>[js]
+var drawContainer = new Ext.draw.Container({
+    renderTo: document.body,
+    width: 250,
+    height: 250
+});
+ 
+var mainSurface = drawContainer.getSurface(); // &#8212; getSurface(&#8216;main&#8217;)
+ 
+mainSurface.add({ // サーフェースにスプライトを追加
+    type: &#8216;rect&#8217;,
+    x: 50,
+    y: 50,
+    width: 100,
+    height: 100,
+    lineWidth: 4,
+    strokeStyle: &#8216;green&#8217;,
+    fillStyle: &#8216;yellow&#8217;
+});
+ 
+mainSurface.renderFrame(); // &#8212; サーフェース内のスプライトを描画
+[/js]</div>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/r1h">Fiddleで開く</a></p>
+
+<h3>スプライトの属性を変更する</h3>
+
+<p>スプライトの属性を変更する方法を見ていきましょう。
+例として、<em>rect</em> スプライトの幅を拡げて長方形にしてみましょう。</p>
+
+<p>まず、スプライトの参照を取得する必要があります。
+一つの方法は、サーフェースに属するスプライト全ての配列である、サーフェースの <em>items</em> コンフィグから取得できます。</p>
+
+<div>[js]
+var items = mainSurface.getItems(),
+    rectSprite = items[0];
+[/js]</div>
+
+<p>サーフェースの
+<a href="https://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.draw.Surface-method-get">get メソッド</a>
+を使う手もあります。</p>
+
+<div>[js]
+var rectSprite = mainSurface.get(0);
+[/js]</div>
+
+<p>よりよいのは、スプライトに ID を割り当てて、それを使って取り出すこともできます。</p>
+
+<div>[js]
+mainSurface.add({
+    type: &#8216;rect&#8217;,
+    id: &#8216;myRect&#8217;,
+    &#8230;
+});
+ 
+var rectSprite = mainSurface.get(&#8216;myRect&#8217;);
+[/js]</div>
+
+<p>ここでスプライトの幅を変更します。
+次のように行います。</p>
+
+<div>[js]
+rectSprite.setAttributes({
+    width: 150
+});
+// &#8212; スプライトの属性を変更した後は再描画するのを忘れずに
+mainSurface.renderFrame();
+[/js]</div>
+
+<p><code>rectSprite.setWidth(150);</code>
+と書いてはいけないのかと思うかもしれませんが、使えません。なぜなら、<em>width</em> はコンフィグではないからです。</p>
+
+<p><img decoding="async" src="//cdn.sencha.com/img/20150813-draw-pkg-part1-img3.png" alt="" title="Sprite" /></p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/r1j">Fiddleで開く</a></p>
+
+<p>一度に沢山の属性をセットすることもできます。
+それは推奨されると共により効果的です。
+では、線と塗りの色を両方変更してみましょう。</p>
+
+<div>[js]
+
+rectSprite.setAttributes({
+    fillStyle: &#8216;rgba(255, 0, 0, .5)&#8217;,
+    strokeStyle: &#8216;rgb(0, 0, 0)&#8217;
+});
+[/js]</div>
+
+<p>ここでは色を指定するのに、
+[色の名前] colors](http://drafts.csswg.org/css-color-4/#named-colors)
+ではなく、
+CSS に準拠した
+<a href="http://drafts.csswg.org/css-color-4/#rgb-functions">rgb 関数</a>
+を使っています。</p>
+
+<p><img decoding="async" src="//cdn.sencha.com/img/20150813-draw-pkg-part1-img4.png" alt="" title="Sprite" /></p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/r1k">Fiddleで開く</a></p>
+
+<p>他の属性も変更してみて、スプライトがどのようになるかを試してください。どんな属性がサポートされるかについては、
+<a href="https://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.draw.sprite.Rect">Ext JS docs</a>
+を参照してください。</p>
+
+<h3>まとめ</h3>
+
+<p>ご覧のようにスプライトの使い方はコンポーネントの使い方と大きな違いはありません。
+コンポーネントと同じ考え方がスプライトでも使われています。
+HTML を直接扱う代わりに、コンポーネントのようなアプローチで、SVG エレメントや Canvas の API 呼び出しを直接取り扱う時間を節約します。
+単にスプライトを生成して属性を設定すると、Draw パッケージが残りの世話を焼いてくれます。</p>
+
+<p>この連載の次の回では、スプライトのアニメーション、変形、操作について学びます。また独自のスプライトを作成する方法やアプローチについても学びます。
+また、<em>instancing</em> や <em>composites</em> といった、スプライトの特別な機能をカバーします。
+これにより、パフォーマンスを改善できコードの複雑さを解消できます。</p>
+
+<p><img decoding="async" src="//cdn.sencha.com/img/20150813-draw-pkg-part1-img5.gif" alt="" title="Sprite" /></p>
+
+<p>その間、
+Draw パッケージで利用できる、
+<a href="https://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.draw.sprite.Circle"><em>circle</em></a>、
+<a href="https://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.draw.sprite.Line"><em>line</em></a>、
+<a href="https://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.draw.sprite.Text"><em>text</em></a>
+といった違うタイプのスプライトを試してみてください。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/877/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Ext.draw の使用法メモ</title>
+		<link>/436</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 09 Jan 2012 03:49:19 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Ext.draw]]></category>
+		<guid isPermaLink="false">/?p=436</guid>
+
+					<description><![CDATA[Ext.draw.Compornent を使ってあるものを作ってみようと思い立ち、その前に使い方を一通りマスターしようと、サンプルプロジェクトを作ってみました。 ごくごく簡単な、お絵かきのようなものです。 そのサンプルプ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext.draw.Compornent を使ってあるものを作ってみようと思い立ち、その前に使い方を一通りマスターしようと、サンプルプロジェクトを作ってみました。
+ごくごく簡単な、お絵かきのようなものです。
+そのサンプルプロジェクトを作りにあたり、使用法のポイントをメモします。</p>
+
+<p>Senchaのサンプルでは、あらかじめ用意されている画像が表示されるようなものばかりですが、
+僕は、画面上のdraw.Comportnentの上にマウス操作で絵を描くようなものを作りたいので、
+動的にSurfaceにSpriteを追加する方法を調べてみます。
+<span id="more-436"></span></p>
+
+<h2>SurfaceにSpriteを</h2>
+
+<p>Ext.draw.Compornentに図形を描画するには、SurfaceオブジェクトにSpriteを追加します。
+Surfaceオブジェクトのitemsコンフィグを指定すれば、そのSpriteはSufaceオブジェクトに表示されます。</p>
+
+<p>Surfaceが生成された後にSpriteを追加する際には、Spriteオブジェクトを生成する時にsurfaceコンフィグに既存のSurfaceオブジェクトを渡します。
+Ext.draw.Compornent の所有するSurfaceは、surfaceプロパティで取得できます。</p>
+
+<div>[js]
+var someSprite = Ext.create(&#8216;Ext.draw.Sprite&#8217;, {
+    surface: drawCompo.surface,
+    type: &#8216;rect&#8217;,
+    stroke: &#8216;#666&#8217;,
+    &#8216;stroke-width&#8217;: 1,
+    x: 100,
+    y: 50,
+    width: 300,
+    height: 150 
+});
+[/js]</div>
+
+<p>また、Surfaceのaddメソッドを使ことで追加することもできます。
+上記の例は次のようにするのと等価です。</p>
+
+<div>[js]
+var someSprite = drawCompo.surface.add({
+    type: &#8216;rect&#8217;,
+    stroke: &#8216;#666&#8217;,
+    &#8216;stroke-width&#8217;: 1,
+    x: 100,
+    y: 50,
+    width: 300,
+    height: 150 
+});
+[/js]</div>
+
+<h2>Spriteの移動や変形など</h2>
+
+<p>Surfaceに配置したSpriteを移動したり色や形を変更するには、SpriteのsetAttributeメソッドを使います。
+Spriteのコンフィグで指定できることが、ほとんどここで変更できます。</p>
+
+<div>[js]
+me.sprite.setAttributes({
+    width: w,
+    height: h,
+    x: x,
+    y: y
+}, true);
+[/js]</div>
+
+<h2>マウスイベントを拾う</h2>
+
+<p>draw.Compornent のマウスイベントを拾いたいですよね。
+draw.CompornentのgetEl()メソッドでExt.Elementオブジェクトを取得して、そこにリスナーを設定します。
+Ext JS通の人には当たり前の話ですが、最初僕は気づかなかったので書いておきます。
+また、エレメントではなくSurfaceにリスナーを設定する事もできるみたいです。(APIリファレンスに書いてあります)</p>
+
+<p>Ext.Elementのクリックイベントでは、マウスがクリックされた座標位置を取得できます。
+この座標はブラウザの領域全体での位置になるので、draw.Compornent上でのローカル座標に変換するには
+Ext.ElementのgetTop(), getLeft() メソッドでコンポーネントのブラウザ上での座標を取得して変換します。</p>
+
+<div>[js]
+onClick: function(e, t, opt) {
+    var me = this, x, y,
+        el = me.GetDrawCompo().getEl(),
+        xy = e.getXY();
+
+    x = xy[0] &#8211; el.getLeft();
+    y = xy[1] &#8211; el.getTop();
+}
+[/js]</div>
+
+<h2>pathスプライト</h2>
+
+<p>&#8216;rect&#8217;で矩形が秒できたので、次は直線を描画しようと思ったら、&#8217;line&#8217; とかいうSpriteはありませんでした。(´･ω･`)
+あるのは&#8217;path&#8217;というSpriteだけです。</p>
+
+<p>このスプライトではパスのデータを「SVGライクなシンタックスで記述します」とあります。
+ここで、SVGでのパスシンタックスを覚えなければなりません。
+ここではとりあえず直線が引ければいいので、それだけ調べてみます。
+単純な直線を引くためには、M10 10 L10 20 というような形式でパスデータを用意します。</p>
+
+<div>[js]
+someSprite.setAttributes({
+    path: Ext.String.format(&#8216;M{0} {1} L{2} {3}&#8217;, x1, y1, x2, y2)
+}, true);
+[/js]</div>
+
+<p>こんな感じで作れば、直線を引くことができます。</p>
+
+<h2>グループ</h2>
+
+<p>Spriteをグループ化して、グループ全体を操作することができます。
+Spriteをグループに所属させるには、groupコンフィグに所属するグループを(文字列または文字列配列)で指定します。
+生成時ではなくあとでグループに所属させるには、CompositeSpriteオブジェクトのaddメソッドを使います。
+グループのCompositeSpriteは、SurfaceのgetGroup()メソッドで取得します。</p>
+
+<div>[js]
+var hogeGroup = drawCompo.surface.getGroup(&#8216;hoge&#8217;);
+hogeGroup.add(someSprite);
+[/js]</div>
+
+<h2>色指定</h2>
+
+<p>Chromeで作っていて、FireFoxで動かすと色指定がうまく動作しませんでした。
+Ext.menu.ColorPickerで設定した色をそのままSpriteのfillコンフィグなどに設定していたのですが、
+それがよくなかったようです。</p>
+
+<p>ColorPickerのgetValue()メソッドで返ってくる色の値には先頭に#がついていません。
+Chrome(Webkit)のSVGでは色指定に # が付いていなくても色指定されますが、
+ForeFox(Gecko)では # がついてないとだめみたいです。</p>
+
+<p>ですのでSpriteに色指定する際には、先頭に # をつけてから設定してやります。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="ja"
+ xmlns:og="http://opengraphprotocol.org/schema/"
+ xmlns:fb="http://www.facebook.com/2008/fbml">
+<![endif]--><!--[if IE 8]>
+<html class="ie ie8" lang="ja"
+ xmlns:og="http://opengraphprotocol.org/schema/"
+ xmlns:fb="http://www.facebook.com/2008/fbml">
+<![endif]--><!--[if !(IE 7) & !(IE 8)]><!--><html lang="ja" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Ext JS 6 で複数環境に対応する方法 | Sunvisor Lab. Ext JS 別館</title>
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="pingback" href="/xmlrpc.php">
+<!--[if lt IE 9]>
+<script src="https://extjs.sunvisor.net/wp-content/themes/twentytwelve/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Sunvisor Lab. Ext JS 別館 &raquo; フィード" href="/feed">
+<link rel="alternate" type="application/rss+xml" title="Sunvisor Lab. Ext JS 別館 &raquo; コメントフィード" href="/comments/feed">
+<link rel="alternate" type="application/rss+xml" title="Sunvisor Lab. Ext JS 別館 &raquo; Ext JS 6 で複数環境に対応する方法 のコメントのフィード" href="/853/feed">
+<script type="text/javascript">
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"httpsextjs.sunvisor.net\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.1"}};
+/*! This file is auto-generated */
+!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode,e=(p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0),i.toDataURL());return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(p&&p.fillText)switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([129777,127995,8205,129778,127999],[129777,127995,8203,129778,127999])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(e=t.source||{}).concatemoji?c(e.concatemoji):e.wpemoji&&e.twemoji&&(c(e.twemoji),c(e.wpemoji)))}(window,document,window._wpemojiSettings);
+</script>
+<style type="text/css">img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}</style>
+	<link rel="stylesheet" id="wp-block-library-css" href="/wp-includes/css/dist/block-library/style.min.css?ver=6.1" type="text/css" media="all">
+<style id="wp-block-library-theme-inline-css" type="text/css">.wp-block-audio figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-audio figcaption{color:hsla(0,0%,100%,.65)}.wp-block-audio{margin:0 0 1em}.wp-block-code{border:1px solid #ccc;border-radius:4px;font-family:Menlo,Consolas,monaco,monospace;padding:.8em 1em}.wp-block-embed figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-embed figcaption{color:hsla(0,0%,100%,.65)}.wp-block-embed{margin:0 0 1em}.blocks-gallery-caption{color:#555;font-size:13px;text-align:center}.is-dark-theme .blocks-gallery-caption{color:hsla(0,0%,100%,.65)}.wp-block-image figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-image figcaption{color:hsla(0,0%,100%,.65)}.wp-block-image{margin:0 0 1em}.wp-block-pullquote{border-top:4px solid;border-bottom:4px solid;margin-bottom:1.75em;color:currentColor}.wp-block-pullquote__citation,.wp-block-pullquote cite,.wp-block-pullquote footer{color:currentColor;text-transform:uppercase;font-size:.8125em;font-style:normal}.wp-block-quote{border-left:.25em solid;margin:0 0 1.75em;padding-left:1em}.wp-block-quote cite,.wp-block-quote footer{color:currentColor;font-size:.8125em;position:relative;font-style:normal}.wp-block-quote.has-text-align-right{border-left:none;border-right:.25em solid;padding-left:0;padding-right:1em}.wp-block-quote.has-text-align-center{border:none;padding-left:0}.wp-block-quote.is-large,.wp-block-quote.is-style-large,.wp-block-quote.is-style-plain{border:none}.wp-block-search .wp-block-search__label{font-weight:700}.wp-block-search__button{border:1px solid #ccc;padding:.375em .625em}:where(.wp-block-group.has-background){padding:1.25em 2.375em}.wp-block-separator.has-css-opacity{opacity:.4}.wp-block-separator{border:none;border-bottom:2px solid;margin-left:auto;margin-right:auto}.wp-block-separator.has-alpha-channel-opacity{opacity:1}.wp-block-separator:not(.is-style-wide):not(.is-style-dots){width:100px}.wp-block-separator.has-background:not(.is-style-dots){border-bottom:none;height:1px}.wp-block-separator.has-background:not(.is-style-wide):not(.is-style-dots){height:2px}.wp-block-table{margin:"0 0 1em 0"}.wp-block-table thead{border-bottom:3px solid}.wp-block-table tfoot{border-top:3px solid}.wp-block-table td,.wp-block-table th{padding:.5em;border:1px solid;word-break:normal}.wp-block-table figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-table figcaption{color:hsla(0,0%,100%,.65)}.wp-block-video figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-video figcaption{color:hsla(0,0%,100%,.65)}.wp-block-video{margin:0 0 1em}.wp-block-template-part.has-background{padding:1.25em 2.375em;margin-top:0;margin-bottom:0}</style>
+<link rel="stylesheet" id="classic-theme-styles-css" href="/wp-includes/css/classic-themes.min.css?ver=1" type="text/css" media="all">
+<style id="global-styles-inline-css" type="text/css">body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #fff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--blue: #21759b;--wp--preset--color--dark-gray: #444;--wp--preset--color--medium-gray: #9f9f9f;--wp--preset--color--light-gray: #e6e6e6;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--duotone--dark-grayscale: url('#wp-duotone-dark-grayscale');--wp--preset--duotone--grayscale: url('#wp-duotone-grayscale');--wp--preset--duotone--purple-yellow: url('#wp-duotone-purple-yellow');--wp--preset--duotone--blue-red: url('#wp-duotone-blue-red');--wp--preset--duotone--midnight: url('#wp-duotone-midnight');--wp--preset--duotone--magenta-yellow: url('#wp-duotone-magenta-yellow');--wp--preset--duotone--purple-green: url('#wp-duotone-purple-green');--wp--preset--duotone--blue-orange: url('#wp-duotone-blue-orange');--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;}:where(.is-layout-flex){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}</style>
+<link rel="stylesheet" id="twentytwelve-style-css" href="/wp-content/themes/twentytwelve/style.css?ver=6.1" type="text/css" media="all">
+<link rel="stylesheet" id="twentytwelve-block-style-css" href="/wp-content/themes/twentytwelve/css/blocks.css?ver=20181230" type="text/css" media="all">
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='twentytwelve-ie-css' href='https://extjs.sunvisor.net/wp-content/themes/twentytwelve/css/ie.css?ver=20121010' type='text/css' media='all' />
+<![endif]-->
+<script type="text/javascript" src="/wp-includes/js/jquery/jquery.min.js?ver=3.6.1" id="jquery-core-js"></script>
+<script type="text/javascript" src="/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2" id="jquery-migrate-js"></script>
+<link rel="https://api.w.org/" href="/wp-json/">
+<link rel="alternate" type="application/json" href="/wp-json/wp/v2/posts/853">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="/wp-includes/wlwmanifest.xml">
+<meta name="generator" content="WordPress 6.1">
+<link rel="canonical" href="/853">
+<link rel="shortlink" href="/?p=853">
+<link rel="alternate" type="application/json+oembed" href="/wp-json/oembed/1.0/embed?url=https%3A%2F%2F%2F853">
+<link rel="alternate" type="text/xml+oembed" href="/wp-json/oembed/1.0/embed?url=https%3A%2F%2F%2F853&#038;format=xml">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-21302113-2"></script>
+<script>window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-21302113-2');</script><meta property="og:site_name" content="Sunvisor Lab. Ext JS 別館">
+<meta property="og:title" content="Ext JS 6 で複数環境に対応する方法">
+<meta property="og:url" content="/853">
+<meta property="og:description" content="こんにちは、療養中の @martini3oz です。 Sencha から Ext JS 6 の GA が発表になってから、しばらく経ちますが、 このブログでは、まだ Ext JS 6 の話題を扱えていませんでした。 Ex [&amp;hellip;]">
+<meta property="og:type" content="article">
+<style data-context="foundation-flickity-css">/*! Flickity v2.0.2
+http://flickity.metafizzy.co
+---------------------------------------------- */.flickity-enabled{position:relative}.flickity-enabled:focus{outline:0}.flickity-viewport{overflow:hidden;position:relative;height:100%}.flickity-slider{position:absolute;width:100%;height:100%}.flickity-enabled.is-draggable{-webkit-tap-highlight-color:transparent;tap-highlight-color:transparent;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.flickity-enabled.is-draggable .flickity-viewport{cursor:move;cursor:-webkit-grab;cursor:grab}.flickity-enabled.is-draggable .flickity-viewport.is-pointer-down{cursor:-webkit-grabbing;cursor:grabbing}.flickity-prev-next-button{position:absolute;top:50%;width:44px;height:44px;border:none;border-radius:50%;background:#fff;background:hsla(0,0%,100%,.75);cursor:pointer;-webkit-transform:translateY(-50%);transform:translateY(-50%)}.flickity-prev-next-button:hover{background:#fff}.flickity-prev-next-button:focus{outline:0;box-shadow:0 0 0 5px #09f}.flickity-prev-next-button:active{opacity:.6}.flickity-prev-next-button.previous{left:10px}.flickity-prev-next-button.next{right:10px}.flickity-rtl .flickity-prev-next-button.previous{left:auto;right:10px}.flickity-rtl .flickity-prev-next-button.next{right:auto;left:10px}.flickity-prev-next-button:disabled{opacity:.3;cursor:auto}.flickity-prev-next-button svg{position:absolute;left:20%;top:20%;width:60%;height:60%}.flickity-prev-next-button .arrow{fill:#333}.flickity-page-dots{position:absolute;width:100%;bottom:-25px;padding:0;margin:0;list-style:none;text-align:center;line-height:1}.flickity-rtl .flickity-page-dots{direction:rtl}.flickity-page-dots .dot{display:inline-block;width:10px;height:10px;margin:0 8px;background:#333;border-radius:50%;opacity:.25;cursor:pointer}.flickity-page-dots .dot.is-selected{opacity:1}</style>
+<style data-context="foundation-slideout-css">.slideout-menu{position:fixed;left:0;top:0;bottom:0;right:auto;z-index:0;width:256px;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}.slideout-menu.pushit-right{left:auto;right:0}.slideout-panel{position:relative;z-index:1;will-change:transform}.slideout-open,.slideout-open .slideout-panel,.slideout-open body{overflow:hidden}.slideout-open .slideout-menu{display:block}.pushit{display:none}</style>
+<style>.ios7.web-app-mode.has-fixed header{ background-color: rgba(3,122,221,.88);}</style>
+</head>
+
+<body data-rsssl="1" class="post-template-default single single-post postid-853 single-format-standard wp-embed-responsive single-author">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-dark-grayscale"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 0.49803921568627"></fefuncr><fefuncg type="table" tablevalues="0 0.49803921568627"></fefuncg><fefuncb type="table" tablevalues="0 0.49803921568627"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-grayscale"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 1"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0 1"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-purple-yellow"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.54901960784314 0.98823529411765"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0.71764705882353 0.25490196078431"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-blue-red"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 1"></fefuncr><fefuncg type="table" tablevalues="0 0.27843137254902"></fefuncg><fefuncb type="table" tablevalues="0.5921568627451 0.27843137254902"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-midnight"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 0"></fefuncr><fefuncg type="table" tablevalues="0 0.64705882352941"></fefuncg><fefuncb type="table" tablevalues="0 1"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-magenta-yellow"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.78039215686275 1"></fefuncr><fefuncg type="table" tablevalues="0 0.94901960784314"></fefuncg><fefuncb type="table" tablevalues="0.35294117647059 0.47058823529412"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-purple-green"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.65098039215686 0.40392156862745"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0.44705882352941 0.4"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-blue-orange"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.098039215686275 1"></fefuncr><fefuncg type="table" tablevalues="0 0.66274509803922"></fefuncg><fefuncb type="table" tablevalues="0.84705882352941 0.41960784313725"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><div id="page" class="hfeed site">
+	<header id="masthead" class="site-header" role="banner">
+		<hgroup>
+			<h1 class="site-title"><a href="/" title="Sunvisor Lab. Ext JS 別館" rel="home">Sunvisor Lab. Ext JS 別館</a></h1>
+			<h2 class="site-description">Ext JS 関連の話題を取り上げます。</h2>
+		</hgroup>
+
+		<nav id="site-navigation" class="main-navigation" role="navigation">
+			<button class="menu-toggle">メニュー</button>
+			<a class="assistive-text" href="#content" title="コンテンツへスキップ">コンテンツへスキップ</a>
+			<div class="nav-menu"><ul>
+<li><a href="/">ホーム</a></li>
+</ul></div>
+		</nav><!-- #site-navigation -->
+
+			</header><!-- #masthead -->
+
+	<div id="main" class="wrapper">
+
+	<div id="primary" class="site-content">
+		<div id="content" role="main">
+
+			
+				
+	<article id="post-853" class="post-853 post type-post status-publish format-standard hentry category-extjs tag-extjs6">
+				<header class="entry-header">
+			
+						<h1 class="entry-title">Ext JS 6 で複数環境に対応する方法</h1>
+								</header><!-- .entry-header -->
+
+				<div class="entry-content">
+			<p>こんにちは、療養中の
+<a href="https://twitter.com/martini3oz">@martini3oz</a>
+です。</p>
+
+<p>Sencha から Ext JS 6 の GA が発表になってから、しばらく経ちますが、
+このブログでは、まだ Ext JS 6 の話題を扱えていませんでした。</p>
+
+<p>Ext JS 6 の目玉はいくつかあるのですが、最も大きな点は、Ext JS と Sencha Touch が「マージされた」ということでしょう。
+以前から Sencha フレームワークをお使いの方は、「マージ」ってどういう風に？と思われることでしょう。
+大まかに言うと次のようになります。</p>
+
+<ul>
+<li>Ext JS と Touch のクラスシステムの微妙な違いを統一した</li>
+<li>core パッケージという、共通部分を担うパッケージができた</li>
+<li>classic と modern という二つの「ツールキット」を用意した</li>
+<li>Sencha Cmd で、それぞれのツールキットを切り替えられるようにした</li>
+<li>microloader で実行するビルドを切り替えられるようにした</li>
+</ul>
+
+<p>クラスシステムの微妙な違いはこまりものでした。UI に関係のない Model の定義ですら違いがあったので、Ext JS と Touch の両方で使うクラスを書くことはほぼ不可能でした。クラスシステムの統一と core パッケージによって、これが解消されたのは非常に大きな事です。</p>
+
+<p>そして、Ext JS 5 は classic というツールキットに、Touch  は modern というツールキットになりました。
+ツールキットは、ビジュアルクラス部分で、それぞれデスクトップ用、モバイル用と分類されますが、別な視点で言うと、レガシー用、HTML5用とも言えます。
+Ext JS 6 の現在のバージョンでは、modern の方は Touch をそのまま移植した程度のコンポーネントになっていて、classic にはあるけど modern にはないコンポーネントが多数ありますが、これも徐々に増えていくそうです。</p>
+
+<p>この「マージ」によって、一つのソースコードでデスクトップからスマートフォンまですべてに対応したアプリケーションを作ることが可能になったのでしょうか。
+現状で言うと、「限りなくそれに近い」という答えになります。
+classic と modern は別個のツールキットなので、一つの製品のなかに両者を混在することはできません。
+しかし、両者の共通部分は一つのソースコードで記述できます。
+また、classic と modern という二つのビルドはできるのですが、microloader の働きで、アクセスしてきたデバイスに応じて、読み込むビルドを自動的に選択してくれます。</p>
+
+<p>レガシーブラウザからスマートフォンまで、すべてのデバイスで動作する、ユニバーサルアプリケーションを作る方法について、以下、Sencha のガイド
+<a href="http://docs.sencha.com/extjs/6.0/whats_new/6.0.0/developing_for_multiple_screens_and_environments.html">Developing for Multiple Environments and Screens</a>
+を翻訳しましたので参考にしてください。(翻訳ミスなどみつけたら教えてください)
+<span id="more-853"></span></p>
+
+<h1>複数の環境への開発</h1>
+
+<p>すべてのデバイスで
+機能性に富み、使いやすく美しいアプリケーションを作ることは、
+アプリケーション開発における理想ですが、なかなか成し遂げることは難しいことです。
+Ext JS 6 によって、あなたはほんの少しの苦労でこの目的を達成するのに必要なツールを手にします。
+accomplished in a few different ways.
+これらの要件を満たすアプリケーションの生成は、いくつかの方法があります。</p>
+
+<h2>ユニバーサルアプリケーションとツールキット</h2>
+
+<p>Ext JS 6 での大きな変更点の一つは、Ext JS と Touch が一つのフレームワークにマージされたことです。
+フレームワークには、二つの独立したツールキット (classc と modern) があります。
+ツールキットには Ext JS と Touch のビューレイヤーを含みます。
+コアとなるリソースやロジックを共有し、双方のツールキットを利用するアプリケーションを「ユニバーサルアプリケーション」と呼びます。</p>
+
+<p>アプリケーションのツールキットを選択するには、
+Sencha Cmd で生成したアプリケーションの <code>app.json</code> ファイルを次のように調整するだけです。</p>
+
+<div>[js]
+&quot;toolkit&quot;: &quot;classic&quot;, // or &quot;modern&quot;
+[/js]</div>
+
+<p>双方のフレームワークのコア (データ、コントローラー、モデルなど) は、
+一つの共通のプラットフォームに調整されました。
+これにより、共有のデータやロジックは、よりいっそうアプリケーションに最適化できるようになります。</p>
+
+<p><strong>注</strong>: ツールキットについてより詳しくは、後ほど言及します。</p>
+
+<p><code>app.json</code> はご存じのように、アプリケーションのコアの設定リストです。</p>
+
+<p>Sencha Cmd で生成された
+<code>app.json</code> ファイルには多くのプロパティがあります。
+これらのプロパティの説明は、インラインでコメントに記述されています。</p>
+
+<p>プロジェクトをアップグレードした場合には、<code>app.json</code> の中には全てのオプションが含まれないことがあります。
+アップグレードを実行したあと、そこに記述されないプロパティのデフォルト値は、
+“.sencha/app/app.defaults.json”にあります。
+このファイルを編集するのではなく、そこから必要な部分を <code>app.json</code> にコピーしてください。</p>
+
+<p><code>app.json</code> について詳しくは
+<a href="/cmd/5.x/microloader.html">the microloader guide</a>.
+をご覧ください。</p>
+
+<h3>classic ツールキット</h3>
+
+<p>classic ツールキットは、伝統的な Ext JS 5 アプリケーションのサポートを提供します。
+デスクトップブラウザ、タブレット、タッチスクリーン付きのラップトップのサポートを含みます。
+詳しくは、
+<a href="/whats_new.html#Classic_Toolkit">What’s New Guide</a>
+をご覧ください。</p>
+
+<h3>modern ツールキット</h3>
+
+<p>modern ツールキットは、デスクトップからスマートフォンまでの全てのモダンブラウザ (IE111以降) をサポートする一般的な HTML5 アプリケーションを提供します。
+詳しくは、
+<a href="/whats_new.html#Modern_Toolkit">What’s New Guide</a>.
+をご覧ください。</p>
+
+<h3>ビルドプロファイル</h3>
+
+<p>ビルドプロファイルにより、アプリケーションのバリエーションを生成することができるようになります。
+バリエーションは、アプリケーションの <code>app.json</code> ファイル内にある <code>builds</code> オブジェクトで指定します。
+これまでにも、テーマやロケールといったもので違うビルドをする機会がありました。</p>
+
+<p>上記の <code>app.json</code> について詳しくは、
+<a href="/cmd/5.x/microloader.html">the microloader guide</a>.
+を参照してください。</p>
+
+<p>Ext JS 6 と Sencha Cmd 6 では、<code>toolkit</code> キーをビルドコンフィグに指定できます。
+これで、classic または modern ツールキットセットを設定できます。
+Cmd は、各ビルドキーをループして、適切なツールキットとツールキットに依存しないロジックを適用します。</p>
+
+<p>ツールキットに依存しないコードは、ツールキット間で共有されるコード全てです。
+また sencha-core パッケージ (データ、コントローラーなど) にあるものを含みます。
+この共有ロジックは双方のツールキットで使われるということをよく覚えておいてください。</p>
+
+<p>ユニバーサルアプリケーションの
+<code>builds</code>
+コンフィグは、次のような JSON 構造をしています。</p>
+
+<div>[js]
+&quot;builds&quot;: {
+    &quot;mymodern&quot;: {
+        &quot;toolkit&quot; : &quot;modern&quot;,
+        &quot;theme&quot;   : &quot;theme-cupertino&quot;,
+        &quot;requires&quot;: [
+            &quot;charts&quot;,
+            &quot;ux&quot;
+        ]
+    },
+    &quot;myclassic&quot;: {
+       &quot;toolkit&quot; : &quot;classic&quot;,
+       &quot;theme&quot;   : &quot;theme-neptune&quot;,
+       &quot;slicer&quot;  : null,
+       &quot;requires&quot;: [
+            &quot;charts&quot;
+        ]        
+    }
+}
+[/js]</div>
+
+<h3>ビルド時に予期すべき事</h3>
+
+<p>では上記の <code>build</code> オブジェクトによって、起こることを解説しましょう。
+この <code>builds</code> コンフィグにより、
+Sencha Cmd で
+次のビルドコマンドを発行することができます。</p>
+
+<div>[js]
+// modern アプリのみをビルドする
+sencha app build mymodern
+// classic アプリのみをビルドする
+sencha app build myclassic
+// builds オブジェクト内の全ての対象をビルドする
+sencha app build
+[/js]</div>
+
+<p>ビルドターゲットの名前は、自由に設定できることを覚えておいてください。
+<code>mymodern</code> を <code>foo</code> に置き換えた後に次のように実行することもできます。</p>
+
+<div>[js]
+sencha app build foo
+[/js]</div>
+
+<p><code>mymodern</code> アプリケーションの結果は、modern ツールキットが使われ、
+ux と charts パッケージにアクセスし、Cupertino テーマで表示されます。</p>
+
+<p><code>myclassic</code> アプリケーションの結果は、classic ツールキットが使われ、
+charts パッケージにアクセスし、Neptune テーマを使います。</p>
+
+<p>色々なバリエーションを <code>builds</code> オブジェクトに設定できます。
+デフォルトでは、すべては builds フォルダのルートに出力されます。</p>
+
+<h3>ユニバーサルアプリケーション</h3>
+
+<p>ユニバーサルアプリケーションは、両方のツールキットにわたる複数のビルドを生成します。
+アプリケーションのこれらのビルド結果は、
+デスクトップやモバイルデバイスで実行されます。
+一つのアプリケーションが、一つの classpath に modern と classic フレームワークをインクルードすることは <strong>できない</strong> ということを覚えておいてください。
+ほとんどの場合、アプリケーションにはグローバルロジックを保管する従来のアプリケーションディレクトリ、ルートレベルの <code>app</code> フォルダ、があります。
+理想的には、アプリケーションの共有部分には、データ、モデル、ビューモデルなどを保管します。
+また、
+ツールキットにわたるロジックを生成したいばあいなどでは共有コントローラーも配置できます。</p>
+
+<p>例えば、classic アプリケーションにグリッドがあり、modern アプリケーションにはリストがあり、両方とも共有のストアとモデルのデータを使うとしましょう。
+次に、両方のアプリケーションにおいて、コンポーネントへのユーザー操作に対応させたいとします。
+そうするとグリッドとリストで共通のイベントを探す必要があります。
+一つの解決方法は、双方のコンポーネントが発火できる select イベントを使うことです。
+しかし、ロジックに“itemtap”がある場合、classic アプリケーションでは、それがどういう意味かわからず、Cmd のビルドプロセスの classic の部分で問題が発生します。</p>
+
+<p>共有のロジックとリソースを検討したら、
+開発者は、適切なツールキット src フォルダに独自のコードを書きます。
+これが、Ext JS 6 の新しいユニバーサルアプリケーションのフォルダ構造をみる時の考え方です。</p>
+
+<p><strong>注:</strong> 単一のツールキットのアプリケーションを生成した場合のフォルダ構造は、以前の実装と非常に良く似ています。</p>
+
+<h3>Ext JS 6 フォルダ構造</h3>
+
+<p>ユニバーサルアプリケーションを生成する際の、
+Ext JS 6 と Sencha Cmd 6 の新しいディレクトリ構造の大きな違いについて覚えておいてください。
+これらは、アプリケーションが次の三つの特定のエリアを特定できるようにするために変更されました。</p>
+
+<ul>
+<li><p>グローバルアプリケーションコード</p></li>
+<li><p>classic 特定のコード</p></li>
+<li><p>modern 特定のコード</p></li>
+</ul>
+
+<p>次が、ユニバーサルアプリケーションのフォルダ構造です。</p>
+
+<div>[js]
+// app
+     // app
+          // model
+          // store
+          // view
+     // classic
+          // src
+          // sass
+          // resources
+     // modern
+          // src
+          // sass
+          // resources
+     // resources
+     // sass
+[/js]</div>
+
+<h3>ユニバーサルアプリケーションを生成する</h3>
+
+<p>ユニバーサルアプリケーションを作るのは単純です。
+Sencha Cmd は、適切なファイル構造、<code>app.json</code>、共有コードのサンプルを持った、「スターターアプリ」を生成します。
+ユニバーサルアプリケーションを生成するには、次のようにします。</p>
+
+<div>[js]
+sencha -sdk /path/to/ExtSDK generate app MyApp ./MyAppLocation
+[/js]</div>
+
+<p>Sencha Cmd は、ユニバーサルアプリケーションの全機能を生成します。
+このアプリケーションは、
+“app”フォルダに共有データを置いた
+classic と modern アプリケーションを生成します。
+それぞれのツールキット特有の定義は、ツールキット名のフォルダ (modern と classic) にあります。</p>
+
+<p>開発時に各アプリケーションを見るには、sencha app watch で、ビルドの対象を指定するのと同じ方法を使って指定できます。</p>
+
+<div>[js]
+sencha app watch modern
+sencha app watch classic
+[/js]</div>
+
+<p><strong>注:</strong> 対象を指定しなかった場合は、デフォルトで <code>builds</code> オブジェクト内の対象のビルドになります。</p>
+
+<p>アプリケーションをビルドすると、それぞれのブラウザーで見ることができます。
+たとえば、ビルドフォルダーを iPhone でロードすると、アプリケーションの modern バージョンが表示されます。それをデスクトップブラウザでロードすると、アプリケーションの classic バージョンが表示されます。</p>
+
+<h2>実行時の設定</h2>
+
+<p>また、アプリケーションを生成するアプリケーションの実行環境を使う為のいくつかの方法があります。
+これらの方法には、App プロファイル、レスポンシブコンフィグ、フラットフォームコンフィグがあります。</p>
+
+<p>それでは、それぞれが、どのように共同して、シームレスな体験をユーザーに提供するのか可能性を探索してみましょう。</p>
+
+<h3>App プロファイル</h3>
+
+<p><code>Ext.app.Profie</code> を使うと、mainView (または Viewport) に定義された条件に従って、アプリケーションのビューをスワップアウトできます。
+これは、特定の条件でプロファイルをアクティブにすることで、アプリケーションに完全に違うビューを生成できると言うことです。
+たとえば、モバイルデバイスかデスクトップブラウザのどちらにロードされたかによって特定のビューを表示したい事があると思います。</p>
+
+<p>この場合、二つのプロファイルを作って、
+Application クラスにある profiles 配列に列挙します。
+次は、簡単な例です。</p>
+
+<div>[js]
+Ext.define(&#8216;App.Application&#8217;, {
+    extend: &#8216;Ext.app.Application&#8217;,
+    profiles: [
+        &#8216;Desktop&#8217;,
+        &#8216;Mobile&#8217;
+    ]
+});
+[/js]</div>
+
+<p>アクティブなプロファイルは、プロファイルの <code>isActive</code> メソッドの戻り値によって特定されます。
+次が、検出された OS によって、デスクトップビューがロードされるように設定するサンプルです。</p>
+
+<div>[js]
+Ext.define(&#8216;App.profile.Desktop&#8217;, {
+    extend: &#8216;Ext.app.Profile&#8217;,
+
+    mainView: &#8216;App.view.desktop.Main&#8217;,
+
+    isActive: function () {
+        return Ext.os.is.Desktop;
+    },
+
+    launch: function () {
+        console.log(&#8216;Launch Desktop&#8217;);
+    }
+});
+[/js]</div>
+
+<p>プロファイルの <code>mainView</code> コンフィグは必須ではありません。
+代わりに、プロファイルの <code>launch</code> メソッドを使って、より細かな制御をすることができます。
+アクティブなプロファイルの <code>launch</code> メソッドだけが呼び出されます。</p>
+
+<h3>プラットフォームコンフィグ</h3>
+
+<p><code>platformConfig</code> プロパティはクラス定義に記述することも、
+インスタンスのコンフィグオブジェクトに指定する事もでき、
+現在のプラットフォームまたはデバイスの分類によって、コンフィグを切り替えます。
+次のように使います。</p>
+
+<div>[js]
+Ext.define(&#8216;App.view.summary.Manufacturing&#8217;, {
+    extend: &#8216;Ext.panel.Panel&#8217;,
+
+    title: &#8216;Mfg Summary&#8217;,
+
+    platformConfig: {
+        desktop: {
+            title: &#8216;Manufacturing Summary&#8217;
+        }
+    }
+});
+[/js]</div>
+
+<p>上記は、次のような直接的なアプローチと同じ結果になります。</p>
+
+<div>[js]
+Ext.define(&#8216;App.view.summary.Manufacturing&#8217;, {
+    extend: &#8216;Ext.panel.Panel&#8217;,
+
+    title: testForDesktop ? &#8216;Manufacturing Summary&#8217;
+                          : &#8216;Mfg Summary&#8217;
+});
+[/js]</div>
+
+<p>これは、<code>platformConfig</code> と三項演算子のメリットを比較しているのではなく、
+<code>platformConfig</code> がクラス定義の一部として見なされることを示しています。
+このようにこのアプローチはベースクラスに関係なく動作します。
+インラインロジックよりも <code>platformConfig</code> がいい理由は、
+データのみのビューを維持でき、JSON フォーマットで安全に送信できるからです。</p>
+
+<p><code>platformConfig</code> をインスタンスコンフィグに指定する事もできます。</p>
+
+<div>[js]
+Ext.define(&#8216;App.view.summary.Manufacturing&#8217;, {
+    extend: &#8216;Ext.panel.Panel&#8217;,
+
+    items: [{
+        xtype: &#8216;panel&#8217;,
+
+        platformConfig: {
+            desktop: {
+                title: &#8216;Manufacturing Summary&#8217;
+            },
+            &#8216;!desktop&#8217;: {
+                title: &#8216;Mfg Summary&#8217;
+            }
+        }
+    }]
+});
+[/js]</div>
+
+<p>上記の直接的な書き方は次のようになるでしょう。</p>
+
+<div>[js]
+Ext.define(&#8216;App.view.summary.Manufacturing&#8217;, {
+    extend: &#8216;Ext.panel.Panel&#8217;,
+
+    items: [
+        Ext.merge({
+            xtype: &#8216;panel&#8217;
+        },
+        testForDesktop ? {
+            title: &#8216;Manufacturing Summary&#8217;
+        } : {
+            title: &#8216;Mfg Summary&#8217;
+        })
+    ]
+});
+[/js]</div>
+
+<p>この <code>platformConfig</code> の使い方では、マージ処理は <code>initConfig</code> メソッドによって処理されます。
+言い換えると、コンフィグに <code>platformConfig</code> プロパティを提供した場合、
+コンストラクターで <code>initConfig</code> を呼び出しているクラスでのみサポートされるということです。
+<code>Ext.Widget</code>、<code>Ext.Component</code>、多くのデータパッケージクラス (AbstractStore など)　や Observable を使う全てのクラスがこれに当てはまります。</p>
+
+<p>クラス定義での <code>platformConfig</code> がクラス定義を変更するやり方と同様に、インスタンスコンフィグでの <code>platformConfig</code> は、オブジェクトの初期設定を変更します。</p>
+
+<h3>レスポンシブコンフィグ</h3>
+
+<p>Ext JS 5 から <code>responsiveConfig</code> が
+<a href="/5.0/whats_new/5.0/whats_new.html#Responsive_Configs">導入され</a>。
+、レスポンシブ Mixin と plugin が使えるようになりました。
+<code>responsiveConfig</code> のルールとプロパティは、インスタンスが生成された時だけでなく、デバイスの向きやビューポートのサイズが変わったときにも評価されます。
+これは、<code>platformConfig</code> に較べオーバーヘッドが増えることになりますが、
+自分でウィンドウのリサイズや向きの変更を監視することで処理するより、より能率的です。</p>
+
+<p>縦長の画面の時に、デバイスの分類 (“desktop”) ではなく、デバイスのサイズに応じて、タイトルを変更することができます。</p>
+
+<div>[js]
+Ext.define(&#8216;App.view.summary.Manufacturing&#8217;, {
+    extend: &#8216;Ext.panel.Panel&#8217;,
+    mixins: [&#8216;Ext.mixin.Responsive&#8217;],
+
+    responsiveConfig: {
+        &#8216;width &gt;= 600&#8217;: {
+            title: &#8216;Manufacturing Summary&#8217;
+        },
+        &#8216;width &lt; 600&#8217;: {
+            title: &#8216;Mfg Summary&#8217;
+        }
+    }
+});
+[/js]</div>
+
+<p>上記では <code>responsiveConfig</code> を使っているので、
+ここでは mixin を使い、各インスタンスに plugin を設定しなくてすんでいます。
+コンポーネントインスタンスで使う場合は、レスポンシブ plugin を代わりに使います。</p>
+
+<div>[js]
+Ext.define(&#8216;App.view.summary.Manufacturing&#8217;, {
+    extend: &#8216;Ext.panel.Panel&#8217;,
+
+    items: [{
+        xtype: &#8216;panel&#8217;,
+        plugins: &#8216;responsive&#8217;,
+
+        responsiveConfig: {
+            &#8216;width &gt;= 600&#8217;: {
+                title: &#8216;Manufacturing Summary&#8217;
+            },
+            &#8216;width &lt; 600&#8217;: {
+                title: &#8216;Mfg Summary&#8217;
+            }
+        }
+    }]
+});
+[/js]</div>
+
+<p>ここでの width は、コンポーネントの幅ではなく、ビューポートの幅であることは、よく覚えておいてください。</p>
+
+<h2>まとめ</h2>
+
+<p>これらのツールで、特定のシチュエーションでの正しいツールを選択すると言うことです。
+ロードタイムをチューニングするには <code>platformConfig</code>。
+より動的な条件には、<code>responsiveConfig</code>。
+大きなスケールで変更するには、<code>Ext.app.Profile</code>。</p>
+
+<p>そして、タブレットとデスクトップさらにはスマートフォンにおいて完全に違うルックスのアプリケーションが必要な場合は、Sencha Cmd のビルドプロファイルを検討してください。
+ビルドプロファイルでは、デスクトップビルドからタブレットのオーバーヘッドを排除できますし、その逆も同様です。</p>
+
+<p>「ひとつのサイズで全てに合わせる」ことはできないので、Ext JS は、能率と柔軟性をまとめたいくつかのツールを提供しています。
+それらはアプリケーションが幅広いデバイスに自然にフィットするように、一緒に使うことができます。</p>
+
+<!-- Facebook Like Button v1.9.6 BEGIN [http://blog.bottomlessinc.com] -->
+<iframe src="https://www.facebook.com/plugins/like.php?href=httpsextjs.sunvisor.net%2F853&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light" scrolling="no" frameborder="0" allowtransparency="true" style="border:none; overflow:hidden; width:450px; height: 30px; align: left; margin: 2px 0px 2px 0px"></iframe>
+<!-- Facebook Like Button END -->
+					</div>
+<!-- .entry-content -->
+		
+		<footer class="entry-meta">
+			カテゴリー: <a href="/category/extjs" rel="category tag">Ext JS</a> | タグ: <a href="/tag/extjs6" rel="tag">ExtJS6</a> | 投稿日: <a href="/853" title="10:13 AM" rel="bookmark"><time class="entry-date" datetime="2015-08-21T10:13:56+09:00">2015年8月21日</time></a> | <span class="by-author">投稿者: <span class="author vcard"><a class="url fn n" href="/author/sunvisor" title="sunvisor の投稿をすべて表示" rel="author">sunvisor</a></span></span>								</footer><!-- .entry-meta -->
+	</article><!-- #post -->
+
+				<nav class="nav-single">
+					<h3 class="assistive-text">投稿ナビゲーション</h3>
+					<span class="nav-previous"><a href="/848" rel="prev"><span class="meta-nav">&larr;</span> Ext Gantt 3 を始めよう</a></span>
+					<span class="nav-next"><a href="/859" rel="next">Modern ツールキットでのデータバインディング &#8211; Sencha ブログより <span class="meta-nav">&rarr;</span></a></span>
+				</nav><!-- .nav-single -->
+
+				
+<div id="comments" class="comments-area">
+
+	
+			<h2 class="comments-title">
+			1 thought on &ldquo;<span>Ext JS 6 で複数環境に対応する方法</span>&rdquo;		</h2>
+
+		<ol class="commentlist">
+					<li class="pingback even thread-even depth-1" id="comment-244636">
+		<p>ピンバック: <a href="https://itmeseji.com/%e3%83%95%e3%83%ad%e3%83%b3%e3%83%88%e3%82%a8%e3%83%b3%e3%83%89/53583/" rel="external nofollow ugc" class="url">Sencha Cmd6 - その3 - IT記事まとめ</a> </p>
+				</li>
+<!-- #comment-## -->
+		</ol>
+<!-- .commentlist -->
+
+		
+				<p class="nocomments">コメントは停止中です。</p>
+		
+	
+	
+</div>
+<!-- #comments .comments-area -->
+
+			
+		</div>
+<!-- #content -->
+	</div>
+<!-- #primary -->
+
+
+			<div id="secondary" class="widget-area" role="complementary">
+			
+		<aside id="recent-posts-4" class="widget widget_recent_entries">
+		<h3 class="widget-title">最近の投稿</h3>
+		<ul>
+											<li>
+					<a href="/999">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 4/6) &#8211; 柔軟なメソッドを使う</a>
+									</li>
+											<li>
+					<a href="/996">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 3/6)</a>
+									</li>
+											<li>
+					<a href="/989">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 2/6)</a>
+									</li>
+											<li>
+					<a href="/979">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 1/6)</a>
+									</li>
+											<li>
+					<a href="/957">LogicoolのCRAFTキーボードを買いました</a>
+									</li>
+					</ul>
+
+		</aside><aside id="tag_cloud-5" class="widget widget_tag_cloud"><h3 class="widget-title">タグ</h3>
+<div class="tagcloud">
+<ul class="wp-tag-cloud" role="list">
+	<li><a href="/tag/architect" class="tag-cloud-link tag-link-43 tag-link-position-1" style="font-size: 12.375pt;" aria-label="Architect (3個の項目)">Architect</a></li>
+	<li><a href="/tag/bryntum" class="tag-cloud-link tag-link-35 tag-link-position-2" style="font-size: 12.375pt;" aria-label="Bryntum (3個の項目)">Bryntum</a></li>
+	<li><a href="/tag/craft" class="tag-cloud-link tag-link-48 tag-link-position-3" style="font-size: 8pt;" aria-label="CRAFT (1個の項目)">CRAFT</a></li>
+	<li><a href="/tag/direct" class="tag-cloud-link tag-link-42 tag-link-position-4" style="font-size: 13.833333333333pt;" aria-label="Direct (4個の項目)">Direct</a></li>
+	<li><a href="/tag/directstore" class="tag-cloud-link tag-link-12 tag-link-position-5" style="font-size: 8pt;" aria-label="DirectStore (1個の項目)">DirectStore</a></li>
+	<li><a href="/tag/editorgridpanel" class="tag-cloud-link tag-link-14 tag-link-position-6" style="font-size: 8pt;" aria-label="EditorGridPanel (1個の項目)">EditorGridPanel</a></li>
+	<li><a href="/tag/electron" class="tag-cloud-link tag-link-47 tag-link-position-7" style="font-size: 8pt;" aria-label="Electron (1個の項目)">Electron</a></li>
+	<li><a href="/tag/ext-draw" class="tag-cloud-link tag-link-26 tag-link-position-8" style="font-size: 12.375pt;" aria-label="Ext.draw (3個の項目)">Ext.draw</a></li>
+	<li><a href="/tag/ext-loader" class="tag-cloud-link tag-link-15 tag-link-position-9" style="font-size: 8pt;" aria-label="Ext.Loader (1個の項目)">Ext.Loader</a></li>
+	<li><a href="/tag/ext3" class="tag-cloud-link tag-link-10 tag-link-position-10" style="font-size: 13.833333333333pt;" aria-label="Ext3 (4個の項目)">Ext3</a></li>
+	<li><a href="/tag/ext4" class="tag-cloud-link tag-link-11 tag-link-position-11" style="font-size: 22pt;" aria-label="Ext4 (17個の項目)">Ext4</a></li>
+	<li><a href="/tag/extjs" class="tag-cloud-link tag-link-4 tag-link-position-12" style="font-size: 8pt;" aria-label="Ext JS (1個の項目)">Ext JS</a></li>
+	<li><a href="/tag/extjs5" class="tag-cloud-link tag-link-37 tag-link-position-13" style="font-size: 10.625pt;" aria-label="ExtJS5 (2個の項目)">ExtJS5</a></li>
+	<li><a href="/tag/extjs6" class="tag-cloud-link tag-link-38 tag-link-position-14" style="font-size: 17.479166666667pt;" aria-label="ExtJS6 (8個の項目)">ExtJS6</a></li>
+	<li><a href="/tag/jasmine" class="tag-cloud-link tag-link-27 tag-link-position-15" style="font-size: 8pt;" aria-label="Jasmine (1個の項目)">Jasmine</a></li>
+	<li><a href="/tag/livereload" class="tag-cloud-link tag-link-34 tag-link-position-16" style="font-size: 8pt;" aria-label="LiveReload (1個の項目)">LiveReload</a></li>
+	<li><a href="/tag/nextjs" class="tag-cloud-link tag-link-17 tag-link-position-17" style="font-size: 10.625pt;" aria-label="NextJS (2個の項目)">NextJS</a></li>
+	<li><a href="/tag/oracle" class="tag-cloud-link tag-link-23 tag-link-position-18" style="font-size: 8pt;" aria-label="Oracle (1個の項目)">Oracle</a></li>
+	<li><a href="/tag/pdo" class="tag-cloud-link tag-link-24 tag-link-position-19" style="font-size: 8pt;" aria-label="PDO (1個の項目)">PDO</a></li>
+	<li><a href="/tag/sass" class="tag-cloud-link tag-link-46 tag-link-position-20" style="font-size: 8pt;" aria-label="SASS (1個の項目)">SASS</a></li>
+	<li><a href="/tag/sencha-touch" class="tag-cloud-link tag-link-29 tag-link-position-21" style="font-size: 17.479166666667pt;" aria-label="Sencha Touch (8個の項目)">Sencha Touch</a></li>
+	<li><a href="/tag/sencha-ug" class="tag-cloud-link tag-link-44 tag-link-position-22" style="font-size: 10.625pt;" aria-label="Sencha UG (2個の項目)">Sencha UG</a></li>
+	<li><a href="/tag/siesta" class="tag-cloud-link tag-link-33 tag-link-position-23" style="font-size: 10.625pt;" aria-label="Siesta (2個の項目)">Siesta</a></li>
+	<li><a href="/tag/theme" class="tag-cloud-link tag-link-45 tag-link-position-24" style="font-size: 8pt;" aria-label="Theme (1個の項目)">Theme</a></li>
+	<li><a href="/tag/universal-app" class="tag-cloud-link tag-link-39 tag-link-position-25" style="font-size: 10.625pt;" aria-label="Universal App (2個の項目)">Universal App</a></li>
+	<li><a href="/tag/vim" class="tag-cloud-link tag-link-16 tag-link-position-26" style="font-size: 13.833333333333pt;" aria-label="vim (4個の項目)">vim</a></li>
+	<li><a href="/tag/webstorm" class="tag-cloud-link tag-link-13 tag-link-position-27" style="font-size: 10.625pt;" aria-label="WebStorm (2個の項目)">WebStorm</a></li>
+	<li><a href="/tag/xframeworkpx" class="tag-cloud-link tag-link-5 tag-link-position-28" style="font-size: 10.625pt;" aria-label="xFrameworkPX (2個の項目)">xFrameworkPX</a></li>
+</ul>
+</div>
+</aside><aside id="archives-4" class="widget widget_archive"><h3 class="widget-title">アーカイブ</h3>
+			<ul>
+					<li><a href="/date/2020/03">2020年3月</a></li>
+	<li><a href="/date/2017/09">2017年9月</a></li>
+	<li><a href="/date/2016/11">2016年11月</a></li>
+	<li><a href="/date/2016/09">2016年9月</a></li>
+	<li><a href="/date/2016/07">2016年7月</a></li>
+	<li><a href="/date/2016/03">2016年3月</a></li>
+	<li><a href="/date/2016/02">2016年2月</a></li>
+	<li><a href="/date/2015/12">2015年12月</a></li>
+	<li><a href="/date/2015/10">2015年10月</a></li>
+	<li><a href="/date/2015/08">2015年8月</a></li>
+	<li><a href="/date/2015/05">2015年5月</a></li>
+	<li><a href="/date/2015/02">2015年2月</a></li>
+	<li><a href="/date/2014/12">2014年12月</a></li>
+	<li><a href="/date/2014/10">2014年10月</a></li>
+	<li><a href="/date/2014/06">2014年6月</a></li>
+	<li><a href="/date/2014/04">2014年4月</a></li>
+	<li><a href="/date/2014/03">2014年3月</a></li>
+	<li><a href="/date/2013/12">2013年12月</a></li>
+	<li><a href="/date/2013/09">2013年9月</a></li>
+	<li><a href="/date/2013/05">2013年5月</a></li>
+	<li><a href="/date/2013/04">2013年4月</a></li>
+	<li><a href="/date/2013/02">2013年2月</a></li>
+	<li><a href="/date/2012/12">2012年12月</a></li>
+	<li><a href="/date/2012/11">2012年11月</a></li>
+	<li><a href="/date/2012/10">2012年10月</a></li>
+	<li><a href="/date/2012/09">2012年9月</a></li>
+	<li><a href="/date/2012/05">2012年5月</a></li>
+	<li><a href="/date/2012/04">2012年4月</a></li>
+	<li><a href="/date/2012/03">2012年3月</a></li>
+	<li><a href="/date/2012/02">2012年2月</a></li>
+	<li><a href="/date/2012/01">2012年1月</a></li>
+	<li><a href="/date/2011/12">2011年12月</a></li>
+	<li><a href="/date/2011/10">2011年10月</a></li>
+	<li><a href="/date/2011/09">2011年9月</a></li>
+	<li><a href="/date/2011/08">2011年8月</a></li>
+	<li><a href="/date/2011/07">2011年7月</a></li>
+	<li><a href="/date/2011/06">2011年6月</a></li>
+	<li><a href="/date/2011/05">2011年5月</a></li>
+	<li><a href="/date/2011/04">2011年4月</a></li>
+	<li><a href="/date/2011/03">2011年3月</a></li>
+	<li><a href="/date/2011/01">2011年1月</a></li>
+			</ul>
+
+			</aside><aside id="text-5" class="widget widget_text">			<div class="textwidget">
+<script src="https://widgets.twimg.com/j/2/widget.js"></script>
+<script>new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 4,
+  interval: 6000,
+  width: 220,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#88bbff',
+      color: '#000000'
+    },
+    tweets: {
+      background: '#ebebeb',
+      color: '#050505',
+      links: '#3300ee'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: false,
+    hashtags: true,
+    timestamp: true,
+    avatars: false,
+    behavior: 'all'
+  }
+}).render().setUser('martini3oz').start();</script>
+</div>
+		</aside>		</div>
+<!-- #secondary -->
+		</div>
+<!-- #main .wrapper -->
+	<footer id="colophon" role="contentinfo">
+		<div class="site-info">
+									<a href="https://ja.wordpress.org/" class="imprint" title="セマンティックなパブリッシングツール">
+				Proudly powered by WordPress			</a>
+		</div>
+<!-- .site-info -->
+	</footer><!-- #colophon -->
+</div>
+<!-- #page -->
+
+<!-- Powered by WPtouch: 4.3.44 --><script type="text/javascript" src="/wp-content/themes/twentytwelve/js/navigation.js?ver=20140711" id="twentytwelve-navigation-js"></script>
+</body>
+</html>

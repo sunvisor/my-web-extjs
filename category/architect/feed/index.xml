@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Architect &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/category/architect/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Wed, 13 Jun 2012 08:04:12 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Sencha Architect 入門(実践編)</title>
+		<link>/569</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 26 May 2012 07:05:14 +0000</pubDate>
+				<category><![CDATA[Architect]]></category>
+		<guid isPermaLink="false">/?p=569</guid>
+
+					<description><![CDATA[基本編でSencha Architectの全体像がわかったことと思いますので、 ここでは実践編として、実際にプロジェクトを操作しながら解説してみます。 プロジェクトの作成 プロジェクトを作成する前に、開発環境を整えましょ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>基本編でSencha Architectの全体像がわかったことと思いますので、
+ここでは実践編として、実際にプロジェクトを操作しながら解説してみます。
+<span id="more-569"></span></p>
+
+<h2>プロジェクトの作成</h2>
+
+<p>プロジェクトを作成する前に、開発環境を整えましょう。</p>
+
+<p>ローカルでWebサーバーが動作する環境になっていますでしょうか。
+そこにプロジェクト用のフォルダをセットアップします。
+僕の場合は、Apacheのuserdirモジュールを使ってプロジェクト毎に開発環境を整えていますので、
+次のようなURLプリフィックスになります。</p>
+
+<pre><code>http://localhost/~test/
+</code></pre>
+
+<p>Sencha Architect を起動して、新しいExt JSプロジェクトを開きます。
+最初にするのは、プロジェクトの設定です。
+ツールバーのSettingsボタンをクリックします。</p>
+
+<h2>Viewの作成</h2>
+
+<p>まず実際にViewを作成してみます。
+Ext JSにとって一般的な、Viewportを使ったものを想定します。
+通常のブラウザ画面を占領するExt JSアプリケーションを作るために、Viewportを配置します。</p>
+
+<h3>Viewportの定義</h3>
+
+<p>ToolboxからViewportをドラッグしてCanvasにドロップします。
+配置すると、Canvas一杯に広がったViewportができます。
+次にセオリー通り、Viewportのレイアウトをborderレイアウトにします。
+画面右下のConfigペインで指定することもできますが、
+Canvas上のViewportをクリックしたときに表示される、歯車アイコンをクリックする方が便利です。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-gearicon.png" alt="gear-icon" /></p>
+
+<p>この歯車アイコンでは、レイアウトに関するプロパティなどを設定する事ができます。
+他のコンポーネントでも利用可能です。
+ここで設定できる内容は、コンポーネントによって異なりますが、
+コンフィグの中でも非常に重要な物が表示されるようになっています。</p>
+
+<h3>initialView</h3>
+
+<p>Configペインを見てみますと、initialViewという設定項目があり、チェックが入った状態になっていると思います。
+Ext JS 4のMVCでは、ApplicationのautoCreateViewportがtrueになっている場合、
+自動的に Viewport.jsというクラスを読み込んで、ビューポートを表示します。
+今回追加した、Viewportクラスのクラス名(userClassName)は、MyViewport になっています。</p>
+
+<p>ビューポートの自動生成に対応させるために、
+Viewportのクラス名をViewportにしたい所ですが、Architectではそれはできません。
+実際にuserClassNameをViewportに設定するとエラーが発生します。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-error.png" alt="Error" /></p>
+
+<p>Architectが生成したコードを見てみると、
+Myiewportの他にViewportというクラスも出力されています。
+実は、initialViewという設定項目がtrueになっているビューがあると、
+そのクラスを継承した、Viewportクラスを自動生成してくれるのです。</p>
+
+<h3>コンポーネントの配置</h3>
+
+<p>このViewportの上にパネルなどを配置してみます。</p>
+
+<ul>
+<li>FormPanelを一つCanvasにドロップします。</li>
+<li>Panelを一つProject InspectorのViewport上にドロップします。</li>
+</ul>
+
+<p>こうすると、FormPanelのregionはcenter、Panelのreginはwestになると思います。
+二つ目のPanelをProject Inspectorにドロップしたのは、
+Canvasは最初にドロップしたFormPanelで覆われているので、
+そこにドロップすると、その子アイテムとして追加されてしまうからです。</p>
+
+<h3>Formのアイテムを追加</h3>
+
+<p>次に、FormPanelの上に、Text Fieldを二つほどドロップします。
+それぞれのText Fieldのname属性を設定しましょう。
+最初のをfield1 後のをfield2とでもしましょう。</p>
+
+<h3>Toolbarの追加</h3>
+
+<p>さらに、FormPanelの上に、Toolbarをドロップしましょう。
+その後、ToolbarにButtonを二つドロップします。
+ボタンのitemIdとtext属性を設定します。</p>
+
+<dl>
+<dt>一つ目</dt>
+<dd><tt>text: 'Message'</tt><br />
+<tt>itemId: 'msgButton'</tt></dd>
+
+<dt>二つ目</dt>
+<dd><tt>text: 'Window'</tt><br />
+<tt>itemId: 'windowButton'</tt></dd>
+</dl>
+
+<h3>Panelの設定</h3>
+
+<p><tt>region: west</tt>のPanelを折りたためるようにしてみます。
+Panelを選択して、Configペインでcollapsibleコンフィグを探してチェックを入れます。
+タイトルバーの所にアイコンが表示されて、それによりパネルを折りたたむことができるようになります。
+この状態で、collapsedのチェックを入れると、初期状態が折りたたまれた状態になります。</p>
+
+<p>次にサイズ変更できるようにしてみます。
+resizableを<tt>true</tt>に設定し、resizeHandlesを <tt>'e'</tt> にしてみます。
+これはリサイズするハンドルをどこに表示するかを指定する物で、<tt>all</tt>を指定するとすべてに表示されます。
+この場合は、<tt>region: west</tt>ですから、右側だけにハンドルを表示させたいので、
+<tt>'e'</tt> (east)を設定しています。</p>
+
+<p>これでいったん保存して、プレビューしてみてください。</p>
+
+<p>ちゃんと、Panelが折りたためるようになっていて、サイズ変更もできるようになっています。</p>
+
+<h2>Controllerの設定</h2>
+
+<h3>References(refs)</h3>
+
+<p>Viewに配置した
+refsを追加するには、次の二つの方法があります。</p>
+
+<ul>
+<li>Configペインで追加する</li>
+<li>Toolboxから追加する</li>
+</ul>
+
+<p>ConfigペインのReferenceの+ボタンをクリックすると、
+簡単なウィザードが起動します。</p>
+
+<blockquote>
+  <p><em>Step 1 of 2 Enter a name of reference</em></p>
+</blockquote>
+
+<p>と表示されたら、Referenceの名前をつけ、Nextボタンをクリックします。</p>
+
+<blockquote>
+  <p><em>Step 2 of 2 Enter a selector</em></p>
+</blockquote>
+
+<p>と表示されたら、コンポーネント クエリー式を入力します。
+すると次のようなrefsコンフィグが定義されます。</p>
+
+<pre><code>refs: [
+    {
+        ref: 'hoge',
+        selector: 'hoge#fuga'
+    }
+],
+</code></pre>
+
+<p>Inspectorからではなく、ToolboxからController ReferenceをProject Inspector上の該当のControllerにドラッグ
+アンド ドロップしても追加することもできます。
+この場合には、ウィザードは起動しません。</p>
+
+<p>どちらの方法をとっても、ConfigペインのReferencesの下に今追加したReferenceが表示されると思います。
+また、Project Inspectorにも表示されます。
+Configペイン上でのReferenceの<img src="https://s.w.org/images/core/emoji/14.0.0/72x72/27a1.png" alt="➡" class="wp-smiley" style="height: 1em; max-height: 1em;" />ボタンをクリックするか、Project InspectorでReferenceを選択すると、
+ConfigペインにReferenceの設定情報が表示されます。
+refとselectorのコンフィグがあると思います。ウィザードを使っていない場合は、
+ここでrefとselectorを設定します。</p>
+
+<p>refで設定した文字列を使って、selectorで指定したコンポーネントを簡単に参照することができます。
+例えば、ref: &#8216;hoge&#8217; の場合は、this.getHoge() でコンポーネントを取得できます。
+selectorには、Ext.CompornentQueryで使える式を設定します。</p>
+
+<blockquote>
+  <h3>コラム: コンポーネント クエリー</h3>
+  
+  <p>コンポーネント クエリーとは、文字列によるクエリー式で、コンポーネントを検索するものです。</p>
+
+<pre><code>button#okButton // itemIdがokButtonであるボタンを探す
+textfield[name=firstname] // name属性がfirstnameのテキストフィールドを探す
+mywindow button#cancel    // mywindowに配置されたitemIdがcancelのボタン
+</code></pre>
+  
+  <p>のように記述します。buttonとかmywindowとかいうのはxtypeです。
+  ビューを定義するときには、userAliasやitemIdの設定をきちんとしておくと
+  コンポーネント クエリーを記述するのが楽になります。
+  詳しくはAPIのドキュメントを参照してください。</p>
+</blockquote>
+
+<h3>Actions</h3>
+
+<p>イベント ハンドラーを設定します。
+Referencesと同様、ConfigペインからでもToolboxからのドロップでも追加できます。</p>
+
+<p>ConfigペインのActionsの +ボタンをクリックします。
+メニューがポップアップして、Controller Action かApplication Actionかを問い合わせてきます。
+Viewのコンポーネントのイベントを記述する際は、Controller Actionを選択します。
+(Application Actionの方は、別な稿で説明しようと思います)</p>
+
+<p>＞ Step 1 of 2 Choose a target type</p>
+
+<p>と表示されたら、対象のコンポーネントのタイプを選択してNextボタンをクリックします。</p>
+
+<blockquote>
+  <p>Step 2 of 2 Choose an event by name</p>
+</blockquote>
+
+<p>と表示されたら、イベント名を選択して、Finishボタンをクリックします。</p>
+
+<p>Referencesと同じように、Actionsに追加したActionも、ConfigペインやProject Inspectorに表示され、
+それを選択すると、Configペインでパラメーターを設定できます。</p>
+
+<p>Controllerでのイベント ハンドラーは、Referencesと同様、
+コンポーネント クエリーを使って対象のオブジェクトを指定します。
+Refsでのselectorにあたるのが、controlQueryです。
+ここに対象となるコンポーネントを特定するクエリー式を設定します。
+ウィザードで指定した場合、ここはtarget typeで指定したコンポーネントのxtypeになっています。
+そのままですと、コンポーネントの特定ができないので、適切な値に変更します。</p>
+
+<pre><code>button#msgButton
+</code></pre>
+
+<p>これで、msgButtonを指すようになりました。</p>
+
+<p>targetTypeでは、コンポーネントのタイプを指定し、
+nameコンフィグには、イベント名を設定します。
+targetTypeを正しく設定すると、nameのコンボボックスに設定できるイベントがリストされます。</p>
+
+<p>fnには、ハンドラーの関数名を設定します。
+ウィザードで作った場合には、onButtonClickなどの名前が自動でつけられますが、
+必要に応じて変更します。</p>
+
+<p>また、Actionを選択した状態では、中央のビューをCodeに切り替えると、
+Actionのハンドラーのコードを入力することができます。
+ArchitectのCodeビューでは、通常はRead Onlyと表示されていて、
+手でコードを修正することはできませんが、
+ハンドラーやinitメソッドなどの入力が必要な部分では、入力が可能になります。
+さっそく次のように入力してみます。</p>
+
+<pre><code>Ext.Msg.alert('ボタンが押されました');
+</code></pre>
+
+<p>プレビューして、ツールバーのMessageボタンをクリックすると、
+アラート ダイアログが表示されます。</p>
+
+<blockquote>
+  <p>Actionsで追加するイベントは、
+  セレクターが同じイベントの場合は次のようにちゃんとまとめてくれます。
+  賢いですね。</p>
+
+<pre><code>"gridpanel": {
+    itemdblclick: this.onGridpanelItemDblClick,
+    select: this.onGridpanelSelect
+}
+</code></pre>
+</blockquote>
+
+<p>長くなりましたので、続きは別稿にします。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha Architect 入門(基礎編)</title>
+		<link>/560</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 26 May 2012 06:39:25 +0000</pubDate>
+				<category><![CDATA[Architect]]></category>
+		<guid isPermaLink="false">/?p=560</guid>
+
+					<description><![CDATA[Ext Designer がバージョンアップしてSencha Architectになりました。 単なるバージョンアップではなく、Visual StudioのようなRAD &#38; IDE環境を目指しているように思われま [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext Designer がバージョンアップしてSencha Architectになりました。
+単なるバージョンアップではなく、Visual StudioのようなRAD &amp; IDE環境を目指しているように思われます。
+<span id="more-560"></span></p>
+
+<p>VBで初めてプログラムを作ったとき、
+フォームにボタンを配置して、そのクリック イベントを記述して、
+ってのをやりませんでしたか？
+そのようなことが、Ext JSでもできる環境が出てきたと言うことです。</p>
+
+<p>さらに、ArchitectからはMVCへの対応がなされていて、
+Designerの時のようにViewだけではなく、
+アプリケーション全体の構築をArchitect上でできるようになっています。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect01.png" alt="Architect" /></p>
+
+<h2>Viewのデザイン</h2>
+
+<p>この部分が一番、Architectの得意とするところです。</p>
+
+<p>標準では画面の左側にToolboxがあり、
+その中からオブジェクトをプロジェクトに追加していきます。
+コンポーネントなどを追加したら、画面中央のCanvasに表示されます。
+また、画面右上にはProject Inspectorがあり、
+プロジェクトの全体像を把握することができます。
+追加したオブジェクトのコンフィグは、
+画面右下にあるConfig Inspectorで設定します。</p>
+
+<h3>Toolbox</h3>
+
+<p>標準では画面左側に表示されるToolbox。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-toolbox.png" alt="Toolbox" align="right" style="margin-left: 10px"/></p>
+
+<p>Toolboxには、コンポーネント、コンテナなどのオブジェクトが並べられています。
+オブジェクトをプロジェクトに追加するには、次の3つの方法があります。</p>
+
+<ol>
+<li>Toolboxのオブジェクトを選択して、
+中央のCanvasにドロップします。</li>
+<li>Toolboxのオブジェクトを選択して、
+画面右側のProject Inspectorにドロップします。</li>
+<li>Project Inspectorで対象となるオブジェクトを選択した後、
+Toolbox上で追加したいオブジェクトをダブルクリックします。</li>
+</ol>
+
+<p>この辺りの操作感はVisual StudioやDeiphiなどのRADツールと同様です。
+最初の方法が一番わかりやすいのですが、ドロップ先のコンテナーの状態によっては、
+適切な場所にドロップできないことがあります。
+また、Behaviorsグループに存在するような、非ヴィジュアルなオブジェクトはCanvasにドロップできません。
+そんな時は、2番目3番目の方法をとるといいでしょう。</p>
+
+<p>Toolboxでは、ツールのグループが表示されており、グループを選択すると、それに所属するオブジェクトが右側に表示されます。
+あるオブジェクトは複数のグループに所属していて、例えばToolbarは、ContainersにもFormsにも表示されます。
+グループの下のCUSTOMと書かれているところの +ボタンをクリックすると自分でグループを作成することもできます。</p>
+
+<p>また大変便利なのが、Toolbox上部のFilterテキストボックスです。グループ内の部品をその名前でフィルタリングできます。
+グループでEverithingを選択してから指定すると、すべての部品の中から該当する部品をリストアップしてくれます。</p>
+
+<h3>Canvasとコードビュー</h3>
+
+<p>画面中央のペインはCanvasです。
+ここにビューが表示されます。
+中央ペインの右上にある Code をクリックすると、現在選択されているオブジェクトのコードが表示されます。</p>
+
+<p>コードは主にRead onlyとなっていて、ユーザーが直接コーディングすることはできません。
+ただ、イベント ハンドラーなど一部においては、コード入力が可能になります。
+コードの入力に関しては、実践編をご覧ください。</p>
+
+<h3>Project Inspector</h3>
+
+<p>プロジェクトの全体像を管理するProject Inspectorには、プロジェクト上のすべてのものが表示されます。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-project.png" alt="Project Inspector" /></p>
+
+<p>初期状態の図を見ると、ApplicationとかControllerなどと表示されています。
+Architectで作成したプロジェクトは、MVCに則った形式で出力されます。
+そして、コントローラーを配置したViewだけでなく、ControllerやModel、Storeといったオブジェクトも設定できます。</p>
+
+<p>Ext JSのMVCでは、いろいろと約束事がありますので、このツールを使って作っていれば、
+そのルールに沿った物ができるというのはいいことでしょう。
+Architectが紡ぎ出すコードはなかなかに良いExt JSのサンプルプロジェクトになります。</p>
+
+<p>Project Inspector上でアイテムをドラッグすると、
+配置したコンポーネントが所属するコンテナーを変更したり、
+順序を変更することができます。</p>
+
+<h3>コンフィグオプションの設定</h3>
+
+<p>画面の右下のConfigペインで、各コンポーネントのコンフィグ オプションを設定します。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-config.png" alt="Config" /></p>
+
+<p>コンフィグ オプションとは、そのコンポーネントの外見や振る舞いに関する各種のパラメーターです。
+これらを適切に設定する事がとても重要になります。
+Ext JSやSencha Touchのコードでは、コンフィグ オプションはオブジェクト リテラルで記述されますが、
+ここでは、プロパティ グリッド上で値を設定することができます。</p>
+
+<p>Ext JS 4やSencha Touch2では、不要なコンフィグを書かなくてもいいように、
+コンフィグの初期値が設定されていて、
+初期値のままの場合には、コンフィグ オブジェクトにその項目を指定する必要はありません。
+Architectでもデフォルト値のままにしておくと、そのコンフィグは生成されるコードに含まれません。
+レイアウトなどを試行錯誤していて、不要なコンフィグが残ってしまう場合がありますので、
+たまに生成されたコードをみて不要なコンフィグはクリアするようにしましょう。</p>
+
+<p>コンフィグプロパティの上にマウスカーソルをホバーさせると、？マークが標示されます。
+そのボタンをクリックすると、そのコンフィグに関する説明がポップアップします。</p>
+
+<p>Architectは、こうしたGUI上で画面のデザインをすることができますが、
+このコンフィグオプションの設定などについては、Ext JSの基本的知識を必要とします。
+先ほど出てきたレイアウトなどについても同様です。
+ただ、GUI上に部品を配置し、コンフィグオプションを設定すると即座に表示が更新されるというのは、
+画面デザインをするにあたり、非常に便利であることは確かです。
+沢山のコンポーネントを配置した複雑なフォームでも
+試行錯誤もやりやすくなります。</p>
+
+<h3>userClassName</h3>
+
+<p>これはExt JSのコンフィグではなく、Architectが使うパラメーターです。
+トップレベルのコンポーネントは、クラスとして定義されます。
+その際のクラス名をここで指定します。ここで指定した値が、生成されるコードでのクラス名になります。</p>
+
+<pre><code>Ext.define('MyApp.view.MyViewport', {
+    extend: 'Ext.container.Viewport',
+
+    layout: {
+</code></pre>
+
+<h3>userAlias</h3>
+
+<p>これも同名のコンフィグがExt JSにあるのではなく、Architectが使うパラメーターです。
+コンポーネントに設定された場合、次のようにwidget.をつけてaliasコンフィグに設定されます。</p>
+
+<pre><code>Ext.define('MyApp.view.MyViewport', {
+    extend: 'Ext.container.Viewport',
+    alias: 'widget.myviewport',
+</code></pre>
+
+<p>これは、コンポーネントのxtypeをmyviewportとしたことになります。</p>
+
+<h3>イベント ハンドラーの設定</h3>
+
+<p>ボタンのイベント ハンドラーを設定するには、ボタンのhandlerコンフィグオプションを設定することで対応できます。
+しかしMVCアーキテクチャではViewで発生したイベントは、通常Controllerで処理します。
+Controllerにイベントリスナを設定するのです。
+ハンドコーディングの場合は、Controllerのinitメソッド内でcontrolメソッドを使って定義しますが、
+Architectでリスナを設定してやると、そういったコードが生成されます。</p>
+
+<p>イベント ハンドラーについては実践編で説明します。</p>
+
+<h2>Controllerの設定</h2>
+
+<p>ArchitectではControllerの定義もできます。
+Controllerとは、で発火したイベントを処理して、Modelに伝えたり、Modelのデータを取り出してViewに渡したりします。</p>
+
+<p>Controllerに装備された重要な機能をArchitectから設定する事ができます。</p>
+
+<h3>References(refs)</h3>
+
+<p>Controllerのrefsコンフィグの指定です。
+ビュー上のオブジェクトを簡単に取得できるgetterメソッドを生成してくれます。</p>
+
+<h3>Actions</h3>
+
+<p>Controllerにイベント ハンドラを定義します。
+Contoller ActionとApplication Actionを定義できます。
+Controller Actionというのは、Viewに配置したコンポーネントなどで発火したイベントの処理を記述します。
+Application Actionというのは、それ以外のアプリケーション ワイドなイベントを処理します。</p>
+
+<h3>init / onLaunch</h3>
+
+<p>Controllerのinit/onLaunchメソッドでは、コントローラーが初期化されるときと起動するときのアクションを定義できます。
+前項でActionsを指定した場合には、initメソッドの中にイベント ハンドラを設定するためのコードが生成されますが、
+ここのinitで定義した内容は、その次に実行されます。</p>
+
+<p>Codeビューでコードを入力します。</p>
+
+<p>onLaunchは、
+です。</p>
+
+<h3>Views / Medels / Stores</h3>
+
+<p>これらの定義をすると、getHogeView(), getHogeModel(), getHogeStore() という
+特別なgetterメソッドが定義され、それぞれクラス定義やインスタンスを簡単に参照できるようになります。</p>
+
+<p>詳しくはAPIドキュメントの各項目を参照してください。</p>
+
+<h2>Model(Model/Store)</h2>
+
+<p>Ext DesignerでもStoreの定義をすることができましたが、
+Architectでもそれが可能です。</p>
+
+<p>Project InspectorのModels / Storesの下の階層に配置されます。</p>
+
+<h2>Project Settings</h2>
+
+<p>ツールバーのSettingボタンをクリックするか、メニューの Edit > Project Settings を選ぶと
+プロジェクトの設定ができます。</p>
+
+<p><img decoding="async" src="wp-content/uploads/2012/05/architect-setting.png" alt="Project Settings" /></p>
+
+<h3>Ext JS Path</h3>
+
+<p>Ext JSのライブラリが保存されているpathを指定します。
+新しいプロジェクトを作った場合には、Cacheflyに設定されていますが、
+実際のプロジェクトでは、サーバー上にライブラリを置くことになると思いますので、
+そのパスを指定します。</p>
+
+<p>ここで指定した内容を元に、htmlファイルのscriptタグが生成されます。</p>
+
+<h3>URL prifix</h3>
+
+<p>Webサーバーに配置されたときのURLのプリフィクスを指定します。</p>
+
+<p>http://localhost/myprojects/sampleproject1</p>
+
+<p>のような感じで指定します。
+これを指定しておくことでPreview機能を利用できます。</p>
+
+<h3>Deploy path</h3>
+
+<p>プロジェクトのソースコードをエクスポートする先のパスを指定します。
+このパスを指定しておくと、ツールバーのDeployボタン(またはF5キー)
+で生成されたソースコードをエクスポートすることができます。</p>
+
+<dl>
+<dt>参照</dt>
+<dd><a href="http://docs.sencha.com/architect/2-0/#!/guide/project_basics">Project Basics</a></dd>
+</dl>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

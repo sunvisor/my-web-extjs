@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="ja"
+ xmlns:og="http://opengraphprotocol.org/schema/"
+ xmlns:fb="http://www.facebook.com/2008/fbml">
+<![endif]--><!--[if IE 8]>
+<html class="ie ie8" lang="ja"
+ xmlns:og="http://opengraphprotocol.org/schema/"
+ xmlns:fb="http://www.facebook.com/2008/fbml">
+<![endif]--><!--[if !(IE 7) & !(IE 8)]><!--><html lang="ja" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Architecting Your App in Ext JS 4, Part 3 | Sunvisor Lab. Ext JS 別館</title>
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="pingback" href="/xmlrpc.php">
+<!--[if lt IE 9]>
+<script src="https://extjs.sunvisor.net/wp-content/themes/twentytwelve/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Sunvisor Lab. Ext JS 別館 &raquo; フィード" href="/feed">
+<link rel="alternate" type="application/rss+xml" title="Sunvisor Lab. Ext JS 別館 &raquo; コメントフィード" href="/comments/feed">
+<link rel="alternate" type="application/rss+xml" title="Sunvisor Lab. Ext JS 別館 &raquo; Architecting Your App in Ext JS 4, Part 3 のコメントのフィード" href="/491/feed">
+<script type="text/javascript">
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"httpsextjs.sunvisor.net\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.1"}};
+/*! This file is auto-generated */
+!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode,e=(p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0),i.toDataURL());return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(p&&p.fillText)switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([129777,127995,8205,129778,127999],[129777,127995,8203,129778,127999])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(e=t.source||{}).concatemoji?c(e.concatemoji):e.wpemoji&&e.twemoji&&(c(e.twemoji),c(e.wpemoji)))}(window,document,window._wpemojiSettings);
+</script>
+<style type="text/css">img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}</style>
+	<link rel="stylesheet" id="wp-block-library-css" href="/wp-includes/css/dist/block-library/style.min.css?ver=6.1" type="text/css" media="all">
+<style id="wp-block-library-theme-inline-css" type="text/css">.wp-block-audio figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-audio figcaption{color:hsla(0,0%,100%,.65)}.wp-block-audio{margin:0 0 1em}.wp-block-code{border:1px solid #ccc;border-radius:4px;font-family:Menlo,Consolas,monaco,monospace;padding:.8em 1em}.wp-block-embed figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-embed figcaption{color:hsla(0,0%,100%,.65)}.wp-block-embed{margin:0 0 1em}.blocks-gallery-caption{color:#555;font-size:13px;text-align:center}.is-dark-theme .blocks-gallery-caption{color:hsla(0,0%,100%,.65)}.wp-block-image figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-image figcaption{color:hsla(0,0%,100%,.65)}.wp-block-image{margin:0 0 1em}.wp-block-pullquote{border-top:4px solid;border-bottom:4px solid;margin-bottom:1.75em;color:currentColor}.wp-block-pullquote__citation,.wp-block-pullquote cite,.wp-block-pullquote footer{color:currentColor;text-transform:uppercase;font-size:.8125em;font-style:normal}.wp-block-quote{border-left:.25em solid;margin:0 0 1.75em;padding-left:1em}.wp-block-quote cite,.wp-block-quote footer{color:currentColor;font-size:.8125em;position:relative;font-style:normal}.wp-block-quote.has-text-align-right{border-left:none;border-right:.25em solid;padding-left:0;padding-right:1em}.wp-block-quote.has-text-align-center{border:none;padding-left:0}.wp-block-quote.is-large,.wp-block-quote.is-style-large,.wp-block-quote.is-style-plain{border:none}.wp-block-search .wp-block-search__label{font-weight:700}.wp-block-search__button{border:1px solid #ccc;padding:.375em .625em}:where(.wp-block-group.has-background){padding:1.25em 2.375em}.wp-block-separator.has-css-opacity{opacity:.4}.wp-block-separator{border:none;border-bottom:2px solid;margin-left:auto;margin-right:auto}.wp-block-separator.has-alpha-channel-opacity{opacity:1}.wp-block-separator:not(.is-style-wide):not(.is-style-dots){width:100px}.wp-block-separator.has-background:not(.is-style-dots){border-bottom:none;height:1px}.wp-block-separator.has-background:not(.is-style-wide):not(.is-style-dots){height:2px}.wp-block-table{margin:"0 0 1em 0"}.wp-block-table thead{border-bottom:3px solid}.wp-block-table tfoot{border-top:3px solid}.wp-block-table td,.wp-block-table th{padding:.5em;border:1px solid;word-break:normal}.wp-block-table figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-table figcaption{color:hsla(0,0%,100%,.65)}.wp-block-video figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-video figcaption{color:hsla(0,0%,100%,.65)}.wp-block-video{margin:0 0 1em}.wp-block-template-part.has-background{padding:1.25em 2.375em;margin-top:0;margin-bottom:0}</style>
+<link rel="stylesheet" id="classic-theme-styles-css" href="/wp-includes/css/classic-themes.min.css?ver=1" type="text/css" media="all">
+<style id="global-styles-inline-css" type="text/css">body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #fff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--blue: #21759b;--wp--preset--color--dark-gray: #444;--wp--preset--color--medium-gray: #9f9f9f;--wp--preset--color--light-gray: #e6e6e6;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--duotone--dark-grayscale: url('#wp-duotone-dark-grayscale');--wp--preset--duotone--grayscale: url('#wp-duotone-grayscale');--wp--preset--duotone--purple-yellow: url('#wp-duotone-purple-yellow');--wp--preset--duotone--blue-red: url('#wp-duotone-blue-red');--wp--preset--duotone--midnight: url('#wp-duotone-midnight');--wp--preset--duotone--magenta-yellow: url('#wp-duotone-magenta-yellow');--wp--preset--duotone--purple-green: url('#wp-duotone-purple-green');--wp--preset--duotone--blue-orange: url('#wp-duotone-blue-orange');--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;}:where(.is-layout-flex){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}</style>
+<link rel="stylesheet" id="twentytwelve-style-css" href="/wp-content/themes/twentytwelve/style.css?ver=6.1" type="text/css" media="all">
+<link rel="stylesheet" id="twentytwelve-block-style-css" href="/wp-content/themes/twentytwelve/css/blocks.css?ver=20181230" type="text/css" media="all">
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='twentytwelve-ie-css' href='https://extjs.sunvisor.net/wp-content/themes/twentytwelve/css/ie.css?ver=20121010' type='text/css' media='all' />
+<![endif]-->
+<script type="text/javascript" src="/wp-includes/js/jquery/jquery.min.js?ver=3.6.1" id="jquery-core-js"></script>
+<script type="text/javascript" src="/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2" id="jquery-migrate-js"></script>
+<link rel="https://api.w.org/" href="/wp-json/">
+<link rel="alternate" type="application/json" href="/wp-json/wp/v2/posts/491">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="/wp-includes/wlwmanifest.xml">
+<meta name="generator" content="WordPress 6.1">
+<link rel="canonical" href="/491">
+<link rel="shortlink" href="/?p=491">
+<link rel="alternate" type="application/json+oembed" href="/wp-json/oembed/1.0/embed?url=https%3A%2F%2F%2F491">
+<link rel="alternate" type="text/xml+oembed" href="/wp-json/oembed/1.0/embed?url=https%3A%2F%2F%2F491&#038;format=xml">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-21302113-2"></script>
+<script>window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-21302113-2');</script><meta property="og:site_name" content="Sunvisor Lab. Ext JS 別館">
+<meta property="og:title" content="Architecting Your App in Ext JS 4, Part 3">
+<meta property="og:url" content="/491">
+<meta property="og:description" content="SenchaのAPIドキュメンテーションにある Architecting Your App in Ext JS 4, Part 3 の翻訳をしました。これでMVC三部作の翻訳完了です。 とか思ったら、最後に &amp;#8220 [&amp;hellip;]">
+<meta property="og:type" content="article">
+<style data-context="foundation-flickity-css">/*! Flickity v2.0.2
+http://flickity.metafizzy.co
+---------------------------------------------- */.flickity-enabled{position:relative}.flickity-enabled:focus{outline:0}.flickity-viewport{overflow:hidden;position:relative;height:100%}.flickity-slider{position:absolute;width:100%;height:100%}.flickity-enabled.is-draggable{-webkit-tap-highlight-color:transparent;tap-highlight-color:transparent;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.flickity-enabled.is-draggable .flickity-viewport{cursor:move;cursor:-webkit-grab;cursor:grab}.flickity-enabled.is-draggable .flickity-viewport.is-pointer-down{cursor:-webkit-grabbing;cursor:grabbing}.flickity-prev-next-button{position:absolute;top:50%;width:44px;height:44px;border:none;border-radius:50%;background:#fff;background:hsla(0,0%,100%,.75);cursor:pointer;-webkit-transform:translateY(-50%);transform:translateY(-50%)}.flickity-prev-next-button:hover{background:#fff}.flickity-prev-next-button:focus{outline:0;box-shadow:0 0 0 5px #09f}.flickity-prev-next-button:active{opacity:.6}.flickity-prev-next-button.previous{left:10px}.flickity-prev-next-button.next{right:10px}.flickity-rtl .flickity-prev-next-button.previous{left:auto;right:10px}.flickity-rtl .flickity-prev-next-button.next{right:auto;left:10px}.flickity-prev-next-button:disabled{opacity:.3;cursor:auto}.flickity-prev-next-button svg{position:absolute;left:20%;top:20%;width:60%;height:60%}.flickity-prev-next-button .arrow{fill:#333}.flickity-page-dots{position:absolute;width:100%;bottom:-25px;padding:0;margin:0;list-style:none;text-align:center;line-height:1}.flickity-rtl .flickity-page-dots{direction:rtl}.flickity-page-dots .dot{display:inline-block;width:10px;height:10px;margin:0 8px;background:#333;border-radius:50%;opacity:.25;cursor:pointer}.flickity-page-dots .dot.is-selected{opacity:1}</style>
+<style data-context="foundation-slideout-css">.slideout-menu{position:fixed;left:0;top:0;bottom:0;right:auto;z-index:0;width:256px;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}.slideout-menu.pushit-right{left:auto;right:0}.slideout-panel{position:relative;z-index:1;will-change:transform}.slideout-open,.slideout-open .slideout-panel,.slideout-open body{overflow:hidden}.slideout-open .slideout-menu{display:block}.pushit{display:none}</style>
+<style>.ios7.web-app-mode.has-fixed header{ background-color: rgba(3,122,221,.88);}</style>
+</head>
+
+<body data-rsssl="1" class="post-template-default single single-post postid-491 single-format-standard wp-embed-responsive single-author">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-dark-grayscale"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 0.49803921568627"></fefuncr><fefuncg type="table" tablevalues="0 0.49803921568627"></fefuncg><fefuncb type="table" tablevalues="0 0.49803921568627"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-grayscale"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 1"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0 1"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-purple-yellow"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.54901960784314 0.98823529411765"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0.71764705882353 0.25490196078431"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-blue-red"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 1"></fefuncr><fefuncg type="table" tablevalues="0 0.27843137254902"></fefuncg><fefuncb type="table" tablevalues="0.5921568627451 0.27843137254902"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-midnight"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 0"></fefuncr><fefuncg type="table" tablevalues="0 0.64705882352941"></fefuncg><fefuncb type="table" tablevalues="0 1"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-magenta-yellow"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.78039215686275 1"></fefuncr><fefuncg type="table" tablevalues="0 0.94901960784314"></fefuncg><fefuncb type="table" tablevalues="0.35294117647059 0.47058823529412"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-purple-green"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.65098039215686 0.40392156862745"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0.44705882352941 0.4"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-blue-orange"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.098039215686275 1"></fefuncr><fefuncg type="table" tablevalues="0 0.66274509803922"></fefuncg><fefuncb type="table" tablevalues="0.84705882352941 0.41960784313725"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><div id="page" class="hfeed site">
+	<header id="masthead" class="site-header" role="banner">
+		<hgroup>
+			<h1 class="site-title"><a href="/" title="Sunvisor Lab. Ext JS 別館" rel="home">Sunvisor Lab. Ext JS 別館</a></h1>
+			<h2 class="site-description">Ext JS 関連の話題を取り上げます。</h2>
+		</hgroup>
+
+		<nav id="site-navigation" class="main-navigation" role="navigation">
+			<button class="menu-toggle">メニュー</button>
+			<a class="assistive-text" href="#content" title="コンテンツへスキップ">コンテンツへスキップ</a>
+			<div class="nav-menu"><ul>
+<li><a href="/">ホーム</a></li>
+</ul></div>
+		</nav><!-- #site-navigation -->
+
+			</header><!-- #masthead -->
+
+	<div id="main" class="wrapper">
+
+	<div id="primary" class="site-content">
+		<div id="content" role="main">
+
+			
+				
+	<article id="post-491" class="post-491 post type-post status-publish format-standard hentry category-aya category-extjs category-mvc tag-ext4">
+				<header class="entry-header">
+			
+						<h1 class="entry-title">Architecting Your App in Ext JS 4, Part 3</h1>
+								</header><!-- .entry-header -->
+
+				<div class="entry-content">
+			<p>SenchaのAPIドキュメンテーションにある
+<a href="http://docs.sencha.com/ext-js/4-0/#!/guide/mvc_pt3">Architecting Your App in Ext JS 4, Part 3</a>
+の翻訳をしました。これでMVC三部作の翻訳完了です。</p>
+
+<p>とか思ったら、最後に &#8220;We will continue&#8230;&#8221; とある。まだ続くのかもしれません。
+<span id="more-491"></span></p>
+
+<h1>Architecting Your App in Ext JS 4, Part 3</h1>
+
+<p><a href="/489">Part 1</a>
+<a href="/476">Part 2</a>
+の中で、PandoraスタイルアプリケーションをExt JS 4の新しい機能を用いて構築する方法を調べました。
+複数のビュー、ストア、モデルのある複雑なUIにModel-View-Controllerアーキテクチャを適用することから始めました。
+コントローラーからビューをコントロールする、
+コントローラーがリスニングできるアプリケーションワイドなイベントを発火するのような、
+アプリケーションを構築する基本的なテクニックを見てきました。
+このパートでは、アプリケーションのMVCアーキテクチャの内部のコントローラーロジックの実装を続けます。</p>
+
+<h2>参照を取得する</h2>
+
+<p>アプリケーションの実装を再開する前に、Ext JS 4のMVCパッケージで利用可能な追加機能のいくつかを見てみましょう。
+前のアーティクルにおいて、
+Ext.application
+のコンフィグにsotresとmodels配列を追加することで、
+アプリケーションに<strong>ストア</strong>や<strong>モデル</strong>を自動的にロードする方法を見てきました。
+この方法でそれぞれのストアの生成されたインスタンスには、
+その名前と同じstoreIdが与えられることについても説明しました。</p>
+
+<h3><code>app/Application.js</code></h3>
+
+<pre id="ext-gen1387"><code id="ext-gen1386" class="prettyprint"><a href="#!/api/Ext-method-application" rel="Ext-method-application" class="docClass"><span class="typ">Ext</span><span class="pun">.</span><span class="pln">application</span></a><span class="pun" id="ext-gen1430">({</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+    models</span><span class="pun">:</span><span class="pln" id="ext-gen1433"> </span><span class="pun" id="ext-gen1428">[</span><span class="str" id="ext-gen1427">'Station'</span><span class="pun">,</span><span class="pln"> </span><span class="str">'Song'</span><span class="pun" id="ext-gen1429">],</span><span class="pln" id="ext-gen1421">
+    stores</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str" id="ext-gen1426">'Stations'</span><span class="pun" id="ext-gen1425">,</span><span class="pln"> </span><span class="str" id="ext-gen1424">'RecentSongs'</span><span class="pun">,</span><span class="pln"> </span><span class="str" id="ext-gen1423">'SearchResults'</span><span class="pun">]</span><span class="pln" id="ext-gen1432">
+    </span><span class="pun">...</span><span class="pln">
+</span><span class="pun" id="ext-gen1431">});</span></code></pre>
+
+<p>storesやmodels配列に追加すると、これらのクラスをインスタンス化するとともに、
+自動的にゲッターも生成されます。
+controllersやviewsにも当てはまります。
+sotres, models, controllers, views の各コンフィグはコントローラークラスにもあって、
+アプリケーションのインスタンスと同じ方法で正しく動作します。
+StationsストアをStationコントローラーの中から参照するためには、
+コントローラーのsotres配列にストアを追加するだけでよいということです。</p>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1389"><code id="ext-gen1388" class="prettyprint"><span class="pun">...</span><span class="pln">
+stores</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Stations'</span><span class="pun">],</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>こうすると、自動的に生成されたゲッターメソッド
+<code>getStationsStore</code>
+を使って、コントローラーの中であればどこからでもStationsストアへの参照を取得できます。
+名前の規則は次のように単純でわかりやすくなっています。</p>
+
+<pre id="ext-gen1391"><code id="ext-gen1390" class="prettyprint"><span class="pln">views</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'StationsList'</span><span class="pun">]</span><span class="pln"> </span><span class="com">// creates getter named 'getStationsListView' -&gt; returns reference to StationsList class</span><span class="pln">
+models</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Station'</span><span class="pun">]</span><span class="pln">     </span><span class="com">// creates getter named 'getStationModel'     -&gt; returns reference to Station model class</span><span class="pln">
+controllers</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Song'</span><span class="pun">]</span><span class="pln">   </span><span class="com">// creates getter named 'getSongController'   -&gt; returns the Song controller instance</span><span class="pln">
+stores</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'Stations'</span><span class="pun">]</span><span class="pln">    </span><span class="com">// creates getter named 'getStationsStore'    -&gt; returns the Stations store instance</span></code></pre>
+
+<p>重要で注意すべき、viewsとmodelsのゲッターはクラスへのリファレンスを返し、
+storesとcontrollersのゲッターは実際のインスタンスを返すことです。</p>
+
+<h2>ビューインスタンスの参照</h2>
+
+<p>前のセクションで、stores, models, controllers, views コンフィグで
+簡単にそれらの参照を取得できるように、
+どのように自動的にゲッターが生成されるのか解説しました。
+<code>getStationsListView</code>
+ゲッターメソッドはビュークラスへの参照を返します。
+このアプリケーションの処理では、StationsList内の最初のアイテムを選択したいと考えています。
+この場合は、ビュークラスへの参照は必要なくて、
+ビューポート内にある実際のStationListインスタンスへの参照が必要になります。</p>
+
+<p>Ext JS 3では、存在するコンポーネントインスタンスへの参照を取得する非常に一般的なアプローチは
+<a href="#!/api/Ext-method-getCmp" rel="Ext-method-getCmp" class="docClass">Ext.getCmp</a>
+メソッドでした。
+このメソッドは引き続き動作しますが、Ext JS 4においては推奨される方法ではありません。
+<a href="#!/api/Ext-method-getCmp" rel="Ext-method-getCmp" class="docClass">Ext.getCmp</a>
+を使ってアプリケーションの中で参照するためには、全てのコンポーネントにユニークなIDを与えなければなりません。
+新しいMVCパッケージでは、
+Ext JS 4の新しい機能である
+<a href="#!/api/Ext.ComponentQuery" rel="Ext.ComponentQuery" class="docClass">ComponentQuery</a>
+を活用する事によって
+コントローラー内にビューインスタンスへのリファレンスを置くことができます。</p>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1393"><code id="ext-gen1392" class="prettyprint"><span class="pun">...</span><span class="pln">
+refs</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+    </span><span class="com">// A component query</span><span class="pln">
+    selector</span><span class="pun">:</span><span class="pln"> </span><span class="str">'viewport &gt; #west-region &gt; stationslist'</span><span class="pun">,</span><span class="pln">
+    </span><span class="kwd">ref</span><span class="pun">:</span><span class="pln"> </span><span class="str">'stationsList'</span><span class="pln">
+</span><span class="pun">}]</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p><code>refs</code>コンフィグで、ビューのインスタンスへの参照をセットアップできます。
+これによりコントローラーのアクションの中からページ上のコンポーネントを参照し操作できます。
+参照したいコンポーネントを指定するにはselectorプロパティの中でComponentQueryを使うことができます。
+オブジェクトの中に他に必要な情報は
+<code>ref</code>
+プロパティです。
+refs配列内にある各アイテムに対して自動的に生成されるゲッターの名前の一部として使われます。
+例えば、
+<code>ref: 'stationsList'</code>
+(注: 大文字のLに注目)
+と定義すると、
+<code>getStationsList</code>
+というゲッターがコントローラー上に生成されます。
+一方、コントローラー内に参照を設定しない場合には、
+<code><a href="#!/api/Ext-method-getCmp" rel="Ext-method-getCmp" class="docClass">Ext.getCmp</a></code>
+をコントローラーアクション内で使い続けることになります。
+しかし、この方法はオススメしません。
+なぜならプロジェクト内でユニークなコンポーネントIDの管理をしなければならなくなってしまい、
+プロジェクトが大きくなると問題を起こすことがあるからです。</p>
+
+<p>忘れてはいけない大事なことは、これらのゲッターはページ上にビューが実際に存在するかどうかとは関係なく生成されると言うことです。
+ゲッターをコールしたときにselectorがページ上のコンポーネントの一致すると、
+結果はキャッシュされるのでその後のゲッターの呼び出しはより速くなります。
+しかし、selectorがページ上のビューと一致しなかった場合は、ゲッターはnullを返します。
+これが意味することは、ビュー上に依存するロジックがありビューがページ上にまだ存在しない可能性がある場合には、
+ゲッターが結果を返した場合だけ実行されるようにするチェックロジックを追加する必要があると言うことです。
+また複数のコンポーネントがselectorに一致した場合には、最初の一つだけが返されます。
+従って、取得したい一つのビューだけを特定するselectorを作るのがよい方法です。
+最後に、参照しているコンポーネントが廃棄(destroy)された場合、
+ページ上に一致する他のコンポーネントがない限り、ゲッターは再びnullを返すようになります。</p>
+
+<h2>アプリケーション起動時にコントローラーロジックをカスケードする</h2>
+
+<p>アプリケーションの開始時、ユーザーの既存のステーションをロードしたいと思います。
+アプリケーションの
+<code>onReady</code>
+メソッドの中にこのロジックを置くことができますが、
+MVCアーキテクチャには
+全てのコントローラー、モデル、ストアがインスタンス化されて初期ビューがレンダリングされた直後に
+各コントローラーで発火する
+<code>onLaunch</code>
+メソッドがあります。
+これによりグローバルアプリケーションロジックとコントローラー特有のロジックを綺麗に分離することができます。</p>
+
+<h3>Step 1</h3>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1395"><code id="ext-gen1394" class="prettyprint"><span class="pun">...</span><span class="pln">
+onLaunch</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// Use the automatically generated getter to get the store</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> stationsStore </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getStationsStore</span><span class="pun">();</span><span class="pln">
+    stationsStore</span><span class="pun">.</span><span class="pln">load</span><span class="pun">({</span><span class="pln">
+        callback</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onStationsLoad</span><span class="pun">,</span><span class="pln">
+        scope</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>StationコントローラーのonLaunchメソッドはStrationストアのloadメソッドを呼び出す最適な場所に思えます。
+ご覧のように、ストアがロードされた直後にコールバックが実行されるようにも設定しています。</p>
+
+<h3>Step 2</h3>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1397"><code id="ext-gen1396" class="prettyprint"><span class="pun">...</span><span class="pln">
+onStationsLoad</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> stationsList </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getStationsList</span><span class="pun">();</span><span class="pln">
+    stationsList</span><span class="pun">.</span><span class="pln">getSelectionModel</span><span class="pun">().</span><span class="kwd">select</span><span class="pun">(</span><span class="lit">0</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>このコールバックの中で自動的に生成されたゲッターを使ってStationsListインスタンスを取得し、
+最初のアイテムを選択しています。
+これによりStationsListの
+<code>selectionchange</code>
+イベントが発火します。</p>
+
+<h3>Step 3</h3>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1399"><code id="ext-gen1398" class="prettyprint"><span class="pun">...</span><span class="pln">
+init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">control</span><span class="pun">({</span><span class="pln">
+        </span><span class="str">'stationslist'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            selectionchange</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onStationSelect
+        </span><span class="pun">},</span><span class="pln">
+        </span><span class="pun">...</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">},</span><span class="pln">
+
+onStationSelect</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">selModel</span><span class="pun">,</span><span class="pln"> selection</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">application</span><span class="pun">.</span><span class="pln">fireEvent</span><span class="pun">(</span><span class="str">'stationstart'</span><span class="pun">,</span><span class="pln"> selection</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);</span><span class="pln">
+</span><span class="pun">},</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>アプリケーションイベントはアプリケーションの中にイベントをリッスンするようなコントローラーが多く張るような場合にとても便利です。
+これらのコントローラーで同じビューイベントをリッスンする代わりに、
+一つのコントローラーがビューイベントをリッスンして他のコントローラーがリッスンできるように
+アプリケーションワイドなイベントを発火します。
+またコントローラーが他のコントローラーとお互いについて知ったり依存したりせずに連携できるようになります。
+<code>onStationSelect</code>
+アクションの中で、
+<code>stationstart</code>
+というアプリケーションイベントを発火しています。</p>
+
+<h3>Step 4</h3>
+
+<h3><code>app/controller/Song.js</code></h3>
+
+<pre id="ext-gen1401"><code id="ext-gen1400" class="prettyprint"><span class="pun">...</span><span class="pln">
+refs</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+    </span><span class="kwd">ref</span><span class="pun">:</span><span class="pln"> </span><span class="str">'songInfo'</span><span class="pun">,</span><span class="pln">
+    selector</span><span class="pun">:</span><span class="pln"> </span><span class="str">'songinfo'</span><span class="pln">
+</span><span class="pun">},</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">ref</span><span class="pun">:</span><span class="pln"> </span><span class="str">'recentlyPlayedScroller'</span><span class="pun">,</span><span class="pln">
+    selector</span><span class="pun">:</span><span class="pln"> </span><span class="str">'recentlyplayedscroller'</span><span class="pln">
+</span><span class="pun">}],</span><span class="pln">
+
+stores</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[</span><span class="str">'RecentSongs'</span><span class="pun">],</span><span class="pln">
+
+init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+    </span><span class="com">// We listen for the application-wide stationstart event</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">application</span><span class="pun">.</span><span class="pln">on</span><span class="pun">({</span><span class="pln">
+        stationstart</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onStationStart</span><span class="pun">,</span><span class="pln">
+        scope</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">},</span><span class="pln">
+
+onStationStart</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">station</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> store </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getRecentSongsStore</span><span class="pun">();</span><span class="pln">
+
+    store</span><span class="pun">.</span><span class="pln">load</span><span class="pun">({</span><span class="pln">
+        callback</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onRecentSongsLoad</span><span class="pun">,</span><span class="pln">
+        </span><span class="kwd">params</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            station</span><span class="pun">:</span><span class="pln"> station</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">'id'</span><span class="pun">)</span><span class="pln">
+        </span><span class="pun">},</span><span class="pln">
+        scope</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>Songコントローラーのinitメソッドで、
+<code>stationstart</code>
+アプリケーションイベントのリスナーを設定しています。
+これが起こったときには、
+RecentSongsストアにこのステーションの曲をロードする必要があります。
+それを
+<code>onStationStart</code>
+メソッドで処理します。
+RecentSongsストアへの参照を取得してそのloadメソッドをコールし、
+ロードが終了した直後に発火するコントローラーアクションを定義しています。</p>
+
+<h3>Step 5</h3>
+
+<h3><code>app/controller/Song.js</code></h3>
+
+<pre id="ext-gen1403"><code id="ext-gen1402" class="prettyprint"><span class="pun">...</span><span class="pln">
+onRecentSongsLoad</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">songs</span><span class="pun">,</span><span class="pln"> request</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> store </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getRecentSongsStore</span><span class="pun">(),</span><span class="pln">
+        selModel </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getRecentlyPlayedScroller</span><span class="pun">().</span><span class="pln">getSelectionModel</span><span class="pun">();</span><span class="pln">
+
+    selModel</span><span class="pun">.</span><span class="kwd">select</span><span class="pun">(</span><span class="pln">store</span><span class="pun">.</span><span class="kwd">last</span><span class="pun">());</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>RecentSongsストアのなかにステーションの曲がロードされたときに、
+RecentlyPlayedScrollerの最後の曲を選択します。
+そうするために
+RecentlyPlayedScroller <code>dataview</code> 上のセレクションモデルを取得し、
+そのselectメソッドにRecentSongsストア内の最後のレコードを渡してコールしています。</p>
+
+<h3>Step 6</h3>
+
+<h3><code>app/controller/Song.js</code></h3>
+
+<pre id="ext-gen1405"><code id="ext-gen1404" class="prettyprint"><span class="pun">...</span><span class="pln">
+init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">control</span><span class="pun">({</span><span class="pln">
+        </span><span class="str">'recentlyplayedscroller'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            selectionchange</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onSongSelect
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+    </span><span class="pun">...</span><span class="pln">
+</span><span class="pun">},</span><span class="pln">
+
+onSongSelect</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">selModel</span><span class="pun">,</span><span class="pln"> selection</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getSongInfo</span><span class="pun">().</span><span class="pln">update</span><span class="pun">(</span><span class="pln">selection</span><span class="pun">[</span><span class="lit">0</span><span class="pun">]);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<p>スクローラーの中の最後の曲を選択したとき、
+<code>selectionchange</code>
+コントロールメソッド
+(このイベントのリスナーはすでにセットアップしていて onSongSelectメソッドの中にあります)
+の中で、
+SongInfoビューの中のデータがアップデートすることによって
+アプリケーションフローが完了します。</p>
+
+<h2>新しいステーションを始める</h2>
+
+<p>これで、アプリケーションフローを追加実装するのが簡単になりました。
+新しいステーションを作成して選択するロジックを追加するのは次のようになります。</p>
+
+<h3><code>app/controller/Station.js</code></h3>
+
+<pre id="ext-gen1407"><code id="ext-gen1406" class="prettyprint"><span class="pun">...</span><span class="pln">
+refs</span><span class="pun">:</span><span class="pln"> </span><span class="pun">[{</span><span class="pln">
+    </span><span class="kwd">ref</span><span class="pun">:</span><span class="pln"> </span><span class="str">'stationsList'</span><span class="pun">,</span><span class="pln">
+    selector</span><span class="pun">:</span><span class="pln"> </span><span class="str">'stationslist'</span><span class="pln">
+</span><span class="pun">}],</span><span class="pln">
+
+init</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">()</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="com">// Listen for the select event on the NewStation combobox</span><span class="pln">
+    </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">control</span><span class="pun">({</span><span class="pln">
+        </span><span class="pun">...</span><span class="pln">
+        </span><span class="str">'newstation'</span><span class="pun">:</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+            </span><span class="kwd">select</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">onNewStationSelect
+        </span><span class="pun">}</span><span class="pln">
+    </span><span class="pun">});</span><span class="pln">
+</span><span class="pun">},</span><span class="pln">
+
+onNewStationSelect</span><span class="pun">:</span><span class="pln"> </span><span class="kwd">function</span><span class="pun">(</span><span class="pln">field</span><span class="pun">,</span><span class="pln"> selection</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">var</span><span class="pln"> selected </span><span class="pun">=</span><span class="pln"> selection</span><span class="pun">[</span><span class="lit">0</span><span class="pun">],</span><span class="pln">
+        store </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getStationsStore</span><span class="pun">(),</span><span class="pln">
+        list </span><span class="pun">=</span><span class="pln"> </span><span class="kwd">this</span><span class="pun">.</span><span class="pln">getStationsList</span><span class="pun">();</span><span class="pln">
+
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">selected </span><span class="pun">&amp;&amp;</span><span class="pln"> </span><span class="pun">!</span><span class="pln">store</span><span class="pun">.</span><span class="pln">getById</span><span class="pun">(</span><span class="pln">selected</span><span class="pun">.</span><span class="kwd">get</span><span class="pun">(</span><span class="str">'id'</span><span class="pun">)))</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+        </span><span class="com">// If the newly selected station does not exist in our station store we add it</span><span class="pln">
+        store</span><span class="pun">.</span><span class="pln">add</span><span class="pun">(</span><span class="pln">selected</span><span class="pun">);</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+
+    </span><span class="com">// We select the station in the Station list</span><span class="pln">
+    list</span><span class="pun">.</span><span class="pln">getSelectionModel</span><span class="pun">().</span><span class="kwd">select</span><span class="pun">(</span><span class="pln">selected</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span><span class="pln">
+</span><span class="pun">...</span></code></pre>
+
+<h2>概要</h2>
+
+<p>これまで先進的なコントローラ技術を使用してビューからロジックを分離することによって、
+アプリケーションのアーキテクチャがわかりやすく保守しやすくなることを説明しました。
+この段階でアプリケーションはすでにかなり機能しています。
+新しいステーションを検索し追加でき、ステーションを選択するとそれを開始できます。
+ステーションの曲はロードされ、曲とアーティストの情報が表示されます。</p>
+
+<p>このシリーズの次のパートではスタイリングやカスタムコンポーネントの作成に焦点を当てて、
+アプリケーションの改良を続けます。</p>
+
+<p><a href="http://docs.sencha.com/ext-js/4-0/guides/mvc_pt3/code.zip">プロジェクトファイルをダウンロード</a></p>
+
+<!-- Facebook Like Button v1.9.6 BEGIN [http://blog.bottomlessinc.com] -->
+<iframe src="https://www.facebook.com/plugins/like.php?href=httpsextjs.sunvisor.net%2F491&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light" scrolling="no" frameborder="0" allowtransparency="true" style="border:none; overflow:hidden; width:450px; height: 30px; align: left; margin: 2px 0px 2px 0px"></iframe>
+<!-- Facebook Like Button END -->
+					</div>
+<!-- .entry-content -->
+		
+		<footer class="entry-meta">
+			カテゴリー: <a href="/category/extjs/aya" rel="category tag">Architecting Your App in Ext JS 4</a>, <a href="/category/extjs" rel="category tag">Ext JS</a>, <a href="/category/extjs/mvc" rel="category tag">MVC</a> | タグ: <a href="/tag/ext4" rel="tag">Ext4</a> | 投稿日: <a href="/491" title="3:20 PM" rel="bookmark"><time class="entry-date" datetime="2012-02-09T15:20:51+09:00">2012年2月9日</time></a> | <span class="by-author">投稿者: <span class="author vcard"><a class="url fn n" href="/author/sunvisor" title="sunvisor の投稿をすべて表示" rel="author">sunvisor</a></span></span>								</footer><!-- .entry-meta -->
+	</article><!-- #post -->
+
+				<nav class="nav-single">
+					<h3 class="assistive-text">投稿ナビゲーション</h3>
+					<span class="nav-previous"><a href="/476" rel="prev"><span class="meta-nav">&larr;</span> Architecting Your App in Ext JS 4, Part 2</a></span>
+					<span class="nav-next"><a href="/505" rel="next">読書メモ: Ext JS 4 First Look / Capter 3 <span class="meta-nav">&rarr;</span></a></span>
+				</nav><!-- .nav-single -->
+
+				
+<div id="comments" class="comments-area">
+
+	
+			<h2 class="comments-title">
+			1 thought on &ldquo;<span>Architecting Your App in Ext JS 4, Part 3</span>&rdquo;		</h2>
+
+		<ol class="commentlist">
+					<li class="comment even thread-even depth-1" id="li-comment-198149">
+		<article id="comment-198149" class="comment">
+			<header class="comment-meta comment-author vcard">
+				<img alt="" src="https://secure.gravatar.com/avatar/410d1e770aff9a9b3b9a9c59e30b7127?s=44&#038;d=monsterid&#038;r=g" srcset="https://secure.gravatar.com/avatar/410d1e770aff9a9b3b9a9c59e30b7127?s=88&#038;d=monsterid&#038;r=g 2x" class="avatar avatar-44 photo" height="44" width="44" loading="lazy" decoding="async"><cite><b class="fn"><a href="http://revkti.com/" rel="external nofollow ugc" class="url">Anisha</a></b> </cite><a href="/491#comment-198149"><time datetime="2016-06-15T12:08:17+09:00">2016年6月15日 12:08 PM</time></a>				</header><!-- .comment-meta -->
+
+				
+				<section class="comment-content comment">
+				<p>Ø³ÙÂ„Ø§ÙÂ…ÙÂ…ÙÂ† Û±Û¶ ÙÂ&#129;Ø±ÙÂˆØ±Ø¯ÛÂŒÙÂ† ÙÂ…ØµØ§ØÂ­Ø¨ÙÂ‡ Ø±Ø˜§ÃÃÂÂÙÂ….ÚÂ†¯™Â†Ø¯ Ø±ÙÂˆØ² ÙÂ†ÛÂŒØ§Ø² Ø§Ø³Øª ØªØ§ Ø¨ØªÙÂˆÙÂ†ÙÂ… Ø¨Ø¹Ø¯ Ø§Ø² ÙÂ…ØµØ§ØÂ­Ø¨ÙÂ‡ ØªØ´Ú©ÛÂŒÙÂ„ Ù¾Ø±ÙÂˆÙÂ†Ø¯ÙÂ‡ ÙÂ&#129;Ø¯Ø±Ø§ÙÂ„ Ø¨Ø¯ÙÂ…ØÂŸÙÂ&#129;ÛÂŒ Ø±ÙÂˆ Ø¨Ø§ÛÂŒØ¯ Ø¨ÙÂ‡ Ø¯ÙÂ„Ø§Ø± Ú©Ø§ÙÂ†Ø§Ø¯Ø§ Ø¨Ø§ Ø®ÙÂˆØ¯ÙÂ… Ø¨Ø¨Ø±ÙÂ…ØÂŸ</p>
+								</section><!-- .comment-content -->
+
+				<div class="reply">
+								</div>
+<!-- .reply -->
+			</article><!-- #comment-## -->
+				</li>
+<!-- #comment-## -->
+		</ol>
+<!-- .commentlist -->
+
+		
+				<p class="nocomments">コメントは停止中です。</p>
+		
+	
+	
+</div>
+<!-- #comments .comments-area -->
+
+			
+		</div>
+<!-- #content -->
+	</div>
+<!-- #primary -->
+
+
+			<div id="secondary" class="widget-area" role="complementary">
+			
+		<aside id="recent-posts-4" class="widget widget_recent_entries">
+		<h3 class="widget-title">最近の投稿</h3>
+		<ul>
+											<li>
+					<a href="/999">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 4/6) &#8211; 柔軟なメソッドを使う</a>
+									</li>
+											<li>
+					<a href="/996">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 3/6)</a>
+									</li>
+											<li>
+					<a href="/989">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 2/6)</a>
+									</li>
+											<li>
+					<a href="/979">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 1/6)</a>
+									</li>
+											<li>
+					<a href="/957">LogicoolのCRAFTキーボードを買いました</a>
+									</li>
+					</ul>
+
+		</aside><aside id="tag_cloud-5" class="widget widget_tag_cloud"><h3 class="widget-title">タグ</h3>
+<div class="tagcloud">
+<ul class="wp-tag-cloud" role="list">
+	<li><a href="/tag/architect" class="tag-cloud-link tag-link-43 tag-link-position-1" style="font-size: 12.375pt;" aria-label="Architect (3個の項目)">Architect</a></li>
+	<li><a href="/tag/bryntum" class="tag-cloud-link tag-link-35 tag-link-position-2" style="font-size: 12.375pt;" aria-label="Bryntum (3個の項目)">Bryntum</a></li>
+	<li><a href="/tag/craft" class="tag-cloud-link tag-link-48 tag-link-position-3" style="font-size: 8pt;" aria-label="CRAFT (1個の項目)">CRAFT</a></li>
+	<li><a href="/tag/direct" class="tag-cloud-link tag-link-42 tag-link-position-4" style="font-size: 13.833333333333pt;" aria-label="Direct (4個の項目)">Direct</a></li>
+	<li><a href="/tag/directstore" class="tag-cloud-link tag-link-12 tag-link-position-5" style="font-size: 8pt;" aria-label="DirectStore (1個の項目)">DirectStore</a></li>
+	<li><a href="/tag/editorgridpanel" class="tag-cloud-link tag-link-14 tag-link-position-6" style="font-size: 8pt;" aria-label="EditorGridPanel (1個の項目)">EditorGridPanel</a></li>
+	<li><a href="/tag/electron" class="tag-cloud-link tag-link-47 tag-link-position-7" style="font-size: 8pt;" aria-label="Electron (1個の項目)">Electron</a></li>
+	<li><a href="/tag/ext-draw" class="tag-cloud-link tag-link-26 tag-link-position-8" style="font-size: 12.375pt;" aria-label="Ext.draw (3個の項目)">Ext.draw</a></li>
+	<li><a href="/tag/ext-loader" class="tag-cloud-link tag-link-15 tag-link-position-9" style="font-size: 8pt;" aria-label="Ext.Loader (1個の項目)">Ext.Loader</a></li>
+	<li><a href="/tag/ext3" class="tag-cloud-link tag-link-10 tag-link-position-10" style="font-size: 13.833333333333pt;" aria-label="Ext3 (4個の項目)">Ext3</a></li>
+	<li><a href="/tag/ext4" class="tag-cloud-link tag-link-11 tag-link-position-11" style="font-size: 22pt;" aria-label="Ext4 (17個の項目)">Ext4</a></li>
+	<li><a href="/tag/extjs" class="tag-cloud-link tag-link-4 tag-link-position-12" style="font-size: 8pt;" aria-label="Ext JS (1個の項目)">Ext JS</a></li>
+	<li><a href="/tag/extjs5" class="tag-cloud-link tag-link-37 tag-link-position-13" style="font-size: 10.625pt;" aria-label="ExtJS5 (2個の項目)">ExtJS5</a></li>
+	<li><a href="/tag/extjs6" class="tag-cloud-link tag-link-38 tag-link-position-14" style="font-size: 17.479166666667pt;" aria-label="ExtJS6 (8個の項目)">ExtJS6</a></li>
+	<li><a href="/tag/jasmine" class="tag-cloud-link tag-link-27 tag-link-position-15" style="font-size: 8pt;" aria-label="Jasmine (1個の項目)">Jasmine</a></li>
+	<li><a href="/tag/livereload" class="tag-cloud-link tag-link-34 tag-link-position-16" style="font-size: 8pt;" aria-label="LiveReload (1個の項目)">LiveReload</a></li>
+	<li><a href="/tag/nextjs" class="tag-cloud-link tag-link-17 tag-link-position-17" style="font-size: 10.625pt;" aria-label="NextJS (2個の項目)">NextJS</a></li>
+	<li><a href="/tag/oracle" class="tag-cloud-link tag-link-23 tag-link-position-18" style="font-size: 8pt;" aria-label="Oracle (1個の項目)">Oracle</a></li>
+	<li><a href="/tag/pdo" class="tag-cloud-link tag-link-24 tag-link-position-19" style="font-size: 8pt;" aria-label="PDO (1個の項目)">PDO</a></li>
+	<li><a href="/tag/sass" class="tag-cloud-link tag-link-46 tag-link-position-20" style="font-size: 8pt;" aria-label="SASS (1個の項目)">SASS</a></li>
+	<li><a href="/tag/sencha-touch" class="tag-cloud-link tag-link-29 tag-link-position-21" style="font-size: 17.479166666667pt;" aria-label="Sencha Touch (8個の項目)">Sencha Touch</a></li>
+	<li><a href="/tag/sencha-ug" class="tag-cloud-link tag-link-44 tag-link-position-22" style="font-size: 10.625pt;" aria-label="Sencha UG (2個の項目)">Sencha UG</a></li>
+	<li><a href="/tag/siesta" class="tag-cloud-link tag-link-33 tag-link-position-23" style="font-size: 10.625pt;" aria-label="Siesta (2個の項目)">Siesta</a></li>
+	<li><a href="/tag/theme" class="tag-cloud-link tag-link-45 tag-link-position-24" style="font-size: 8pt;" aria-label="Theme (1個の項目)">Theme</a></li>
+	<li><a href="/tag/universal-app" class="tag-cloud-link tag-link-39 tag-link-position-25" style="font-size: 10.625pt;" aria-label="Universal App (2個の項目)">Universal App</a></li>
+	<li><a href="/tag/vim" class="tag-cloud-link tag-link-16 tag-link-position-26" style="font-size: 13.833333333333pt;" aria-label="vim (4個の項目)">vim</a></li>
+	<li><a href="/tag/webstorm" class="tag-cloud-link tag-link-13 tag-link-position-27" style="font-size: 10.625pt;" aria-label="WebStorm (2個の項目)">WebStorm</a></li>
+	<li><a href="/tag/xframeworkpx" class="tag-cloud-link tag-link-5 tag-link-position-28" style="font-size: 10.625pt;" aria-label="xFrameworkPX (2個の項目)">xFrameworkPX</a></li>
+</ul>
+</div>
+</aside><aside id="archives-4" class="widget widget_archive"><h3 class="widget-title">アーカイブ</h3>
+			<ul>
+					<li><a href="/date/2020/03">2020年3月</a></li>
+	<li><a href="/date/2017/09">2017年9月</a></li>
+	<li><a href="/date/2016/11">2016年11月</a></li>
+	<li><a href="/date/2016/09">2016年9月</a></li>
+	<li><a href="/date/2016/07">2016年7月</a></li>
+	<li><a href="/date/2016/03">2016年3月</a></li>
+	<li><a href="/date/2016/02">2016年2月</a></li>
+	<li><a href="/date/2015/12">2015年12月</a></li>
+	<li><a href="/date/2015/10">2015年10月</a></li>
+	<li><a href="/date/2015/08">2015年8月</a></li>
+	<li><a href="/date/2015/05">2015年5月</a></li>
+	<li><a href="/date/2015/02">2015年2月</a></li>
+	<li><a href="/date/2014/12">2014年12月</a></li>
+	<li><a href="/date/2014/10">2014年10月</a></li>
+	<li><a href="/date/2014/06">2014年6月</a></li>
+	<li><a href="/date/2014/04">2014年4月</a></li>
+	<li><a href="/date/2014/03">2014年3月</a></li>
+	<li><a href="/date/2013/12">2013年12月</a></li>
+	<li><a href="/date/2013/09">2013年9月</a></li>
+	<li><a href="/date/2013/05">2013年5月</a></li>
+	<li><a href="/date/2013/04">2013年4月</a></li>
+	<li><a href="/date/2013/02">2013年2月</a></li>
+	<li><a href="/date/2012/12">2012年12月</a></li>
+	<li><a href="/date/2012/11">2012年11月</a></li>
+	<li><a href="/date/2012/10">2012年10月</a></li>
+	<li><a href="/date/2012/09">2012年9月</a></li>
+	<li><a href="/date/2012/05">2012年5月</a></li>
+	<li><a href="/date/2012/04">2012年4月</a></li>
+	<li><a href="/date/2012/03">2012年3月</a></li>
+	<li><a href="/date/2012/02">2012年2月</a></li>
+	<li><a href="/date/2012/01">2012年1月</a></li>
+	<li><a href="/date/2011/12">2011年12月</a></li>
+	<li><a href="/date/2011/10">2011年10月</a></li>
+	<li><a href="/date/2011/09">2011年9月</a></li>
+	<li><a href="/date/2011/08">2011年8月</a></li>
+	<li><a href="/date/2011/07">2011年7月</a></li>
+	<li><a href="/date/2011/06">2011年6月</a></li>
+	<li><a href="/date/2011/05">2011年5月</a></li>
+	<li><a href="/date/2011/04">2011年4月</a></li>
+	<li><a href="/date/2011/03">2011年3月</a></li>
+	<li><a href="/date/2011/01">2011年1月</a></li>
+			</ul>
+
+			</aside><aside id="text-5" class="widget widget_text">			<div class="textwidget">
+<script src="https://widgets.twimg.com/j/2/widget.js"></script>
+<script>new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 4,
+  interval: 6000,
+  width: 220,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#88bbff',
+      color: '#000000'
+    },
+    tweets: {
+      background: '#ebebeb',
+      color: '#050505',
+      links: '#3300ee'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: false,
+    hashtags: true,
+    timestamp: true,
+    avatars: false,
+    behavior: 'all'
+  }
+}).render().setUser('martini3oz').start();</script>
+</div>
+		</aside>		</div>
+<!-- #secondary -->
+		</div>
+<!-- #main .wrapper -->
+	<footer id="colophon" role="contentinfo">
+		<div class="site-info">
+									<a href="https://ja.wordpress.org/" class="imprint" title="セマンティックなパブリッシングツール">
+				Proudly powered by WordPress			</a>
+		</div>
+<!-- .site-info -->
+	</footer><!-- #colophon -->
+</div>
+<!-- #page -->
+
+<!-- Powered by WPtouch: 4.3.44 --><script type="text/javascript" src="/wp-content/themes/twentytwelve/js/navigation.js?ver=20140711" id="twentytwelve-navigation-js"></script>
+</body>
+</html>

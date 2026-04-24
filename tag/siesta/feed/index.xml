@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Siesta &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/siesta/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Sun, 07 Apr 2013 05:30:18 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Siestaでユーザー入力をシミュレート</title>
+		<link>/621</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 12 Nov 2012 04:49:59 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Bryntum]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<category><![CDATA[Siesta]]></category>
+		<guid isPermaLink="false">/?p=621</guid>
+
+					<description><![CDATA[Siestaに関する第2弾です。Siestaでユーザー入力のシミュレートをやってみます。 ユーザー操作のシミュレート Siestaでは、ユーザーの操作をシミュレートできます。 Siesta.Test.Simulateネー [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Siestaに関する第2弾です。Siestaでユーザー入力のシミュレートをやってみます。</p>
+
+<p><a href="/wp-content/uploads/2012/11/siesta.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2012/11/siesta-1024x691.png" alt="" title="siesta" width="640" height="431" class="alignnone size-large wp-image-610" srcset="/wp-content/uploads/2012/11/siesta-1024x691.png 1024w, /wp-content/uploads/2012/11/siesta-300x202.png 300w, /wp-content/uploads/2012/11/siesta.png 1394w" sizes="(max-width: 640px) 100vw, 640px" /></a></p>
+
+<p><span id="more-621"></span></p>
+
+<h2>ユーザー操作のシミュレート</h2>
+
+<p>Siestaでは、ユーザーの操作をシミュレートできます。
+Siesta.Test.Simulateネームスペースのmixinたちのメソッドや、
+Siesta.Test.Actionクラスがそれをやるみたいですね。</p>
+
+<p>アクションは、実行後にコールバックを呼ぶという非同期の呼び出しになります。</p>
+
+<h3>t.chain メソッド</h3>
+
+<p>ちょっとそれますが、
+非同期のテストを順番に実行する時には、コールバックのネストが深くなってしまいます。
+そんな時にはt.chainで、非同期のものも順番にテストを実行させることができます。</p>
+
+<div>[js]
+    t.chain(
+        function (next) {
+            t.type(userNameField, &#8216;username&#8217;, next)
+        },
+        function (next) {
+            t.type(passwordField, &#8216;secret&#8217;, next)
+        },
+        function (next) {
+            t.click(loginButton, next)
+        },
+        function () {
+            // done
+        }
+    });
+[/js]</div>
+
+<p>SiestaのAPI Docのサンプルには、文末の<code>;</code>が抜けているのが多くてキモいです、
+このサンプルではつけてます。</p>
+
+<p>関数をいっぱい渡すわけですね。
+このtypeなどの関数は、Siesta.TestのAPI見ても出てきません。
+typeだと、Siesta.Test.Simulate.Keyboardというmixinのメソッドです。
+これらSimulateのメソッドで、ユーザー入力のシミュレートをします。
+関数に渡るのはコールバック関数で、
+それが次の関数ということになるのですね。
+関数の中では、非同期呼び出しをする時のコールバックに渡された引数nextを渡してやるということです。</p>
+
+<p>関数じゃなくてオブジェクトリテラルで指定することも可能です。</p>
+
+<div>[js]
+    t.chain({
+        action  : &#8216;type&#8217;,
+        target  : userNameField, 
+        text    : &#8216;username&#8217;
+    },{
+        action  : &#8216;type&#8217;,
+        target  : passwordField, 
+        text    : &#8216;secret&#8217;
+    },{
+        action  : &#8216;click&#8217;,
+        target  : loginButton 
+    });
+[/js]</div>
+
+<p>関数とオブジェクト両方混ぜて使っても大丈夫です。</p>
+
+<h3>Actionの指定</h3>
+
+<p>このオブジェクトの指定の仕方について。</p>
+
+<ul>
+<li><strong><code>action</code></strong>:<br />
+実行するアクションの名前、<code>type</code>とか<code>click</code>とかがあります。
+Siesta.Test.Actionクラスのサブクラス名の先頭を小文字にしたものを指定するみたいです。</li>
+<li><strong><code>target</code></strong>:<br />
+アクションの対象となるエレメントを指定。後述。</li>
+<li><strong><code>text</code></strong>:<br />
+<code>type</code>アクションの場合のオプションで、入力するテキスト。
+アクション毎に指定できるオプションがあります。
+Siesta.Test.ActionのサブクラスのAPIドキュメントを参照してください。</li>
+</ul>
+
+<h3>target に設定できるもの</h3>
+
+<p>Siestaでは、いろいろな方法で、アクションの対象となるエレメントを指定できるようになっています。</p>
+
+<p>まず、Siesta.Test.Browserで使えるもの</p>
+
+<ul>
+<li>HTMLエレメント</li>
+<li><code>[ x, y ]</code>形式の配列で座標を指定。</li>
+<li>DOMクエリーを表すCSSセレクター。</li>
+</ul>
+
+<p>Ext JSやSencha Touchでは次のものも使えます。</p>
+
+<ul>
+<li>Ext.dom.Element のインスタンス</li>
+<li>Ext.Componentのインスタンス。</li>
+<li>コンポジットクエリー文字列。</li>
+<li>コンポーネントクエリー文字列。先頭に <code>'&gt;&gt;'</code> をつけること。</li>
+</ul>
+
+<p>コンポジットクエリーというのはSiestaの用語で、コンポーネントクエリーの後に <code>'=&gt;'</code> で繋げて、
+セレクターを書いてエレメントを指定する構文です。</p>
+
+<p>文字列で指定するものが3つありますが、文字列が <code>'&gt;&gt;'</code> で始まっていれば、コンポーネントクエリー、
+文字列中に<code>'=&gt;'</code>があれば、コンポジットクエリー、それ以外はDOMクエリーということになります。</p>
+
+<h2>シミュレートしてみる</h2>
+
+<p>ちょっと長いですけど、フォームの入力をシミュレートするテストを書いてみました。
+この元になるフォームには、テキストフィールドやコンボボックスなどがあり、保存ボタンがあります。
+保存ボタンには、イベントリスナーが設定済みで、そのリスナーの中で <code>saveCommand</code> という独自イベントが発火する仕組みになっています。</p>
+
+<div>[js]
+    StartTest(function(t) {
+        var nameValue = &#8216;鬼瓦　権三&#8217;,
+            emailValue = &#8216;gonzo@onigawara.com&#8217;,
+            ageValue = &#8217;40&#8217;;
+            
+        t.requireOk(
+            [
+                &#8216;EX.model.Employee&#8217;, 
+                &#8216;EX.model.Department&#8217;, 
+                &#8216;EX.store.Departments&#8217;, 
+                &#8216;EX.view.Form&#8217;
+            ], 
+            function() {
+                var rec, form,
+                    nameFld, deptFld, emailFld, genderFld, ageFld, 
+                    saveButton, async = t.beginAsync();
+
+                rec = Ext.create(&#8216;EX.model.Employee&#8217;);
+                Ext.create(&#8216;EX.store.Departments&#8217;, {
+                    storeId: &#8216;Departments&#8217;,
+                    addMode: false
+                });
+
+                form = Ext.create(&#8216;EX.view.Form&#8217;, {
+                    width: 500,
+                    renderTo: Ext.getBody()
+                });
+
+                nameFld = form.down(&#8216;textfield[name=name]&#8217;);
+                deptFld = form.down(&#8216;combobox[name=department_id]&#8217;);
+                emailFld = form.down(&#8216;textfield[name=email]&#8217;);
+                genderFld = form.down(&#8216;combobox[name=gender]&#8217;);
+                ageFld = form.down(&#8216;numberfield[name=age]&#8217;);
+
+                saveButton = form.down(&#8216;button[text=保存]&#8217;);
+
+                // イベントリスナー設定
+                form.on(&#8216;saveCommand&#8217;, function(form, rec, mode) {
+                    var values = form.getValues();
+
+                    t.diag(&#8216;保存ボタンがクリックされた&#8217;);
+                    t.is(values.name, nameValue, &#8216;nameフィールドの一致&#8217;);
+                    t.is(values.email, emailValue, &#8216;emailフィールドの一致&#8217;);
+                    t.is(values.department_id, &#8216;3&#8217;, &#8216;department_idフィールドの一致&#8217;);
+                    t.is(values.gender, &#8216;男&#8217;, &#8216;genderフィールドの一致&#8217;);
+                    t.is(values.age, ageValue, &#8216;ageフィールドの一致&#8217;);
+                    t.endAsync(async);
+                });
+                form.loadRecord(rec);
+                // イベントをリッスンしてボタンをクリック
+                t.chain({
+                    // テキストフィールドに入力
+                    action: &#8216;type&#8217;,
+                    target: nameFld,
+                    text: nameValue
+                }, {
+                    // コンボのリストを開く
+                    action      : &#8216;click&#8217;,
+                    target      : deptFld.el.query(&#8216;.x-trigger-cell&#8217;)[0]
+                }, 
+                function (next) {
+                    // コンボのアイテムを選択
+                    t.click(deptFld.getPicker().getNode(2), next);
+                }, {
+                    // テキストフィールドに入力
+                    action: &#8216;type&#8217;,
+                    target: emailFld,
+                    text: emailValue
+                }, {
+                    // コンボのリストを開く
+                    action      : &#8216;click&#8217;,
+                    target      : genderFld.el.query(&#8216;.x-trigger-cell&#8217;)[0]
+                },
+                function (next) {
+                    // コンボのアイテムを選択
+                    t.click(genderFld.getPicker().getNode(0), next);
+                }, {
+                    // 数値フィールドに入力
+                    action: &#8216;type&#8217;,
+                    target: ageFld,
+                    text: ageValue
+                }, {
+                    // 保存ボタンをクリック
+                    action: &#8216;click&#8217;,
+                    target: saveButton
+                });
+            }
+        );
+    });
+[/js]</div>
+
+<h3>type</h3>
+
+<p>typeアクションで、テキストフィールドに値を入力しています。
+targetの指定は、本来であればコンポーネントの入力エレメントを取り出して渡さなければならないところですが、
+Siesta.Test.ExtJSクラスを利用している場合は、コンポーネントを渡しちゃってもいいそうです。
+ですので、ここでは、</p>
+
+<pre><code>nameFld = form.down('textfield[name=name]');
+</code></pre>
+
+<p>として取り出したコンポーネントを渡しています。</p>
+
+<h3>コンボボックスのアイテム選択</h3>
+
+<p>これは、サンプルの中から取りだしたテクニックです。</p>
+
+<div>[js]
+    {
+        // コンボのリストを開く
+        action      : &#8216;click&#8217;,
+        target      : deptFld.el.query(&#8216;.x-trigger-cell&#8217;)[0]
+    }, 
+    function (next) {
+        // コンボのアイテムを選択
+        t.click(deptFld.getPicker().getNode(2), next);
+    },
+[/js]</div>
+
+<p>2つのアクションで実行しています。</p>
+
+<ul>
+<li>コンボボックスのトリガーボタンのクリック</li>
+<li>プルダウンしたアイテムのクリック</li>
+</ul>
+
+<p>です。これで任意のプルダウンの選択という動作をシミュレートできます。</p>
+
+<h3>保存ボタンのクリック</h3>
+
+<p>t.chainで指定した一連の操作の最後は、保存ボタンをクリックです。
+このテストでは、 saveCommandイベントのリスナーを設定しています。
+そして、endSyncを使って、このリスナーが実行されるまで、テストを有効にしています。
+リスナーに渡された内容を見て、値の比較のアサーションを定義しています。</p>
+
+<p>このテストを実行すると、次の動画のような動きをします。
+ちょっとわかりにくいかも知れませんが、画面上部のテスト実行ボタンをクリックするまでの動きは、僕が行った操作ですが、その後の動きは、Siestaによるシミュレーションです。</p>
+
+<iframe loading="lazy" width="560" height="315" src="http://www.youtube.com/embed/i1WEect0XQw" frameborder="0" allowfullscreen></iframe>
+
+<p>いかがですか、<strong>自動てすとっ！</strong>って感じがしていいですよねｗ</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>SiestaでMVCアプリのテストを書く</title>
+		<link>/607</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sun, 11 Nov 2012 02:46:52 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Bryntum]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<category><![CDATA[Siesta]]></category>
+		<guid isPermaLink="false">/?p=607</guid>
+
+					<description><![CDATA[Testing Sencha Apps by Mats Bryntse (Sencha Touch North West Meetup) という動画を見てSiestaに興味を持ったので、さわり始めてみました。 Siest [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p><a href="http://www.youtube.com/watch?v=nhokEFzzjcI&amp;feature=youtu.be&amp;hd=1">Testing Sencha Apps by Mats Bryntse (Sencha Touch North West Meetup)</a>
+という動画を見てSiestaに興味を持ったので、さわり始めてみました。
+SiestaはJavaScriptのテストフレームワークで、非常にビジュアル系。なんせExt JSで作られていますからね。
+Siestaを使って、MVCアプリケーションのテストをしてみたい。
+ということで、やり始めているのですが、これはその記録です。
+根気よく続いていれば、続きを書けるかもしれません。
+<a href="/wp-content/uploads/2012/11/siesta.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2012/11/siesta-1024x691.png" alt="" title="siesta" width="640" height="431" class="alignnone size-large wp-image-610" srcset="/wp-content/uploads/2012/11/siesta-1024x691.png 1024w, /wp-content/uploads/2012/11/siesta-300x202.png 300w, /wp-content/uploads/2012/11/siesta.png 1394w" sizes="(max-width: 640px) 100vw, 640px" /></a></p>
+
+<p><span id="more-607"></span>
+この画面は、この記事の最後のテスト、GridPanelのテストを実行したときの画面です。画面上でテストを選択して実行させる。ビジュアルコンポーネントのテストでは、その表示も確認できます。冒頭のビデオを見ていても、とてもワクワクするような作りになっています。</p>
+
+<h3>Siestaの配置</h3>
+
+<pre><code>  ▾ public_html/
+    ▾ ex_siesta/
+      ▸ app/
+      ▸ data/
+      ▸ resources/
+      ▾ test/
+        ▸ siesta/   &lt;-- SiestaのSDK
+        ▸ tests/
+          test_harness.html
+          test_harness.js
+        app.js
+        index.html
+    ▸ extjs/        &lt;-- Ext JS のSDK
+</code></pre>
+
+<p><s>テスト対象のアプリケーションのフォルダにtestフォルダを作って、その下にtestsディレクトリとsiestaのSDKを配置します。
+配置の位置関係は自由ですが、僕の場合にはテストを1つのディレクトリにつめこんでしまいたかったので、こうしてみました。</s>こうするとうまくいかないこと(Modelのproxyが参照しているurlの階層の問題)があったので、test下に放り込むのはやめて、Siestaのexampleに従って次のようにしました。</p>
+
+<pre><code>  ▾ public_html/
+    ▾ ex_siesta/
+      ▸ app/
+      ▸ data/
+      ▸ resources/
+      ▸ siesta/   &lt;-- SiestaのSDK
+      ▸ tests/
+        test_harness.html
+        test_harness.js
+        app.js
+        index.html
+    ▸ extjs/        &lt;-- Ext JS のSDK
+</code></pre>
+
+<p>テストの起点となるのは、test_harness.html と test_harness.js です。
+<s>この場合は、test ディレクトリの下に入れ込んでしまうので、index.js / index.html という名前にしても良いのでしょうね。</s></p>
+
+<p><strong>test_harness.html</strong></p>
+
+<div>[html]
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;../../extjs/resources/css/ext-all.css&quot;/&gt;
+            &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;siesta/resources/css/siesta-all.css&quot;&gt;
+            
+            &lt;script type=&quot;text/javascript&quot; src=&quot;../../extjs/ext-all.js&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;siesta/siesta-all.js&quot;&gt;&lt;/script&gt;
+
+            &lt;script type=&quot;text/javascript&quot; src=&quot;test_harness.js&quot;&gt;&lt;/script&gt;
+        &lt;/head&gt;
+        
+        &lt;body&gt;
+        &lt;/body&gt;
+    &lt;/html&gt;
+[/html]</div>
+
+<p>CSSとJS、それぞれExt JSとSiestaのものを読み込みます。
+最後に、<code>test_harness.js</code>を読み込みます。</p>
+
+<h3>Harness</h3>
+
+<p><strong>test_harness.js</strong></p>
+
+<div>[js]
+    var Harness = Siesta.Harness.Browser.ExtJS;
+
+    Harness.configure({
+        title       : &#8216;MVC Test Suite&#8217;,
+        loaderPath  : { &#8216;EX&#8217; : &#8216;app&#8217; },
+        
+        preload : [
+           &quot;../extjs/resources/css/ext-all.css&quot;,
+           &quot;../extjs/ext-all-debug.js&quot;
+        ]
+        
+    });
+
+    Harness.start({
+        group: &#8216;Sanity&#8217;,
+        items: [
+            &#8216;tests/010_sanity.t.js&#8217;
+        ]
+    },{
+        group: &#8216;Model&#8217;,
+        items: [
+            &#8216;tests/021_employee.t.js&#8217;,
+            &#8216;tests/022_depertment.t.js&#8217;
+        ]
+    },{
+        group: &#8216;View&#8217;,
+        items: [
+            &#8216;tests/031_list.t.js&#8217;,
+            &#8216;tests/032_grid.t.js&#8217;
+        ]
+    });
+[/js]</div>
+
+<p>Harnessの設定</p>
+
+<ul>
+<li><strong><code>loaderPath</code></strong>
+loaderPathには、アプリケーションの名前空間へのパスをセットします。
+(Ext.loaderに設定するのと同じですね)</li>
+<li><strong><code>preload</code></strong><br />
+preloadには各テストをロードする前にロードすべきファイルを指定します。</li>
+</ul>
+
+<h2>テストコード</h2>
+
+<p>実際のテストは、この場合testsディレクトリの下に置きます。
+それぞれのテストは、完全に独立して実行されグローバルスコープもクリーンナップされます。</p>
+
+<p><strong>tests/010_sanity.t.js</strong></p>
+
+<div>[js]
+    StartTest(function(t) {
+        t.diag(&quot;Sanity test, loading classes on demand and verifying they were indeed loaded.&quot;);
+        
+        t.ok(Ext, &#8216;ExtJS is here&#8217;);
+        t.requireOk(&#8216;EX.controller.Main&#8217;);
+    });
+[/js]</div>
+
+<p>StartTestという関数の引数に無名関数を渡しています。</p>
+
+<p>テストコードは
+<code>StartTest(function (t) { .... })</code>
+でラップします。
+StartTestに渡す関数に第1引数として渡される引数(前記の<code>t</code>)は、Siesta.Testのインスタンスです。
+で、Siesta.Test のインスタンスにはいくつかのアサーションメソッドがあります。
+それを使ってテストを書いて行きます。ここで使っているのは次のようなものです。</p>
+
+<ul>
+<li><strong><code>ok</code>メソッド</strong><br />
+値が真になる場合にテストをパスします</li>
+<li><strong><code>requireOk</code>メソッド</strong><br />
+Siesta.Test.ExtJSクラスのメソッド。Ext.require()で指定したクラスをロードして、コールバック関数が指定されていたら、それを実行する。</li>
+<li><strong><code>done</code>メソッド</strong><br />
+ここでは使ってませんが、テストを終了するメソッドです。</li>
+</ul>
+
+<h3>Modelのテスト</h3>
+
+<div>[js]
+    StartTest(function(t) {
+
+        t.requireOk(&#8216;EX.model.Employee&#8217;, function() {
+            var mod = Ext.create(&#8216;EX.model.Employee&#8217;, {
+                name: &#8216;鬼瓦　権三&#8217;,
+                department_id: 1,
+                email: &#8216;gonzo@onigawara.com&#8217;,
+                gender: &#8216;男&#8217;,
+                age: 33
+            });
+            
+            t.is(mod.genderEn(), &#8216;male&#8217;, &#8216;genderEn works ok&#8217;);
+            t.is(mod.get(&#8216;email&#8217;), &#8216;gonzo@onigawara.com&#8217;, &#8216;Could read email&#8217;);
+        });
+    });
+[/js]</div>
+
+<ul>
+<li><strong><code>is</code>メソッド</strong><br />
+1つ目と2つ目の引数が等しければテストをパスします</li>
+</ul>
+
+<p>genderEnというメソッドは、Modelで定義しているメソッドで</p>
+
+<div>[js]
+    genderEn: function(value) {
+        var me = this,
+            gender = me.get(&#8216;gender&#8217;);
+
+        if(gender == &#8216;男&#8217;){
+            return &#8216;male&#8217;;
+        } else if(gender == &#8216;女&#8217;){
+            return &#8216;female&#8217;;
+        } else {
+            return gender;
+        }
+    }
+[/js]</div>
+
+<p>こんな感じのメソッドです。このテストでは、isメソッドでその動作を確認しているのと、
+普通にgetメソッドでemailを読み出して、値を比較してみています。</p>
+
+<h3>Storeのテスト</h3>
+
+<div>[js]
+    StartTest(function(t) {
+        t.requireOk(&#8216;EX.store.Departments&#8217;, function() {
+            var s = Ext.create(&#8216;EX.store.Departments&#8217;),
+                async = t.beginAsync();
+
+            s.load({
+                callback: function() {
+                    var c, m;
+
+                    t.pass(&#8216;loaded&#8217;);
+                    c = s.getCount();
+                    t.isGreater(c, 0, Ext.String.format(&#8216;レコードが{0}件&#8217;, c));
+                    m = s.getAt(0);
+                    t.ok(m, Ext.String.format(&#8216;最初のレコードのname:{0}&#8217;, m.get(&#8216;name&#8217;)));
+                    t.endAsync(async);
+                }
+            });
+            
+        });
+    });
+[/js]</div>
+
+<p>ストアのテストでは、ストアをloadしたコールバックでテストを実行しました。</p>
+
+<p>追記）
+非同期のコールバックを使ったテストをする場合は、beginAsync/ednAsyncを使って、その非同期呼び出しが完了するまで、
+テストが終了しないようにする必要があります。</p>
+
+<h3>View のテスト</h3>
+
+<p>Gridをテストしてみます。</p>
+
+<div>[js]
+    StartTest(function(t) {
+        t.requireOk(
+            [
+                &#8216;EX.model.Employee&#8217;, 
+                &#8216;EX.store.Employees&#8217;, 
+                &#8216;EX.model.Department&#8217;, 
+                &#8216;EX.store.Departments&#8217;, 
+                &#8216;EX.view.Grid&#8217;
+            ], 
+            function() {
+                var grid;
+                
+                Ext.create(&#8216;EX.store.Employees&#8217;,{
+                    storeId: &#8216;Employees&#8217;
+                });
+                Ext.create(&#8216;EX.store.Departments&#8217;, {
+                    storeId: &#8216;Departments&#8217;
+                });
+
+                grid = Ext.create(&#8216;EX.view.Grid&#8217;,{
+                    renderTo: Ext.getBody()
+                });
+
+                t.waitForRowsVisible(grid, function() {
+                    t.is(grid.store.getCount(), grid.getView().getNodes().length, &#8216;Rendered all data in store ok&#8217;);
+                    t.matchGridCellContent(grid, 0, 1, grid.store.first().get(&#8216;name&#8217;), &#8216;Found full name in first cell&#8217;);
+                });
+            }
+        );
+    });
+[/js]</div>
+
+<p>テストできるようになるまで、ちょっとハマりました。
+上記で、ストアを生成する時に、storeIdを指定しています。テスト対象のストアにはstoreIdの定義はありません。
+通常、Gridではstoreコンフィグに文字列でストアを指定しますね。</p>
+
+<pre><code>Ext.define('EX.view.Grid', {
+    store: 'Users'
+    :
+    :
+});
+</code></pre>
+
+<p>こんな感じですよね。ここで指定している &#8216;Users&#8217; っていうのは、ストアのstoreIdになります。
+MVCではstoreIdをつけていなくても、クラス名からstoreIdを生成してストアをStoreManagerに登録してくれますが、
+テストの状態ではそんなことはありません。
+ですので、ストアをインスタンス化するときにstoreIdを指定してやる必要があります。</p>
+
+<p>で、グリッドを生成してやると、Siestaの画面にちゃんとGridが表示されます。
+t.waitForRowsVisible を使ったテストは、Siestaのサンプルの中にあったものです。
+こういったExt JSのテストに特化したメソッドが用意されているのはいいですね。</p>
+
+<h2>続く（たぶん）</h2>
+
+<p>SiestaでViewのテストまで書いてみました。単体でのテストができていますね。
+Siestaでは、コントローラーや結合テストもでき、ボタンをクリックさせたりしてテストをすすめることができます。
+次回はそういったところを書きたいと思います。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

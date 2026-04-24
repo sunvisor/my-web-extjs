@@ -1,0 +1,1791 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Sencha Touch &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/category/touch/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Fri, 23 Oct 2015 09:12:43 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Modern ツールキットでのデータバインディング &#8211; Sencha ブログより</title>
+		<link>/859</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Fri, 23 Oct 2015 09:12:43 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[ExtJS6]]></category>
+		<guid isPermaLink="false">/?p=859</guid>
+
+					<description><![CDATA[近頃、Sencha 本家のブログでは技術資料的な記事が少し少なくなっていましたが、先日久々に技術的な記事が掲載されました。 ご存じのように、Ext JS 6 では、以前の Ext JS (Version 5まで) と、S [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>近頃、Sencha 本家のブログでは技術資料的な記事が少し少なくなっていましたが、先日久々に技術的な記事が掲載されました。</p>
+
+<p>ご存じのように、Ext JS 6 では、以前の Ext JS (Version 5まで) と、Sencha Touch という2つのフレームワークがマージされました。
+これまで、Ext JS のユーザーが Ext JS 6 へ移行する記事は、いくつか見られたのですが、Sencha Touch ユーザーに向けた、Ext JS 6 の解説記事はありませんでした。</p>
+
+<p>この記事では、Ext JS 6 の ViewModel を modern ツールキットで使う方法が書かれています。ツールキットとは、Ext JS 6 のビジュアルな部分を受け持つところで、現在は、classic と modern の2つのツールキットが存在します。
+modern ツールキットは、Sencha Touch の流れをくむツールキットです。</p>
+
+<p>ViewModel は、Ext JS 5 で導入された、MVVM あるいは M-V-VM-VC という新しいアーキテクチャで採用された、ビューに関連してデータを保持するクラスです。
+Sencha Touch だけをやってきた方には馴染みのない概念だと思いますが、これを利用することで、非常にアプリケーションを作成しやすくなります。</p>
+
+<p>ではご覧ください。
+<a href="https://www.sencha.com/blog/data-binding-in-the-ext-js-modern-toolkit/">Data Binding in the Ext JS Modern Toolkit | Sencha</a>
+の翻訳です。
+<span id="more-859"></span></p>
+
+<h3>はじめに</h3>
+
+<p>Ext JS 6 で &#8220;ツールキット&#8221; というコンセプトが導入されました。
+これは、(主とする)フレームワークのビジュアルコンポーネントを指定するものです。
+以前の Ext JS でのアプリケーションのビルドは、バージョン6では、&#8221;classic&#8221; ツールキットを使ったものにアップグレードし、Sencha Touch アプリケーションは、&#8221;modern&#8221; ツールキットが使われます。
+双方のアプリケーションファミリーにとっての大きな利点は、共通した <code>core</code> パッケージが使えることです。
+これは、ユニバーサルアプリケーションを構築する開発者が使えるというだけでなく、Sencha Touch アプリケーションを modern ツールキットにアップグレードする際に、多くの新機能 (特に重要なのは ViewModel とデータバインディング) が使えるようになります。</p>
+
+<p>これらの機能をまだ見たことがない方は、
+<a href="http://docs.sencha.com/extjs/6.0/application_architecture/view_models_data_binding.html">View Models and Data Binding Guide</a>
+をご覧になると良いでしょう。
+これにより、データバインディングという概念に関する強固な土台ができることでしょう。
+この記事では、modern ツールキットにおけるデータバインディングの働きに商店を宛、いくつかの便利なテクニックを紹介しましょう。</p>
+
+<h3>ViewModel</h3>
+
+<p><code>Ext.app.ViewModel</code> くらすは、データバインディングを可能にする要となります。
+ViewModel は、<code>Ext.data.Model</code> と似ていますが、data をフィールドのフラットなセットとして扱うのではなく、オブジェクトとプロパティの階層として扱い、階層内の変更を監視する為の <code>bind()</code> メソッドが提供されます。</p>
+
+<h3>ViewModel の階層</h3>
+
+<p>ViewModel の階層は、JavaScript のプロトタイプチェーンのように動作します。
+子コンポーネントのViewModel は、親の ViewModel の中に含まれる全ての情報にアクセスできます。
+孫やひ孫が、親子の関係を遡って、上位レベルのコンポーネントデータにアクセスできます。</p>
+
+<p>次のサンプルでは、子アイテムが親の ViewModel にアクセスできることを示します。
+また、
+チェーンの中にプロパティを追加したり、非破壊的にそれらを変更することができます。
+バインディングは、常にチェーンを上に向かって検索し、
+値が見つかったらそれが返されます。</p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/v3q">この Fiddle をご覧ください</a></p>
+
+<p>上記のコードは、次の出力を返します。</p>
+
+<p><em>The Don is Vito Corleone but I also know Genco Abbandando\
+ The new Don is Sonny Corleone\
+ Wait he’s not dead! Long live Vito Corleone!</em></p>
+
+<h3>ViewModel のライフサイクル</h3>
+
+<p>modern ツールキットでは、ViewModel の階層は、コンポーネント生成の間に確立されます。
+これは単純ですが、ViewModel の親は、あとで変更できない関係であるということを理解するために不可欠な概念です。
+この理由で、子要素を生成する際には、インスタンスを生成して手動で追加するのではなく、コンフィグを使うことを推奨します。</p>
+
+<p>例えば、ユーザーが<code>Ext.create</code> でボタンを生成する場合、ボタンは、ViewModel の親のチェーンなしに生成されます。
+このボタンがあとでコンテナーに追加されても、チェーンが再接続されることはありません。</p>
+
+<h3>バインディング</h3>
+
+<p>データバインディングは、<code>Ext.Widget</code> (<code>Ext.Component</code> の基底クラス) の機能で、ViewModel の変更を監視します。
+変更はその後、コンポーネントのコンフィグに、コンフィグのセッターメソッドによって渡されます。
+ViewModel の値が変更されたときには、その値にバインドされたすべてのコンフィグのセッターメソッドが新しい値で呼び出されます。</p>
+
+<h3>Two-Way Binding</h3>
+
+<p>すべてのバインディングは、Ext JS や Sencha Touch の開発者にはおなじみの、標準のセッターやアップデータのワークフローを通して動作します。
+単方向のバインディングでは、コンフィグのセッターは、ViewModel の値が変更される度に呼び出されます。
+これは、双方向バインディングでも、アップデータがインターセプトされる以外は同様です。
+コンフィグの値が変更されアップデータに渡されたとき、
+ViewModel のバインドされた値も変更されます。
+更新する他のすべてのバインド値を順番に変更します。</p>
+
+<p>コンフィグで双方向バインディングを定義する際には、便利な <code>twoWayBindable</code> コンフィグを使います。
+普通は、このコンフィグは内部的に使われますが、
+合致するコンフィグプロパティを持つカスタムビューやコンポーネントを書く際に便利です。
+例えば、<code>Ext.field.Text</code> の定義では、<code>value</code> コンフィグを次のように双方向バインディングとして定義しています。</p>
+
+<div>[js]
+    twoWayBindable: {
+        value: 1
+    }
+[/js]</div>
+
+<p>次のサンプルでは、スピナーフィールドでの双方向バインディングで、簡単に formulas と連携できることを示します。</p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/v3p">この Fiddle をご覧ください</a></p>
+
+<p>スピナーフィールドの値が変更されると、
+そのアップデータは、ViewModel にフックされます。
+このトリガーで、下のコンテナーのバインディングがhtml コンフィグのセッターを呼び出します。
+これは <code>Ext.field.Spinner</code> が、<code>value</code> コンフィグへの変更をを通知し、双方向バインディングが可能に設定されている <code>Ext.field.Text</code> を基底クラスとしているから、動作するのです。</p>
+
+<h3>双方向バインディングを無効にする</h3>
+
+<p>To disable the two-way binding in the above example, we could replace
+this piece of code:
+上記のサンプルで双方向バインディングを無効にするには、
+一部のコードを修正します。</p>
+
+<div>[js]
+    bind: &#8216;{people}&#8217;
+[/js]</div>
+
+<p>上記の部分を次のように変更します。</p>
+
+<div>[js]
+    bind: {
+        value: {
+            bindTo: &#8216;{people}&#8217;,
+            twoWay: false  // a bind option
+        }
+    }
+[/js]</div>
+
+<p>上記のコードはバインディングのいくつかの側面を示しています。
+最初のケースでは、(スピナーの &#8220;value&#8221; である) <code>defaultBindProperty</code> に頼りました。
+<code>bind</code> が単なる文字列のとき、<code>bind</code> オプションは、デフォルト値にセットされます。カスタムの <code>bind</code> オプションを指定するには、明示的に <code>bindTo</code> プロパティを使い、追加の属性を指定してバインディングを指定します。</p>
+
+<p>このサンプルで双方向バインディングを無効にすると、スピナーを変更しても、コンテナーの html は変更されなくなることがわかるでしょう。</p>
+
+<h3>発行 (Publishing)</h3>
+
+<p>他のコンポーネントから利用したいコンポーネントのコンフィグは、ViewModel に発行することができます。
+<code>publishes</code> コンフィグは、<code>twoWayBindable</code> と同様に、アップデータをフックしてコンフィグの値を ViewModel にプッシュします。
+バインディングと違って、発行される値には、ViewModel で変更されたときに呼び出されるセッターがありません。</p>
+
+<p>より重要なことに、データはViewModel 内に置かれるのではなく、発行されたコンフィグの値は、コンポーネントの名前を参照して名付けられたオブジェクトの中に保存されます。
+多くのコンポーネントには、デフォルトの <code>publishes</code> コンフィグがあり、単純に、コンポーネントに <code>reference</code> コンフィグを設定することによってこれらの値は、ViewModel からアクセスできます。</p>
+
+<p>list を使う時に、他のコンポーネントがリストの中のどのアイテムが選択されているかを知りたいような時にこれは、特に便利です。</p>
+
+<p>次のサンプルでは、<code>Ext.dataview.DataView</code> には <code>selection</code> プロパティを発行する<code>Ext.mixin.Selectable</code>がミックスインされていることを使います。
+これはフレームワークに組み込まれているので、<code>Ext.dataview.List</code> のインスタンスは、選択されたアイテムに他のコンポーネントがアクセスできます。</p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/v3r">この Fiddle をご覧ください</a></p>
+
+<h3>Forms and Fields</h3>
+
+<p>modern ツールキットでは、フォームのフィールドは、最初からデータバインディングが動作するように設定されています。
+<code>Ext.field.Text</code> を継承したすべてのコンポーネントは、value を ViewModel に発行し、双方向バインディングするように設定されています。
+チェックボックスでは、<code>checked</code> コンフィグが発効され、これもまた双方向バインディングと連結されています。
+スライダーも、双方向バインディングが有効で、単一または複数の値が発行されます。</p>
+
+<p>次のサンプルでは、複数のフォーム要素を接続します。
+セレクトフィールドでフォームの情報をフィルタさせ、チェックボックスでイメージのクラスをコントロールします。
+<code>Ext.field.Checkbox</code> は、<code>checked</code> プロパティを発行するので、
+そこに接続するためには、<code>'{checkboxReferenceName.checked}'</code> を使います。</p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/v3u">この Fiddle をご覧ください</a></p>
+
+<p>上記のサンプルでは、
+1つの値を ViewModel の値に直接バインドすることで、
+いくつかの視覚的結果を得ることができることがわかると思います。
+例えば、次の行を</p>
+
+<div>[js]
+userCls: &#8216;{friend.checked:pick(&quot;&quot;, &quot;friend&quot;)}&#8217;,
+[/js]</div>
+
+<p>このように変更してみましょう。</p>
+
+<div>[js]
+userCls: &#8216;{person.value.friend:pick(&quot;&quot;, &quot;friend&quot;)}&#8217;,
+[/js]</div>
+
+<h3>リスト</h3>
+
+<p><code>Ext.dataview.List</code> など <code>Ext.data.DataView</code> を継承したクラスを使う時には、
+データバインディングは、<code>itemConfig</code> プロパティを使ってアイテム事に有効にできます。
+レコードデータは、このコンフィグの中で bind ステートメントで <code>record</code> オブジェクトを使うことで、利用可能です。</p>
+
+<p>例えば、&#8221;propertyName&#8221; というプロパティを参照するには、<code>'{record.propertyName}'</code> にバインドします。
+欠くアイテムは、自身の ViewModel を生成して、その中に自身の formulas やバインドできるプロパティを生成できます。</p>
+
+<p>次のサンプルでは、アイテムの ViewModel にカスタムの formula を使って、
+計算を実行しています。
+また、リストのストア内のレコードにバインドして、
+各リストアイテムのコンポーネントの内側のテンプレートを設定しています。
+最後に、ストアのデータをセレクトフィールドにバインドしています。</p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/v6g">この Fiddle をご覧ください</a></p>
+
+<h3>グリッド</h3>
+
+<p>グリッドのデータバインディングは、非常にパワフルで各セルがレコードデータにアクセスできます。
+グリッドは、親クラスの <code>Ext.dataview.List</code> のように、グリッドの <code>itemConfig</code> 内の <code>viewModel</code> コンフィグの設定で、行の中の全てのセルにレコードをバインドできます。</p>
+
+<p>例えば、 <code>Ext.grid.cell.Widget</code> をセル内で使う時には、そのコンポーネントにレコードデータをバインドできます。
+他によくあるグリッドのバインディングの例としては、セルの <code>innerCls</code> に接続することもあります。
+そうすると、レコードからの値の組み合わせを元にして、セルのスタイルを設定できます。</p>
+
+<p>次のサンプルでは、
+双方の使用例を示します。
+ボタンコンポーネントをグリッドセルの中に生成して、pick フォーマッタで条件による書式を設定しています。</p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/v8u">この Fiddle をご覧ください</a></p>
+
+<h3>まとめ</h3>
+
+<p>ViewModel とデータバインディングのパワーは、modern ツールキットで本領を発揮します。
+Config システムに依存しているおかげで、ほとんどのコンフィグプロパティは、バインドリクエストの応答します。
+通常の用途でアプリケーションを素早く稼働できるようにするために、共通のコンポーネントは、最初から <code>twoWayBindable</code> とコンフィグの発行を利用できます。
+データバインディングは、アプリケーションを構築する方法を基本的に変えます、そして、テキストフィールドから大きなグリッドまですべてはそれらに影響を及ぼすことができます。
+好きなようにアプリケーションを書くために、データバインディングがあなたの開発者としてよく使うツールになると思います。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>約束の地 &#8211; Promised land</title>
+		<link>/707</link>
+					<comments>/707#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 11 Dec 2013 15:14:21 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Sencha UG]]></category>
+		<guid isPermaLink="false">/?p=707</guid>
+
+					<description><![CDATA[この記事は、 Sencha Advent Calendar 2013 の12日目の記事です。 都市再開発で、オフィスを市のやや北寄りの区域に移さなければならなくなった。 新しいオフィスは、マサチュセッツ大通りとボイルスト [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>この記事は、
+<a href="http://www.adventar.org/calendars/137">Sencha Advent Calendar 2013</a>
+の12日目の記事です。</p>
+
+<div style="margin: 10px">
+<em>
+    都市再開発で、オフィスを市のやや北寄りの区域に移さなければならなくなった。
+    新しいオフィスは、マサチュセッツ大通りとボイルストン通りの角に突っ立っている二階建ての丸い塔のような建物の二階にあって、一階は煙草屋である。
+    前の住人は女占い師で、彼女が看板がわりに窓に貼りつけたつぎはぎの金文字をかみそりの刃で削りとっている時、その男の姿に気がついた。
+</em>
+</div>
+
+<p>ロバート・Ｂ・パーカー著「約束の地」より。</p>
+
+<p>パーカーも亡くなっちゃったんですね。</p>
+
+<p>今回はPromiseについてお話しします。
+<span id="more-707"></span></p>
+
+<p>Senchaのフレームワークでは、多くの場面で非同期の処理をする必要があります。
+その最たるものがサーバーとの通信です。</p>
+
+<div>[js]
+    Ext.Ajax.request({
+        url: &#8216;page.php&#8217;,
+        params: {
+            id: 1
+        },
+        success: function(response){
+            var text = response.responseText;
+            // process server response here
+        }
+    });
+    // next step
+[/js]</div>
+
+<p><code>failure</code>がありませんね。ごめんなさい。<code>m(_ _)m</code>
+<code>failure</code>は<a href="http://code.xenophy.com/?p=1974">ちゃんと書きましょう</a>。
+リクエストの結果は、非同期で実行される<code>success</code>関数内で受け取ります。
+受け取った結果をもとに次の処理をするときには、当然ながら<code>success</code>関数内から実行しなくてはなりません。
+コード中の process server response here という所で実行するわけですね。
+コード上の next step と書かれた場所で何かを実行しても、サーバーからのレスポンスはこの時点では通常は返ってきていません。</p>
+
+<p>複数の非同期処理をチェーンの様に実行したい時ってあります。
+そんな時は、こうして関数の中にネストして処理してやると、どんどんネストが深くなって悲しいことになります。</p>
+
+<div>[js]
+    Ext.Ajax.request({
+        params: {
+            id: 1
+        },
+        success: function(response){
+            var text = response.responseText;
+            Ext.Ajax.request({
+                url: &#8216;page2.php&#8217;,
+                params: {
+                    text: text
+                },
+                success: function(response){
+                    var text = response.responseText;
+                    Ext.Ajax.request({
+                        url: &#8216;page3.php&#8217;,
+                        params: {
+                            text: text
+                        },
+                        success: function(response){
+                            var text = response.responseText;
+                            // process server response here
+                        }
+                    });
+                }
+            });
+        }
+    });
+[/js]</div>
+
+<p>そこで、非同期の処理をシーケンシャルな処理のように書く方法ってないものかなぁ、と思うわけです。
+こういう要求にはいろいろなライブラリとかあるんですよね。</p>
+
+<p>CommonJSのPromiseパターンというのがあって、それがどうもこのやり方のこれからの標準のようですね。</p>
+
+<p>Senchaのブログ記事、
+<a href="http://www.sencha.com/blog/implementing-user-extensions-for-architect-3-0-preview/">Implementing User Extensions for Sencha Architect 3.0 Preview</a>
+（日本語訳は「
+<a href="http://www.xenophy.com/sencha-blog/8504">Sencha Architect 3.0 プレビューでのユーザー拡張機能の実装</a>」）
+では、
+深くネストした関数コールバックの解決に、promiseを使うことにした、ということが記述されています。</p>
+
+<pre><code>なんかいいライブラリないかな？
+</code></pre>
+
+<p>私は、みつけました。</p>
+
+<p>＿人人人人人人人人＿<br />
+＞ Ext.ux.Deferred ＜<br />
+￣Y^Y^Y^Y^Y^Y^￣</p>
+
+<p><a href="https://github.com/wilk/Ext.ux.Deferred">Github &#8211; wilk/Ext.ux.Deferred</a></p>
+
+<p>今日は、このクラスの使い方を勉強してみましょう。</p>
+
+<p>名簿のアプリを例にします。</p>
+
+<p><a href="/wp-content/uploads/2013/12/fa5d87746de0ee9344fbefc2c2cf6e17.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2013/12/fa5d87746de0ee9344fbefc2c2cf6e17.png" alt="er" width="461" height="305" class="alignnone size-full wp-image-709" srcset="/wp-content/uploads/2013/12/fa5d87746de0ee9344fbefc2c2cf6e17.png 461w, /wp-content/uploads/2013/12/fa5d87746de0ee9344fbefc2c2cf6e17-300x198.png 300w" sizes="(max-width: 461px) 100vw, 461px" /></a></p>
+
+<p>このように、personsテーブルでは、prefectures(都道府県)、carriers(携帯キャリア)、companies(会社)という3つのマスターを参照しています。これを</p>
+
+<p><a href="/wp-content/uploads/2013/12/49640f18775fef8723c4f1605e6bffd9.png"><img decoding="async" src="/wp-content/uploads/2013/12/49640f18775fef8723c4f1605e6bffd9.png" alt="スクリーンショット" width="700" class="alignnone size-full wp-image-711" srcset="/wp-content/uploads/2013/12/49640f18775fef8723c4f1605e6bffd9.png 855w, /wp-content/uploads/2013/12/49640f18775fef8723c4f1605e6bffd9-300x234.png 300w" sizes="(max-width: 855px) 100vw, 855px" /></a></p>
+
+<p>このようにGridの中に表示したいとします。</p>
+
+<p>それぞれのテーブルは、Persons/Prefectures/Carriers/Companies というストアに格納され、それぞれがAjaxプロキシでもってサーバーからデータを取得します。</p>
+
+<p>グリッドでは、次のように&#8217;renderer&#8217;関数を使って表示してやります。</p>
+
+<div>[js]
+        xtype: &#8216;grid&#8217;,
+        store: &#8216;Persons&#8217;,
+        columns: [{
+            text: &#8216;名前&#8217;,
+            dataIndex: &#8216;name&#8217;,
+            flex: 1
+        }, {
+            text: &#8216;都道府県&#8217;,
+            dataIndex: &#8216;pref_id&#8217;,
+            renderer: function(value) {
+                var store = Ext.getStore(&#8216;Prefectures&#8217;),
+                    rec = store.getById(value);
+
+                return rec.get(&#8216;pref_name&#8217;);
+            },
+            flex: 1
+[/js]</div>
+
+<p>4つのストアは、コントローラーのonLaunchメソッドでロードしましょう。</p>
+
+<div>[js]
+    onLaunch2: function() {
+        var me = this;
+
+        me.getPrefecturesStore().load();
+        me.getCarriersStore().load();
+        me.getCompaniesStore().load();
+        me.getPersonsStore().load();
+    },
+[/js]</div>
+
+<p>Personsストアをロードする前にちゃんと他のマスターをロードしてますね。これで大丈夫です。</p>
+
+<p>って、そんなわけないだろ！(｀Д´)ノ</p>
+
+<p>こちら、<code>load</code>メソッドは非同期ですので、マスターのロードが終わっていなくても、Personsストアのロードが始まってしまう可能性があります。
+ためしに、マスターのサーバー側メソッドでWaitをかまして、遅くしてやると。</p>
+
+<p><a href="/wp-content/uploads/2013/12/803070d52469dab0e5736af8b0b9cb82.png"><img decoding="async" src="/wp-content/uploads/2013/12/803070d52469dab0e5736af8b0b9cb82.png" alt="スクリーンショット" width="700" class="alignnone size-full wp-image-712" srcset="/wp-content/uploads/2013/12/803070d52469dab0e5736af8b0b9cb82.png 855w, /wp-content/uploads/2013/12/803070d52469dab0e5736af8b0b9cb82-300x234.png 300w" sizes="(max-width: 855px) 100vw, 855px" /></a></p>
+
+<p>このようにエラーが発生して、カラムにデータが表示されません。
+これは、マスターがロードし終わる前にPersonsストアがロードされてしまって、Gridの<code>renderer</code>が呼ばれてしまっているからです。</p>
+
+<p>これを <code>Ext.ux.Deferred</code>ですべてのマスターのストアがロードされてから、Personsストアをロードするようにしてみましょう。</p>
+
+<p>まず、<code>Ext.ux.Deferred</code>をプロジェクトに追加します。
+僕の場合は、 app/ux/Deferred.js に置きました。
+Ext.uxというネームスペースなので、そのままだとSDKのソースディレクトリに取りに行ってエラーになるので、app.jsで、Ext.Loaderにパスを教えます。
+app以外のところ（classpathが通っていないところ）においた場合は、app.jsonとかsencha.cfgとかでclasspathを設定してやる必要があります。</p>
+
+<div>[js]
+    Ext.Loader.setConfig({
+        paths: {
+            &#8216;Ext.ux.Deferred&#8217;: &#8216;app/ux/Deferred.js&#8217;
+        }
+    });
+[/js]</div>
+
+<p>そして、これを使う、コントローラーの requires に指定してロードさせます。</p>
+
+<div>[js]
+    requires: [
+        &#8216;Ext.ux.Deferred&#8217;
+    ],
+[/js]</div>
+
+<p><code>Ext.ux.Deferred</code>の使い方は、</p>
+
+<div>[js]
+    Ext.ux.Deferred.when( promise ).then(resolve[, reject]);
+[/js]</div>
+
+<p>こんな風に呼び出します。promiseは、非同期処理をする関数です。resolveはpromiseの非同期処理が完了したら呼び出される関数。rejectは非同期処理が却下されたときに呼び出される関数です。
+<code>then</code>の後に更に、<code>.then</code>として処理をチェーンすることもできます。</p>
+
+<p>promiseにセットする関数は、<code>Ext.ux.Deferred</code>のインスタンスを返す関数である必要があります。</p>
+
+<pre><code>async = function() {
+    var dfd = Ext.create('Ext.ux.Deferred');
+    asyncFunc(function() {
+        dfd.resolve();
+    });
+}
+</code></pre>
+
+<p>このような感じになります。
+関数の中で<code>Ext.ux.Deferred</code>のインスタンスを生成して、非同期処理が終わったらそのインスタンスの<code>resolve</code>メソッドを呼んでやります。
+それを<code>Ext.ux.Deferred</code>のスタティックメソッドである<code>when</code>に渡してやります。</p>
+
+<div>[js]
+    Ext.ux.Deferred.when( async ).then(function () {
+        // 終わった後の処理
+            :
+    });
+[/js]</div>
+
+<p>また、<code>when</code>メソッドに渡すpromise関数は複数指定できます。</p>
+
+<pre><code>Ext.ux.Deferred.when( promise1, promise2, promise3 ).then(resolve[, reject]);
+</code></pre>
+
+<p>この方法で、3つのマスターをロードして、それらがすべて整ったらPersonsストアをロードするというのを実現できそうです。</p>
+
+<p>ストアをオープンするためのpromise関数は次のような感じになります。</p>
+
+<div>[js]
+    promise =  function() {
+        var me = this,
+            dfd = Ext.create(&#8216;Ext.ux.Deferred&#8217;);
+
+        me.getPrefecturesStore().load({
+            callback: function(rec, op, success) {
+                if( success ) {
+                    dfd.resolve();
+                } else {
+                    dfd.reject(arguments);
+                }
+            }
+        });
+        return dfd;
+    };
+[/js]</div>
+
+<p><code>Ext.ux.Deferred</code>オブジェクトを生成して、<code>load</code>メソッドのコールバックの中で、<code>resolve</code>または<code>reject</code>を呼び出しています。</p>
+
+<p>このやり方でマスター全部のpromise関数を作ってやります。
+出来上がったonLaunchメソッドは次のようになりました。</p>
+
+<div>[js]
+    onLaunch: function() {
+        var me = this,
+            promise = function(store) {
+                return function() {
+                    var dfd = Ext.create(&#8216;Ext.ux.Deferred&#8217;);
+
+                    store.load({
+                        callback: function(rec, op, success) {
+                            if( success ) {
+                                dfd.resolve();
+                            } else {
+                                dfd.reject(arguments);
+                            }
+                        }
+                    });
+                    return dfd;
+                };
+            };
+
+        Ext.ux.Deferred
+        .when(
+            promise(me.getPrefecturesStore()),
+            promise(me.getCarriersStore()),
+            promise(me.getCompaniesStore())
+        )
+        .then(
+            function(){
+                // when resolved
+                me.getPersonsStore().load();
+            },
+            function(){
+                // when rejected
+                console.log(arguments);
+            }
+        );
+
+    }
+[/js]</div>
+
+<p>3行目からの<code>promise</code>という関数は、指定されたストアをロードするpromise関数を返します。
+この関数を使ってpuromise関数を3つつくって<code>when</code>メソッドに渡しています。
+こうすることで、全てのマスターストアがロードされてから、Personsテーブルをロードすることを確実にすることができました。</p>
+
+<p><code>Ext.ux.Deferred</code>は、この他にもExt.Directでのサーバーサイド関数呼び出しでのチェーンなんかにも使えますし、コンポーネントテストを書くときに使っても便利ですね。
+Senchaフレームワークの標準で、非同期の実行を待つ処理を書けるのは、たしかSencha TouchのRouter機能のbeforeフィルターの中だけだったと思います。
+beforeフィルターのように、ある処理をする前に、なにかがどうにかなっているのを確実にするために、この<code>Ext.ux.Deferred</code>を使うと、より安定したアプリケーションを構築できる可能性がありますね。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/707/feed</wfw:commentRss>
+			<slash:comments>4</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>一日もかからないさ、数時間でできるよ</title>
+		<link>/696</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 04 Dec 2013 15:05:03 +0000</pubDate>
+				<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Sencha UG]]></category>
+		<category><![CDATA[未分類]]></category>
+		<guid isPermaLink="false">/?p=696</guid>
+
+					<description><![CDATA[この記事は、 Sencha Advent Calendar 2013 の5日目の記事です。 もうAdvent Calendarを書く時期になったんですね。 去年のAdvent Calendarの記事から、今年に入って5つ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>この記事は、
+<a href="http://www.adventar.org/calendars/137">Sencha Advent Calendar 2013</a>
+の5日目の記事です。</p>
+
+<p>もうAdvent Calendarを書く時期になったんですね。
+去年のAdvent Calendarの記事から、今年に入って5つしか記事を書いていないことがわかりました。ごめんなさい。
+今年は、もう少し、記事書きます。</p>
+
+<p><span id="more-696"></span>
+去年の今頃は、今とは違う仕事をしていました。なんだか遠い昔のような気がします。</p>
+
+<p>さて、Sencha Touchの入門を扱ったような記事も、いくつかのブログで紹介されるようになってきました。</p>
+
+<p>このAdvent Calendarでも @kotsutsumi さんが、
+<a href="http://code.xenophy.com/?p=1968">Sencha Touch 2.3 MVC 1 &#8211; 導入編</a>
+<a href="http://code.xenophy.com/?p=1970">Sencha Touch 2.3 MVC 2 &#8211; プロファイル機能</a>
+と、二つも記事を書いてくださっています。</p>
+
+<p>僕も、入門用のコンテンツを用意してみました。
+Sencha Touchを始めてみたい、とか取りあえずどんなもんかさわってみたい。
+とか思っている方は、この記事読んでください。
+用意した、とか言ってますが、実は使い回しですｗ</p>
+
+<p><a href="/wp-content/uploads/2013/12/egg.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2013/12/egg-1024x875.png" alt="egg" width="640" height="546" class="alignnone size-large wp-image-698" srcset="/wp-content/uploads/2013/12/egg-1024x875.png 1024w, /wp-content/uploads/2013/12/egg-300x256.png 300w, /wp-content/uploads/2013/12/egg.png 1272w" sizes="(max-width: 640px) 100vw, 640px" /></a></p>
+
+<p>去る10月26日に、大阪イノベーションハブを会場にして、Innovation EGG というイベントが開催されました。
+こちらは、比企宏之さんが主催されている、IT系コミュニティ合同で初心者向けの勉強会で、この日が栄えある第1回目でした。
+僕もSencha UGを代表しまして、登壇させて頂きました。
+沢山の方が来場され、僕のセッションも沢山の方に聞いて頂きました。</p>
+
+<p><a href="http://eventregist.com/e/InnovationEGG01">http://eventregist.com/e/InnovationEGG01</a></p>
+
+<p>このイベントは「初心者向け」の勉強会です。
+僕は、もちろん Sencha について話したわけですが、Senchaの事を知らない人や、始めたばかりの人が対象です。
+また、一つのセッションの時間が2時間弱という長いスパンでしたので、どうしようか考えたあげく、ハンズオン形式でやることにしました。
+ハンズオンで、実際に作るところをみてもらうのと、みるみるうちにアプリができていくのをみてもらえば、Sencha Touchの魅力が伝わるかなと思ったのです。
+ハンズオンの内容としては、Senchaコマンドでスケルトンをジェネレートするところから、アプリケーションが完成するまでを2時間でやってみてもらおう、というものです。</p>
+
+<p><a href="http://www.youtube.com/watch?v=G0UC-C2Y7ME">Building Mobile HTML5 Apps in Hours, Not Days</a>
+というオライリーのWebcastがありますが、それを実際にやるって感じです。</p>
+
+<pre><code>「一日もかからないさ、数時間でできるよ」
+</code></pre>
+
+<p>Senchaのフレームワークは、取っつきが難しいとかよく言われますが、この勉強会の資料を作ってみると、以外と初心者が始めてもいけんじゃね？という感じがしてきました。
+会場でお聞きくださった方の中にも、興味を持って始められた方が沢山おられましたしね。</p>
+
+<p>もちろん、2時間で Sencha Touchのすべてがわかるわけはありませんが、作り始めるところからデプロイまで、一通りができるようになるというのは、大きな一歩です。</p>
+
+<p><a href="http://preview.xenophy.com/xenophy/senchaug/egg/#!/guide">こちらにハンズオン資料があります</a></p>
+
+<p>このハンズオンでは、</p>
+
+<ul>
+<li>Sencha クラスシステムとMVCの基本</li>
+<li>モデル／ストアの作成</li>
+<li>Listビュー</li>
+<li>Panelでの表示／テンプレート</li>
+<li>NavigationView</li>
+<li>コントローラー</li>
+<li>表示の調整</li>
+<li>ビルド</li>
+<li>テーマの変更（オプション）</li>
+</ul>
+
+<p>について学べます。
+ひととおり揃っているでしょ？
+実際の所は、少し時間が足りなくて後半は走り気味な進行になってしまいましたが、なんとかやりました。
+時間が余るようなら、と、用意したテーマの変更にはたどり着けませんでした。</p>
+
+<p>あなたが初心者の方なら、
+<a href="http://preview.xenophy.com/xenophy/senchaug/egg/#!/guide">こちら</a>
+から資料にアクセスして、実際にやってみてください。
+ステップバイステップでアプリケーションを作成することができます。</p>
+
+<p>あなたが新人の教育に悩んでいるのなら、
+まず
+<a href="http://preview.xenophy.com/xenophy/senchaug/egg/#!/guide">こちら</a>
+の資料を見せて、「とりあえずやっておきなさい」とやらせてみてください。</p>
+
+<p>ちなみに、Innovation Egg の第2回は、2月15日に大阪イノベーションハブにて開催されます。
+このイベントに関しては、
+<a href="https://www.facebook.com/InnovationEgg">Innovation Eggのfacebookページ</a>
+をご覧ください。
+（次回は、僕は参加できないんですけどね）</p>
+
+<p>そうそう。Sencha UGの勉強会、次の大阪会場は、1月24日(金)に開催します。
+関西のSenchaフリークの皆さん、ふるってご参加ください。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>LiveReloadが便利すぎる</title>
+		<link>/661</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 16 Feb 2013 06:42:14 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[LiveReload]]></category>
+		<guid isPermaLink="false">/?p=661</guid>
+
+					<description><![CDATA[LiveReloadというツールがとても便利。 一言で言うと、ファイルの変更を監視して、変更があったらブラウザーをリロードしてくれる、ものです。 Web系の開発やっているとブラウザーのリロードは年中やってます。 だけど、 [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p><a href="http://livereload.com/">LiveReload</a>というツールがとても便利。</p>
+
+<p>一言で言うと、ファイルの変更を監視して、<strong>変更があったらブラウザーをリロードしてくれる</strong>、ものです。
+Web系の開発やっているとブラウザーのリロードは年中やってます。
+だけど、これをしなくていいというのがこんなにも幸せなこととは知りませんでした。
+<span id="more-661"></span>
+LiveReloadの使い方は簡単です。</p>
+
+<ol>
+<li>LiveReloadを起動する</li>
+<li>開発中のプロジェクトのフォルダを監視対象に追加する</li>
+<li>開発中のプロジェクトにコードスニペットを忍ばす（あるいはブラウザーエクステンションをインストールする）</li>
+</ol>
+
+<p>こうすると、監視対象のファイルが更新された時にブラウザーがリロードされるようになります。</p>
+
+<p>2の監視対象の追加は、ディレクトリをドラッグアンドドロップすれば巻単位追加できます。</p>
+
+<p>3のスニペットはLiveReloadの画面に表示されているものをコピペするだけです。
+次のようなスニペットです。</p>
+
+<pre><code>&lt;script&gt;
+    document.write(
+        '&lt;script src="http://' + 
+        (location.host || 'localhost').split(':')[0] + 
+        ':35729/livereload.js?snipver=1"&gt;&lt;/' + 
+        'script&gt;'
+    )
+&lt;/script&gt;
+</code></pre>
+
+<p>ブラウザーエクステンションを使うのではなく、コードスニペットを使った場合は、
+別なマシンから接続していても自動的にリロードがかかります。
+別なマシンは、iPadでもiPhoneでもAndroidでも大丈夫です。
+対象のサイトを表示しているすべてのブラウザーが同時にリロードされます。</p>
+
+<p>テストの効率が上がること請け合いです。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Model/StoreとProxyの関係</title>
+		<link>/646</link>
+					<comments>/646#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 05 Dec 2012 20:08:46 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=646</guid>
+
+					<description><![CDATA[この記事は、 Sencha Advent Calendar 2012 の6日目の記事です。皆さんも是非参加してください。 昨日も書いたのですが、次の人が出てこないので、今日も書きます。 明日はちょっと無理っぽいので、だれ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<blockquote>
+  <p>この記事は、
+  <a href="http://www.adventar.org/calendars/23">Sencha Advent Calendar 2012</a>
+  の6日目の記事です。皆さんも是非参加してください。
+  昨日も書いたのですが、次の人が出てこないので、今日も書きます。
+  明日はちょっと無理っぽいので、だれかお願いします。まぢで。</p>
+</blockquote>
+
+<p>今回は、Sencha フレームワークの中のデータパッケージについての話です。
+ModelやStoreがサーバーから（いや、クライアントサイドでもですが）データを取得する時には、Proxyを使います。</p>
+
+<p><span id="more-646"></span></p>
+
+<p>このProxy、Ext JS 3 の頃には、Storeにくっつけて使う物でしたが、Ext JS 4やSencha Touch 2では、StoreでもModelでも、どちらにでもくっつけられます。そして、Senchaの公式ドキュメントを見ると、どうもModelにくっつける方が推奨されているようです。</p>
+
+<div>[js]
+    Ext.define(&#8216;MyModel&#8217;, {
+        extend: &#8216;Ext.data.Model,
+        proxy: {
+            type: &#8216;ajax&#8217;,
+            url: &#8216;data/hoge.php&#8217;,
+            reader: {
+                type: &#8216;json&#8217;
+            }
+        },
+        fields: [{
+            name: &#8216;id&#8217;,
+                :
+[/js]</div>
+
+<p>このような感じで、Modelにくっつけます。</p>
+
+<p>ProxyをModelにくっつけるのと、Storeにくっつけるのでは、どう違うのでしょうか。
+Modelにくっつけるのを推奨している理由は、次の2つが挙げられていました。</p>
+
+<ul>
+<li>StoreがなくてもModel単体でサーバーと通信ができる</li>
+<li>同じModelを使う複数のStoreがあるときにそれぞれにProxyの設定をする必要が無い</li>
+</ul>
+
+<p>なるほど。</p>
+
+<p>そう思って、僕も主にStoreではなくModelにProxyをくっつけて実装していました。
+それに僕がProxyだったら、StoreとModelを較べるとModelの方がスレンダーで美人なような感じがしますものね（違</p>
+
+<p>そして、そんなことを言っていると、ある時にハマりまして、そのときにこの件についてもう一度考える機会を得ました。</p>
+
+<blockquote>
+  <p>Proxyってほんとはどっちと結婚したらいいの？（だから違</p>
+</blockquote>
+
+<h2>ProxyがModelと結婚したら</h2>
+
+<p>ProxyのコンフィグがセットされたModelがインスタンス化されるときの動きを考えます。
+Modelというのは、いわばレコードですから、レコードの数だけインスタンスがあることになります。しかしProxyもそれと同じだけインスタンス化されるのは無駄です、100件も1000件ものModelそれぞれにProxyなんていりません。ですから、Proxyのインスタンスは1つしかできません。
+ModelにProxyのコンフィグがくっついている場合には、そのModelが使うProxyは1つだけ作られます。そして、そのModelのインスタンスが使われる時には、そのProxyが使われます。</p>
+
+<p><img decoding="async" loading="lazy" src="/wp-content/uploads/2012/12/proxy_fig1.png" alt="" title="proxy_fig1" width="429" height="124" class="alignnone size-full wp-image-648" srcset="/wp-content/uploads/2012/12/proxy_fig1.png 429w, /wp-content/uploads/2012/12/proxy_fig1-300x86.png 300w" sizes="(max-width: 429px) 100vw, 429px" /></p>
+
+<h2>ProxyがStoreと結婚したら</h2>
+
+<p>ではProxyがStoreのコンフィグにくっつけられていたらどうでしょうか。Storeは、Modelのコレクションです。StoreにProxyのコンフィグがある場合は、Storeがインスタンス化されるごとにProxyのインスタンスも作られ、Storeにセットされます。</p>
+
+<p>同じ、Storeクラスからインスタンス化された場合でも、インスタンスが複数作られれば、Proxyも同じ数だけ作られ、Storeにバインドされます。
+ModelにもStoreにもProxyが設定されていた場合は、StoreのProxyが優先的に使われます。</p>
+
+<p><img decoding="async" loading="lazy" src="/wp-content/uploads/2012/12/proxy_fig2.png" alt="" title="proxy_fig2" width="429" height="323" class="alignnone size-full wp-image-650" srcset="/wp-content/uploads/2012/12/proxy_fig2.png 429w, /wp-content/uploads/2012/12/proxy_fig2-300x225.png 300w" sizes="(max-width: 429px) 100vw, 429px" /></p>
+
+<h2>まとめます</h2>
+
+<ul>
+<li>Modelに設定されたProxyのインスタンスは1つだけ</li>
+<li>Storeに設定されたProxyのインスタンスはStoreのインスタンスの数だけ</li>
+</ul>
+
+<p>この2つを理解していないとハマる事があります。</p>
+
+<p>僕がはまったのは、extraParamsです。
+このコンフィグおよび、setExtraParamはProxyのコンフィグ／メソッドなんですが、
+これを使って、サーバーにパラメーターを渡してデータを得ていたのです。
+ProxyはModelにセットしていました。</p>
+
+<p>しかも、Storeを複数インスタンス化して、別なパラメーターをsetExtraParamでセットして。</p>
+
+<p>ここで、勘の良い方はお気づきと思いますが、このやり方だとStoreをいくつインスタンス化しても、Proxyは1つの物が共有されるのです。</p>
+
+<p><img decoding="async" loading="lazy" src="/wp-content/uploads/2012/12/proxy_fig3.png" alt="" title="proxy_fig3" width="429" height="273" class="alignnone size-full wp-image-652" srcset="/wp-content/uploads/2012/12/proxy_fig3.png 429w, /wp-content/uploads/2012/12/proxy_fig3-300x190.png 300w" sizes="(max-width: 429px) 100vw, 429px" /></p>
+
+<p>つまりこの図のようになるんですね。だから、setExtraParamでextraParamsの内容を書き換えると、すべてのStoreインスタンスのパラメーターが変わっちまうんです。(´･ω･`)</p>
+
+<p>このような使い方をする場合は、StoreにProxyをくっつけます。そうしたらStoreインスタンスごとにProxyのインスタンスができるので、extraParamsもそれぞれのStoreで保持されます。</p>
+
+<p>以上が、Proxyがどちらを伴侶として選ぶかによって、変わる人生のシミュレーションです（違。</p>
+
+<p>とても深遠な話になりましたね。人生の教訓として覚えておきましょうｗ</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/646/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Ext JSでのOverrideについて</title>
+		<link>/632</link>
+					<comments>/632#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Tue, 04 Dec 2012 19:03:51 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=632</guid>
+
+					<description><![CDATA[この記事は、 Sencha Advent Calendar 2012 の5日目の記事です。皆さんも是非参加してください。 明日も明後日も決まってないみたいなんで、誰か書いてくださいよ〜 そこの、青さん！蛙さん！たのみます [&#8230;]]]></description>
+										<content:encoded><![CDATA[<blockquote>
+  <p>この記事は、
+  <a href="http://www.adventar.org/calendars/23">Sencha Advent Calendar 2012</a>
+  の5日目の記事です。皆さんも是非参加してください。
+  明日も明後日も決まってないみたいなんで、誰か書いてくださいよ〜
+  そこの、青さん！蛙さん！たのみますよ。</p>
+</blockquote>
+
+<p>通常、クラスを理解するプログラマがオーバーライドという言葉を聞くと、親クラスを継承した中でクラスのメソッドをオーバーライドするというのをイメージすると思います。
+通常のクラスシステムでは考えられないことだと思いますが、JavaScript上で実現されているフレームワークであるExt JSのクラスシステムでは、既存のクラスの定義内容をあとから変更することができます。
+Ext JSでは、このこともオーバーライドと呼びます。</p>
+
+<p><span id="more-632"></span></p>
+
+<p>通常のオーバーライドでは、クラスを継承してメソッドをオーバーライドしますので、
+オーバーライドしたメソッドを呼び出すためには、継承したサブクラスをインスタンス化しなければなりません。
+ここで扱うオーバーライドは、元のクラス定義そのものにあるメソッドをオーバーライドするということになります。
+その場合、元のクラスをインスタンス化したとしても、オーバーライドしたメソッドが実行されます。</p>
+
+<p>この機能は、Ext JS本体のバグを修正するためのパッチとか、一部特定の場合だけメソッドの挙動を変える必要があるときなどに使われます。
+また、Ext JSで提供されているロケールファイルの中身は、このオーバーライドのオンパレードです。
+この機能は、以前から、<code>Ext.override</code>メソッドとして提供されていました。
+しかし、オーバーライドしたメソッドから、元のメソッドを呼び出すようなことはできませんでした。
+Ext JS 4.1からは、元のメソッドを呼び出せるようになったので、パッチ当ての時に元のメソッドと重複したコードを書かずに済む場面が増えることでしょう。
+また、同じくExt JS 4.1からは、<code>Ext.override</code>メソッドだけではなく、<code>Ext.define</code>メソッドを使ったオーバーライドもできるようになりました。
+ここでは、Ext.defineを使ったオーバーライドについてみていきましょう。</p>
+
+<div>[js]
+    // Base Class
+    Ext.define(&#8216;My.BaseClass&#8217;, {
+        method: function(v) {
+            console.log(&#8216;ベースクラスのメソッド&#8217;);
+        }
+    });
+    
+    // Class を継承
+    Ext.define(&#8216;My.SubClass&#8217;, {
+        extend: &#8216;My.BaseClass&#8217;,
+        method: function(v) {
+            console.log(&#8216;サブクラスのメソッド&#8217;);
+        }
+    });
+[/js]</div>
+
+<p>これは、普通の継承です。
+ここで、</p>
+
+<div>[js]
+    var c1 = Ext.create(&#8216;My.SubClass&#8217;);
+    c1.method();
+[/js]</div>
+
+<p>とすれば、コンソールには、「サブクラスのメソッド」と表示されます。
+生成するクラスを<code>"My.BaseClass"</code>にした場合は、「ベースクラスのメソッド」とログされます。
+ここまでは普通です。</p>
+
+<div>[js]
+    // オーバーライド
+    Ext.define(&#8216;My.OvrClass&#8217;, {
+        override: &#8216;My.BaseClass&#8217;,
+        method: function(v) {
+            console.log(&#8216;オーバーライドしたメソッド&#8217;);
+        }
+    });
+[/js]</div>
+
+<p>次にこのように、<code>extend</code>指令の代わりに<code>override</code>指令を加えます。
+こうすると、クラスを継承するのではなく、クラス定義そのものを上書きするという挙動になります。
+第1引数に渡すクラス名は、ここでは意味を持ちません。
+つまり、この定義をして、</p>
+
+<div>[js]
+    Ext.create(&#8216;My.OvrClass&#8217;);
+[/js]</div>
+
+<p>とインスタンス化しようとしてもエラーになります。
+なんで、ここでクラス名を指定するかというと、それは<code>Ext.Loader</code>に見つけてもらうため。その為です。
+オーバーライドされたクラスを使いたい別のクラスにおいて、<code>required</code>の中にこのクラス名（クラス名じゃないんですが）を入れておくと<code>Ext.Loader</code>様がロードしてくださるわけです。</p>
+
+<p>このようにオーバーライド定義をすると、</p>
+
+<div>[js]
+    var c1 = Ext.create(&#8216;My.BaseClass&#8217;);
+    c1.method();
+[/js]</div>
+
+<p>と、<code>My.BaseClass</code> をインスタンス化した場合に、「オーバーライドしたメソッド」とログされます。
+元のメソッドを呼び出すときには、クラス継承したときに親クラスのメソッドを呼び出すときと同様、
+<code>callParent</code>を使います。</p>
+
+<div>[js]
+    // オーバーライド
+    Ext.define(&#8216;My.OvrClass&#8217;, {
+        override: &#8216;My.BaseClass&#8217;,
+        method: function(v) {
+            this.callParent(v);
+            console.log(&#8216;オーバーライドしたメソッド&#8217;);
+        }
+    });
+[/js]</div>
+
+<p>尚、このオーバーライドは、サブクラスでも適用されます。BaseClassがオーバーライドされていて、SubClassがBaseClassを継承している場合に、SubClassをインスタンス化してメソッドを呼び出すと、オーバーライドされたメソッドが実行されます。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/632/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Sencha Cmd がやってきた</title>
+		<link>/589</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Thu, 20 Sep 2012 12:21:03 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Sencha Touch]]></category>
+		<guid isPermaLink="false">/?p=589</guid>
+
+					<description><![CDATA[Sencha Cmd V3 のbetaが本日リリースされました。 以前からあった、Sencha SDK Toolkit (又の名をSencha Command) がリニューアルしたものです。 これは、内部的にはかなりのリ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Sencha Cmd V3 のbetaが本日リリースされました。</p>
+
+<p>以前からあった、Sencha SDK Toolkit (又の名をSencha Command) がリニューアルしたものです。
+これは、内部的にはかなりのリニューアルがあったようで、その動作環境がJavaになったのだそうです。</p>
+
+<p>まず、Sencha Touch のプロダクトしかサポートしていなかった、アプリケーションのジェネレートが、
+Ext JS でもできるようになりました。
+また、デプロイ関連では、前のバージョンでは、Phantom JSを使って使われているクラスを判断していたのを、
+ソースコードの中を見て判断するようになったようです。
+(Sencha Cmdのプロダクトの中を見てみると、まだPhantom.jsが入っているんで、使ってはいるみたいですねぇ)</p>
+
+<p>これまで、結構必要ファイルに漏れがあったので、こんどのものには期待したいところです。
+漏れがあったのは、僕自身のrequiresなどの設定が悪かったせいかもしれませんが、
+いろいろ試したけどだめだったんすよねぇ〜</p>
+
+<p>とまれ、Sencha 社内でも大評判だというこのツールに期待大です。
+<span id="more-589"></span></p>
+
+<p>なお、最新の機能は Ext JS に対応していますが、
+Sencha Touch には未対応なようです。
+後のバージョンではサポートするよというようなことが書いてありました。</p>
+
+<p>そうそう、この情報の元ネタのブログは
+<a href="http://www.sencha.com/blog/all-new-sencha-cmd/">こちら</a>、
+そして、速攻翻訳が
+<a href="http://www.xenophy.com/javascript/3653">こちら</a>
+になります。
+ダウンロード先も書いてあります。</p>
+
+<p>今回はドキュメントも充実しています。
+Ext JS 4.1 のAPIドキュメントのガイドに沢山の記事があります。</p>
+
+<p><a href="http://docs.sencha.com/ext-js/4-1/#!/guide/command">http://docs.sencha.com/ext-js/4-1/#!/guide/command</a></p>
+
+<p>英文なので、僕も全部は読めていませんが、これを一通り読めば良い感じに使えるようになるんじゃないでしょうか。</p>
+
+<h2>必要条件</h2>
+
+<ol>
+<li>Java Run-time</li>
+<li>Compass</li>
+<li>Sencha Cmd</li>
+<li>Ext JS は 4.1.1a または 4.1.2a が必要。無印の4.1.1や4.1.2はだめ。</li>
+</ol>
+
+<p>僕は、当日早速落としたSencha Cmdで試していて、
+全然うまく動かずに泣いていたのですが、
+その日のうちに、バグフィックスのアップデートがされていて、
+それを適用したら直りました。</p>
+
+<p>また、Sencha SDK Toolkit をインストール済みの場合は、
+コマンド名が同じSenchaのため、.profile などを編集して、
+SDK Toolkit が設定したPATHをコメントアウトするなどの対策が必要です。</p>
+
+<h2>つかってみるべ</h2>
+
+<p>インストール後に、</p>
+
+<pre><code>$ sencha
+</code></pre>
+
+<p>で、</p>
+
+<pre><code>Sencha Cmd v3.0.0.141
+
+OPTIONS
+  * --debug, -d - Sets log level to higher verbosity
+  * --plain, -p - enables plain logging output (no highlighting)
+  * --quiet, -q - Sets log level to warnings and errors only
+  * --sdk-path, -s - sets the path to the target framework
+
+CATEGORIES
+  * compile - Compile sources to produce concatenated output and metadata
+  * generate - Generate code like models and controllers or raw templates
+  * theme - Builds a set of theme images from a given html page
+  * app - Perform various application build processes
+  * fs - A set of useful utility actions to work with files.
+  * package - Packages a Sencha Touch application for native app stores
+  * manifest - Extract class metadata
+
+COMMANDS
+  * ant - Invoke Ant with helpful properties back to Sencha Command
+  * build - Builds a project from a JSB3 file.
+  * config - Loads a config file or sets a configuration property
+  * help - Get help on using Sencha Command
+</code></pre>
+
+<p>こんな感じで表示されたらOKです。</p>
+
+<p>で、最初にプロダクトを作ってみます。</p>
+
+<pre><code>$ sencha -sdk ~/Downloads/ExtJS/ext-4.1.1a generate app MyApp ~/devsites/cmd_test/public_html
+</code></pre>
+
+<p>と実行してみました。</p>
+
+<ul>
+<li>-sdk の後はExt JSのディレクトリ。sdkのディレクトリをカレントディレクトリとして実行したら省略可能。</li>
+<li>generate で、アプリケーションのスカッフォルドを生成。</li>
+<li>app の次にアプリケーションのネームスペースと、生成するディレクトリを指定。</li>
+</ul>
+
+<p>コンソールに [INFO] &#8230;. と表示され、完了したら、
+そのディレクトリにアプリケーションの枠組みができあがりました。</p>
+
+<pre><code>  ▾ public_html/
+    ▾ app/
+      ▾ controller/
+          Main.js
+      ▾ view/
+          Main.js
+          Viewport.js
+        app.js
+    ▸ ext/
+    ▸ resources/
+      app.json
+      bootstrap.js
+      index.html
+</code></pre>
+
+<p>index.html の中身は次のとおり</p>
+
+<pre><code>&lt;!DOCTYPE HTML&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;MyApp&lt;/title&gt;
+    &lt;link rel="stylesheet" href="resources/css/default/app.css"&gt;
+    &lt;!-- &lt;x-compile&gt; --&gt;
+        &lt;!-- &lt;x-bootstrap&gt; --&gt;
+            &lt;script src="ext/ext-debug.js"&gt;&lt;/script&gt;
+            &lt;script src="bootstrap.js"&gt;&lt;/script&gt;
+        &lt;!-- &lt;/x-bootstrap&gt; --&gt;
+        &lt;script src="app/app.js"&gt;&lt;/script&gt;
+    &lt;!-- &lt;/x-compile&gt; --&gt;
+&lt;/head&gt;
+&lt;body&gt;&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>bootstrap.js の中身は</p>
+
+<pre><code>Ext.Loader.addClassPathMappings({
+  "Ext.draw.engine.ImageExporter": "ext/src/draw/engine/ImageExporter.js",
+  "Ext.layout.component.Auto": "ext/src/layout/component/Auto.js",
+  "Ext.grid.property.Store": "ext/src/grid/property/Store.js",
+  "Ext.layout.container.Box": "ext/src/layout/container/Box.js",
+  "Ext.direct.JsonProvider": "ext/src/direct/JsonProvider.js",
+  :
+  :
+</code></pre>
+
+<p>な感じです。</p>
+
+<p>app.json はコメントが沢山入っていますが、はずすと次の内容です。</p>
+
+<pre><code>{
+    "name": "MyApp",
+
+    "js": [
+        {
+            "path": "ext/ext-all.js"
+        },
+        {
+            "path": "app/app.js",
+            "update": "delta"
+        }
+    ],
+
+    "css": [
+        {
+            "path": "resources/css/default/app.css",
+            "update": "delta"
+        }
+    ],
+
+    "appCache": {
+        "cache": [
+            "index.html"
+        ],
+        "network": [
+            "*"
+        ],
+        "fallback": []
+    },
+
+    "extras": [
+        "resources/images",
+        "resources/icons",
+        "resources/loading"
+    ],
+
+    "archivePath": "archive",
+
+    "buildPaths": {
+        "testing": "build/testing",
+        "production": "build/production",
+        "package": "build/package",
+        "native": "build/native"
+    },
+
+    "buildOptions": {
+        "product": "touch",
+        "minVersion": 3,
+        "debug": false,
+        "logger": "no"
+    },
+
+    "id": "8b895996-e12d-44d0-ad5d-579508c94e6d"
+}
+</code></pre>
+
+<p>僕としては、最も気になるのは、デプロイの時にちゃんと使えるのかな？
+というところです。
+ブログの文章では、最終的にデプロイをSencha Cmdでやりたい場合は、
+開始からSencha Cmdでジェネレートした方がいいような感じもしましたが、
+既存のプロジェクトのデプロイも含めて、いろいろ実験したいと思います。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha Touch 2 日本語ロケールファイル</title>
+		<link>/581</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 15 Sep 2012 02:09:42 +0000</pubDate>
+				<category><![CDATA[Sencha Touch]]></category>
+		<guid isPermaLink="false">/?p=581</guid>
+
+					<description><![CDATA[Sencha Touch 2 の日本語ロケールファイルってないんですよね。 Ext JS 4 にはあるんですがね。 ないなら、作ってみようと思い立ち作ってみました。 ファイル名を ext-lang-ja.js として、i [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Sencha Touch 2 の日本語ロケールファイルってないんですよね。</p>
+
+<p>Ext JS 4 にはあるんですがね。</p>
+
+<p>ないなら、作ってみようと思い立ち作ってみました。
+ファイル名を ext-lang-ja.js として、index.html で読み込んでください。
+MessageBox とかが日本語化されます。
+まだ、試作品です。テストも完了していません。
+いろいろなフィードバックもらえるととてもうれしいです。</p>
+
+<p>今の、バージョンの Ext JS や Sencha Touch は Ext.define の override を使って
+ロケールを適用しているのですね。Ext.define({override:&#8230;}); すごいわ。</p>
+
+<ul>
+<li>ソースコードは、github.com の <a href="https://gist.github.com/3726024">gist</a> に入っています。</li>
+<li>また、ご意見などはここのコメントでもいいですが、
+<a href="http://www.meetup.com/Japan-Sencha-UserGroup/messages/boards/thread/26943842">Sencha UGのDiscussions</a>
+の方にしていただけるとうれしいです。</li>
+</ul>
+
+<p><span id="more-581"></span></p>
+
+<script src="https://gist.github.com/3726024.js"> </script>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha Touch 2 で Ext Direct を使う (4)</title>
+		<link>/549</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 02 Apr 2012 04:15:15 +0000</pubDate>
+				<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Direct]]></category>
+		<guid isPermaLink="false">/?p=549</guid>
+
+					<description><![CDATA[この連載の最後は、リクエストのコンバインについてです。 リクエストのコンバイン Ext Direct では、短時間での複数のRemote Procedure Call をまとめて処理する機能が組み込まれています。 デフォ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>この連載の最後は、リクエストのコンバインについてです。
+<span id="more-549"></span></p>
+
+<h2>リクエストのコンバイン</h2>
+
+<p>Ext Direct では、短時間での複数のRemote Procedure Call をまとめて処理する機能が組み込まれています。
+デフォルトでは10ミリ秒以内に発生したリクエストは、まとめられてサーバーに送信されます。</p>
+
+<p>コンバインされては困る場合には、
+Ext.direct.RemotingProvider の enableBuffer コンフィグをfalseにします。
+また、サーバーサイドの処理に時間がかかることが予想される場合は
+timeout コンフィグに適切な値を設定します。</p>
+
+<p>この記事のソースコードは、
+<a href="http://www.assembla.com/code/martini3oz-rpc/git/nodes">Assembla</a>
+に置いてあります。
+例によって、<a href="http://www.xframeworkpx.com/">xFrameworkPX</a>
+で作っています。</p>
+
+<h3>コンバインに関するコンフィグ</h3>
+
+<ul>
+<li>enableBuffer</li>
+<li>timeout</li>
+</ul>
+
+<p>どちらも、Providerがインスタンス化されたあとも、</p>
+
+<pre><code>enabelBuffer = false
+timeout= 60
+</code></pre>
+
+<p>のように設定変更できる。</p>
+
+<p>この動作について検証をしてみます。</p>
+
+<p><em>Ext.Directコントローラー</em></p>
+
+<div>[php]
+    class extdirect extends xFrameworkPX_Controller_ExtDirect
+    {
+        public $modules = array(
+            &#8216;directm&#8217; =&gt; array()
+        );
+
+        public $direct = array(
+            &#8216;namespace&#8217; =&gt; &#8216;MyApp&#8217;,
+            &#8216;descriptor&#8217; =&gt; &#8216;Ext.REMOTING_API&#8217;
+        );
+
+        public function execute()
+        {
+            $this-&gt;log-&gt;trace(&#8216;Direct Called.&#8217;);
+            parent::execute();
+        }
+    }
+[/php]</div>
+
+<p>通常はしないのですが、Directコントローラーのexecuteメソッドをオーバーラードして、
+ログを残すようにしています。
+これで、クライアント側からリクエストがあったときにログが記録されます。</p>
+
+<p><em>Module (directm.php)</em></p>
+
+<div>[php]
+    class directm extends xFrameworkPX_Model
+    {
+        public $usetable = false;
+
+        public function test($param, $wait)
+        {
+            $log = xFrameworkPX_Log::getInstance();
+            $log-&gt;trace(&#8216;Function Called. param = &#8216; . $param);
+            sleep($wait);
+            return &#8216;param is &#8216; . $param . &#8216; &#8212; Server Time:&#8217; . date(&#8216;H:i:s&#8217;);
+        }
+
+    }
+[/php]</div>
+
+<p>モジュールのメソッドの方でも、呼び出しがあったことをログに記録するようにしています。
+サーバーへのリクエスト毎にコントローラーでログが取られ
+メソッドの呼び出し毎にモジュールでログが取られるというわけです。</p>
+
+<p>Module のtestメソッドは、指定した秒数だけwaitして返ってくるというものです。</p>
+
+<h3>普通にコンバイン</h3>
+
+<p>クライアント側のJSコードです。単純にRPCを10回、繰り返します。</p>
+
+<p><em>rpc.js</em></p>
+
+<div>[js]
+    Ext.ns(&#8216;MyApp&#8217;);
+
+    Ext.onReady(function () {
+        
+        var i;
+
+        Ext.direct.Manager.addProvider(Ext.REMOTING_API);
+
+        for(i=0; i&lt;10; i++) {
+            MyApp.directm.test(i, 0, function (ret) {
+                var now = new Date();
+
+                console.log(ret + &#8216; client time:&#8217; + Ext.Date.format(now, &#8216;H:i:s&#8217;));
+            });
+        }
+
+    });
+[/js]</div>
+
+<p>コンソールには次のように表示されます。待ち時間を0にしていますので一瞬で処理は終わっています。</p>
+
+<pre><code>rpc.js:13param is 0 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 1 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 2 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 3 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 4 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 5 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 6 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 7 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 8 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 9 --- Server Time:14:04:19 client time:14:04:19
+</code></pre>
+
+<p>サーバーのログは次のようになっています。</p>
+
+<pre><code>2011-12-27 14:16:56,23     [00684] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 0
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 1
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 2
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 3
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 4
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 5
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 6
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 7
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 8
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 9
+</code></pre>
+
+<p>コントローラーは1度だけ呼び出されていて、Moduleのメソッドは10回呼び出されています。
+リクエストがまとめられていることがわかります。
+では、メソッドに遅延を入れた場合はどうなるのでしょうか。</p>
+
+<p>rpc.js の10行目でのRPC呼び出しで第2引数に1を渡してみます。</p>
+
+<pre><code>rpc.js:13param is 1 --- Server Time:14:21:13 client time:14:21:21
+rpc.js:13param is 2 --- Server Time:14:21:14 client time:14:21:21
+rpc.js:13param is 3 --- Server Time:14:21:15 client time:14:21:21
+rpc.js:13param is 4 --- Server Time:14:21:16 client time:14:21:21
+rpc.js:13param is 5 --- Server Time:14:21:17 client time:14:21:21
+rpc.js:13param is 6 --- Server Time:14:21:18 client time:14:21:21
+rpc.js:13param is 7 --- Server Time:14:21:19 client time:14:21:21
+rpc.js:13param is 8 --- Server Time:14:21:20 client time:14:21:21
+rpc.js:13param is 9 --- Server Time:14:21:21 client time:14:21:21
+</code></pre>
+
+<p>Server Time と client time を比べてみてください。10個のリクエストはサーバー上では1秒ごとに処理され、
+それらがまとめてクライアントに返ってきているのがわかります。</p>
+
+<p>リクエストのレスポンスは1秒ごとに返ってくるのではなく、10秒後に全部のレスポンスが返ります。
+ここでは10秒ですが、このリクエストが30とかまとまると確実にタイムアウトを引き起こします。
+一つひとつのリクエストは1秒で返ってくるはずですが、まとめられたため30秒(デフォルトのタイムアウト)を越えてタイムアウトになる訳です。</p>
+
+<h3>リクエストの分割</h3>
+
+<p>enableBufferコンフィグをfalseにすると、このリクエストのコンバインは行われなくなります。
+そうすれば、一つひとつの処理を分割してリクエストすることが出来ます。
+ただ、リクエストの数が多い場合は、XHRのオーバーヘッドは大きくなりますし、サーバー側に負担を掛けることにもなります。
+2番目の例をebanleBufferコンフィグをfalseにして実行してみます。</p>
+
+<p><em>rpc2.js</em></p>
+
+<pre><code>rpc2.js:14param is 4 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 3 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 2 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 0 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 5 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 1 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 7 --- Server Time:14:33:41 client time:14:33:41
+rpc2.js:14param is 6 --- Server Time:14:33:41 client time:14:33:41
+rpc2.js:14param is 8 --- Server Time:14:33:41 client time:14:33:41
+rpc2.js:14param is 9 --- Server Time:14:33:41 client time:14:33:41
+</code></pre>
+
+<p>もどってくる順番が面白いことになっています。
+応答時間を見ていると、サーバー側では6つのリクエストが一度に処理をされているような感じに見えます。
+これはapacheの設定で変わるのだろうとおもいます。
+それにしてももどってくる順番がでたらめですね。</p>
+
+<pre><code>2011-12-26 16:19:23,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:23,16     [32174] TRACE modules/directm.php - Function Called. param = 0
+2011-12-26 16:19:24,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:24,16     [32174] TRACE modules/directm.php - Function Called. param = 1
+2011-12-26 16:19:25,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:25,16     [32174] TRACE modules/directm.php - Function Called. param = 2
+2011-12-26 16:19:27,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:27,16     [32174] TRACE modules/directm.php - Function Called. param = 3
+2011-12-26 16:19:28,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:28,16     [32174] TRACE modules/directm.php - Function Called. param = 4
+2011-12-26 16:19:29,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:29,16     [32174] TRACE modules/directm.php - Function Called. param = 5
+2011-12-26 16:19:30,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:30,16     [32174] TRACE modules/directm.php - Function Called. param = 6
+2011-12-26 16:19:31,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:31,16     [32174] TRACE modules/directm.php - Function Called. param = 7
+2011-12-26 16:19:32,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:32,16     [32174] TRACE modules/directm.php - Function Called. param = 8
+2011-12-26 16:19:33,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:33,16     [32174] TRACE modules/directm.php - Function Called. param = 9
+</code></pre>
+
+<p>サーバーのログを見ると、一つひとつが別のリクエストして送られてきていることがわかります。</p>
+
+<p>enableBufferコンフィグをfalseにせずにリクエストを分割する方法としては、
+リクエストを送り、そのレスポンスでのコールバックで次のリクエストを送るという方法があります。
+そうすれば、送って受けてまた送って、という風に同期的な処理ができます。</p>
+
+<p><em>rpc3.js</em></p>
+
+<div>[js]
+    Ext.onReady(function () {
+        
+        var i;
+
+        Ext.direct.Manager.addProvider(Ext.REMOTING_API);
+
+        i = 0;
+        MyApp.f = function() {
+            MyApp.directm.test(i, 1, function (ret) {
+                var now = new Date();
+
+                console.log(ret + &#8216; client time:&#8217; + Ext.Date.format(now, &#8216;H:i:s&#8217;));
+                i++;
+                if( i &amp;lt; 10 ){
+                    MyApp.f();
+                }
+            });
+            
+        };
+
+        MyApp.f();
+
+    });
+[/js]</div>
+
+<p>こんな感じです。この方法では最初のレスポンスが返ってきてから次のレスポンスを送るので、
+同期的に処理をする必要があるときには便利です。</p>
+
+<pre><code>rpc3.js:14param is 0 --- Server Time:14:41:48 client time:14:41:48
+rpc3.js:14param is 1 --- Server Time:14:41:50 client time:14:41:50
+rpc3.js:14param is 2 --- Server Time:14:41:51 client time:14:41:51
+rpc3.js:14param is 3 --- Server Time:14:41:52 client time:14:41:52
+rpc3.js:14param is 4 --- Server Time:14:41:53 client time:14:41:53
+rpc3.js:14param is 5 --- Server Time:14:41:54 client time:14:41:54
+rpc3.js:14param is 6 --- Server Time:14:41:55 client time:14:41:55
+rpc3.js:14param is 7 --- Server Time:14:41:56 client time:14:41:56
+rpc3.js:14param is 8 --- Server Time:14:41:57 client time:14:41:57
+rpc3.js:14param is 9 --- Server Time:14:41:58 client time:14:41:58
+</code></pre>
+
+<p>コンソールへの表示も、1秒ごとに更新され、順番に着実に処理されてゆく様子が見て取れます。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha Touch 2 で Ext Direct を使う (3)</title>
+		<link>/545</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 02 Apr 2012 03:21:53 +0000</pubDate>
+				<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Direct]]></category>
+		<guid isPermaLink="false">/?p=545</guid>
+
+					<description><![CDATA[Sencha Touch のすばらしいデータシステムであるStoreとExt Directを一緒に使う方法を説明します。 Direct Store (Proxy) Ext.data.proxy.Direct を使うと、  [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Sencha Touch のすばらしいデータシステムであるStoreとExt Directを一緒に使う方法を説明します。
+<span id="more-545"></span></p>
+
+<h2>Direct Store (Proxy)</h2>
+
+<p>Ext.data.proxy.Direct を使うと、
+ストアをDirectのサーバーサイド関数と関連づけられます。
+使い方はAjaxProxyと非常によく似ているので、AjaxProxyの使い方に慣れている方には、
+既知のことが書かれているかもしれません。</p>
+
+<p>ここで説明しているプロジェクトのサンプルも、
+<a href="https://github.com/sunvisor/touch">Githubのリポジトリ</a>
+に置いてあります。
+このサンプルは、サーバーサイドを<a href="http://www.xframeworkpx.com/">xFrameworkPX</a>
+を使って作っています。そのプロジェクトの中のwebappディレクトリとmodulesディレクトリだけを
+リポジトリに上げていますので、<a href="http://www.xframeworkpx.com/">xFrameworkPX</a>
+のプロジェクトを作り、各フォルダの内容を変えてください。</p>
+
+<p>まず、DirectProxyを設定してみましょう。
+directFnとかapiというコンフィグにサーバーサイドのメソッドをセットします。
+このProxyは、Storeに設定する事もできますし、Modelに設定する事もできます。</p>
+
+<div>[js]
+    proxy: {
+        type: &#8216;direct&#8217;,
+        directFn: &#8216;AM.users.getAll&#8217;,
+        reader: {
+            type: &#8216;json&#8217;,
+            rootProperty: &#8216;data&#8217;,
+            successProperty: &#8216;success&#8217;
+        }
+    }
+[/js]</div>
+
+<p>サーバーからのデータ読み出しだけの場合は、このようにdirectFnコンフィグを使います。
+directFnコンフィグに、サーバー側のデータを返すメソッドをセットします。</p>
+
+<div>[js]
+    proxy: {
+        type: &#8216;direct&#8217;,
+        api: {
+            create: &#8216;AM.users.addRec&#8217;,
+            read: &#8216;AM.users.getAll&#8217;,
+            update: &#8216;AM.users.updateRec&#8217;,
+            destroy: &#8216;AM.users.removeRec&#8217;
+        },
+        reader: {
+            type: &#8216;json&#8217;,
+            rootProperty: &#8216;data&#8217;,
+            successProperty: &#8216;success&#8217;
+        }
+    }
+[/js]</div>
+
+<p>読み書きできるようにして、CRUDの4つのメソッドを指定する場合は、このようにapiコンフィグを使います。
+apiコンフィグには、create, read, update, destroy の4つのメンバーのオブジェクトを渡します。
+それぞれのメソッドは、サーバーサイドでそれぞれの処理の時に呼び出されます。</p>
+
+<p>Storeの各種のメソッドを使って、レコードの追加、更新、削除などの複数の処理を行い、
+Store.sync() を呼び出すと、それをCRUDの処理に分解して、それぞれのメソッドを実行します。</p>
+
+<h2>CRUDのサーバーサイド</h2>
+
+<p>Storeと関連づけるサーバーサイドのメソッドはどういう仕様にしなければならないのか、
+という点について説明します。</p>
+
+<p>ここでは、データの読み書き処理には、ReaderとWriterが使われます。
+ReaderとWriterはデータの形式によって違う物が用意されています。
+ここでは、DirectProxy, JsonReader, JsonWriter という組み合わせの場合の話をします。</p>
+
+<h3>Readアクション</h3>
+
+<p>directFnコンフィグや、api.readに設定する、データ読み出し用のサーバーサイドメソッドはどのように実装するのでしょう。
+簡単に言うと、クライアントからのパラメーターを受け取って、
+その結果のデータレコードを返すということになります。</p>
+
+<p>クライアントはサーバーにはどのようにパラメーターを渡すのでしょうか。
+パラメーターの渡し方の基本を設定するのが、paramByHashコンフィグです。
+これをtrueにすると、パラメーターは1つのオブジェクトとしてサーバーに渡されます。デフォルトはtrueです。
+このコンフィグをfalseにした場合は、paramOrderなどでパラメーターの順序を決めたりしなければなりません。
+このコンフィグはよほど必要の無い限り、trueのまま使います。
+サーバー側で受け取る引数は1つだけなので、パラメーターの数が増えるなどの変更にも柔軟に対応できます。</p>
+
+<p>Proxyのパラメータ名</p>
+
+<ul>
+<li>filterParam: &#8216;filter’</li>
+<li>sortParam: &#8216;sort’</li>
+<li>enablePagingParams: true</li>
+<li>startParam: &#8216;start’</li>
+<li>limitParam: &#8216;limit’</li>
+</ul>
+
+<p>上記の表の、値部分がパラメータ名です。
+Storeのfilter, sort のようなコンフィグが指定された場合とか、
+PagingToolbarを使ってグリッドをページングするような場合には、
+これらのパラメーターがサーバー側に渡されます。</p>
+
+<p>これらのパラメーター名は上記のコンフィグを使って変更することができますが、
+既存のサーバーサイドを利用するのでもない限り変更する必要は無いでしょう。</p>
+
+<p>では、これ以外のパラメータ、アプリケーション独自のパラメーターを渡す必要がある場合は、
+Store.loda()メソッドの引数に params: {hoge: fuga} というオブジェクトを渡すか、
+extraParamsコンフィグに設定します。</p>
+
+<p>load()メソッドでパラメーターを渡す方法では、自分のアプリケーションがloadする時にはパラメーターを
+渡すことができますが、Ext JS のフレームワークがデータのロードをする際には自前のパラメーターは
+渡されません。
+例えば、最初のloadの時に条件をパラメーターで渡したとしても、
+PageingToolbarなどによりページングしていて、ページが切り替えられたときには、
+フレームワークがパラメーターを作成するので、独自のパラメーターを渡す余地がありません。
+そんな場合はextraParamsにセットします。
+extraParamsにセットされたパラメーターはreadリクエストを送る度にパラメーターとして送信されます。
+extraParamsはコンフィグですので、その値を動的に変更するには、setExtraParams()メソッドを使います。</p>
+
+<p>サーバー側では、これらのパラメーターを受け取ることになりますが、
+paramByHash: true の場合は、1つのオブジェクトでやってきます。</p>
+
+<div>[php]
+    public function getAll($param)
+    {
+        $limit = $param-&gt;limit;
+        $page = $param-&gt;page;
+        $start = $param-&gt;start;
+        &#8230;
+[/php]</div>
+
+<p>PHPの場合は受け取ったパラメーターをルーターが処理をして、StdClassオブジェクトでやってきますので、
+上記のようにその中から値を取り出せます。</p>
+
+<p>サーバーのメソッドの中では、そのパラメーターを使って適切な処理をし、
+必要なデータを返します。</p>
+
+<p>返す値は次のようなオブジェクトを返します。</p>
+
+<div>[php]
+        return array(
+            &#8216;total&#8217; =&gt; $total,
+            &#8216;data&#8217; =&gt; $r,
+            &#8216;success&#8217; =&gt; true
+        );
+    }
+[/php]</div>
+
+<p>$rには、DBから取り出したレコードの配列が入っていて、$totalにはデータの総件数が入っている、
+と思ってください。
+Ext.data.reader.JSONのコンフィグ設定で次のような物があります。</p>
+
+<ul>
+<li>rootProperty: &#8216;’
+
+<ul>
+<li>データを格納するプロパティ名</li>
+</ul></li>
+<li>successProperty: &#8216;success’
+
+<ul>
+<li>成功フラグを格納するプロパティ名</li>
+</ul></li>
+<li>totalProperty: &#8216;total’
+
+<ul>
+<li>データの全件数を格納するプロパティ名
+ページングの時に必要</li>
+</ul></li>
+</ul>
+
+<p>上記の値の部分はデフォルト値です。
+先ほどの例では、rootProperty: &#8216;data&#8217; と設定してあるという場合のコードです。
+totalプロパティはページングをするとき以外は指定しなくても大丈夫なようです。</p>
+
+<h3>Create / Update アクション</h3>
+
+<p>Createは追加、Updateは更新ですが、
+いずれも処理対象のRecord(Model)のデータがサーバーに送られます。
+1つの更新で、複数件の更新や追加があった場合には、複数のレコードが配列で渡されます。</p>
+
+<p>Ext.data.writer.JSONのコンフィグに allowSingle というのがあり、これがfalseの場合は、
+更新されるレコードが1件の場合でも配列で渡され、
+trueの場合にはレコードが1件だけの場合には配列ではなく単独のオブジェクトとして渡されます。</p>
+
+<p>サーバー側では、受け取ったデータをDBに追加／更新します。
+そして結果を返すのですが、何を返すのでしょうか。
+それは、追加／更新した結果レコードです。
+それをReaderが読める形式で返します。
+Storeは、ここで返された結果通りにStoreのレコードを更新します。
+Readerが読める形式で追加／更新した結果レコードを返します。
+Readerが読める形式というのは、さきほどの、</p>
+
+<div>[php]
+    return array(
+        &#8216;total&#8217; =&gt; $total,
+        &#8216;data&#8217; =&gt; $r,
+        &#8216;success&#8217; =&gt; true
+    );
+[/php]</div>
+
+<p>という形式です。ここで返すレコードは、追加・更新されたものだけです。
+Storeはここで返された結果通りにStoreのレコードを更新します。
+Createの場合は、クライアントからはIDのない(fantom)データが送られますので、
+サーバー側ではそれをDBに登録して、IDをつけたレコードを返してやる必要があります。</p>
+
+<h4>Delete アクション</h4>
+
+<p>Deleteアクションでは、削除されたレコードのidだけがサーバーに送られます。
+Create / Update と同様に複数ある場合は配列で送られます。
+サーバー側では受け取ったデータのidを見て、該当するレコードを削除します。
+リザルトには削除したidだけを返します。</p>
+
+<h3>with MVC</h3>
+
+<p>サンプルでは、directFnなどに、サーバーサイドのメソッドをそのまま指定している場合がほとんどです。</p>
+
+<div>[js]
+    directFn: Hoge.fooFunc
+[/js]</div>
+
+<p>でもこれだと、MVCのローディングシステムと一緒に使うとうまく行きません。</p>
+
+<p>ローディングシステムで
+Ext.DefineでStoreなりModelなりのクラス定義がされる時点では、
+まだ、addProviderされていないので、関数オブジェクトができていません。
+だから、生で指定するとエラーが起きます。
+ですので、</p>
+
+<div>[js]
+    directFn: &#8216;Hoge.fooFunc&#8217;
+[/js]</div>
+
+<p>というように文字列で指定します。
+こうするとExt.Defineの時点で、関数オブジェクトがまだ存在しなくてもエラーはでません。
+実際にModelやStoreのオブジェクトがインスタンス化されるまでにaddProviderすればいいのです。</p>
+
+<p>もう一点、MVCでaddProviderをどこに置くか、という問題があります。</p>
+
+<p>普通にApplication.launchに置いても、うまくいきません。
+launchが実行される時には、関連するオブジェクトのインスタンス化が終わっています。
+とうぜん、その時にProxyのインスタンスも作られてしまいます。
+だから、launchでaddProviderしても遅いのです。
+Proxyのインスタンスが作られる前にaddProviderする必要があります。</p>
+
+<p>Ext.onReadyの中に書くと、ApplicationがProxyをインスタンス化する前に
+addProviderできます。</p>
+
+<div>[js]
+    Ext.require(&#8216;Ext.direct.*&#8217;);
+
+    Ext.onReady(function() {
+        Ext.direct.Manager.addProvider(Ext.REMOTING_API);
+    });
+
+    Ext.application({
+        name: &#8216;AM&#8217;,
+
+        controllers: [&#8216;Users&#8217;],
+        models: [&#8216;User&#8217;],
+        stores: [&#8216;Users&#8217;],
+        views: [&#8216;Main&#8217;, &#8216;List&#8217;, &#8216;Edit&#8217;],
+
+        launch: function() {
+            Ext.create(&#8216;AM.view.Main&#8217;);
+        }
+    });
+[/js]</div>
+
+<p>これでダイナミックローディングシステムを使ったMVCの場合でもエラーが出ずに実行することができます。
+たぶんこれでビルドしたときにも動作すると思いますが、その点については未検証です。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

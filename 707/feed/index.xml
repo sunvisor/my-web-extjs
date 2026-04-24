@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	約束の地 &#8211; Promised land へのコメント	</title>
+	<atom:link href="/707/feed" rel="self" type="application/rss+xml" />
+	<link>/707</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Wed, 29 Mar 2017 09:40:27 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>
+		pianyi より		</title>
+		<link>/707#comment-239338</link>
+
+		<dc:creator><![CDATA[pianyi]]></dc:creator>
+		<pubDate>Wed, 29 Mar 2017 09:40:27 +0000</pubDate>
+		<guid isPermaLink="false">/?p=707#comment-239338</guid>
+
+					<description><![CDATA[&lt;p&gt;ご回答ありがとうございます。&lt;/p&gt;
+
+&lt;p&gt;履歴の確認を怠っておりました。
+失礼いたしました。&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>ご回答ありがとうございます。</p>
+
+<p>履歴の確認を怠っておりました。
+失礼いたしました。</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		Sunvisor より		</title>
+		<link>/707#comment-239336</link>
+
+		<dc:creator><![CDATA[Sunvisor]]></dc:creator>
+		<pubDate>Wed, 29 Mar 2017 06:20:24 +0000</pubDate>
+		<guid isPermaLink="false">/?p=707#comment-239336</guid>
+
+					<description><![CDATA[&lt;p&gt;コメントありがとうございます。
+この記事の執筆時点では &lt;code&gt;return dfd&lt;/code&gt; で正しかったのが、ライブラリの方のバージョンアップで仕様が変わったのだと思います。最新の仕様に合わせて記述してください。&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>コメントありがとうございます。
+この記事の執筆時点では <code>return dfd</code> で正しかったのが、ライブラリの方のバージョンアップで仕様が変わったのだと思います。最新の仕様に合わせて記述してください。</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		pianyi より		</title>
+		<link>/707#comment-239335</link>
+
+		<dc:creator><![CDATA[pianyi]]></dc:creator>
+		<pubDate>Wed, 29 Mar 2017 05:55:03 +0000</pubDate>
+		<guid isPermaLink="false">/?p=707#comment-239335</guid>
+
+					<description><![CDATA[&lt;p&gt;こんにちは
+困ったらここにたどり着く事が多く、いつも重宝しております。
+1か所間違いでは？と思う個所が有りましたのでご連絡いたします。ご確認いただけないでしょうか。&lt;/p&gt;
+
+&lt;p&gt;一番最後に記載されているソースの16行目：
+「return dfd;」
+の部分ですが、
+「return dfd.promise();」
+の間違いでは無いでしょうか。&lt;/p&gt;
+
+&lt;p&gt;GithubのTutorial では、「return dfd.promise();」が記載されていると思われます。&lt;/p&gt;
+
+&lt;p&gt;よろしくお願いいたします。&lt;/p&gt;
+
+&lt;p&gt;Ext4.1.3
+chrome : 56.0.2924.87 (64-bit)&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>こんにちは
+困ったらここにたどり着く事が多く、いつも重宝しております。
+1か所間違いでは？と思う個所が有りましたのでご連絡いたします。ご確認いただけないでしょうか。</p>
+
+<p>一番最後に記載されているソースの16行目：
+「return dfd;」
+の部分ですが、
+「return dfd.promise();」
+の間違いでは無いでしょうか。</p>
+
+<p>GithubのTutorial では、「return dfd.promise();」が記載されていると思われます。</p>
+
+<p>よろしくお願いいたします。</p>
+
+<p>Ext4.1.3
+chrome : 56.0.2924.87 (64-bit)</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		非同期のJavaScript: Promise &#124; Sunvisor Lab. Ext JS 別館 より		</title>
+		<link>/707#comment-197850</link>
+
+		<dc:creator><![CDATA[非同期のJavaScript: Promise &#124; Sunvisor Lab. Ext JS 別館]]></dc:creator>
+		<pubDate>Wed, 23 Mar 2016 07:17:12 +0000</pubDate>
+		<guid isPermaLink="false">/?p=707#comment-197850</guid>
+
+					<description><![CDATA[&lt;p&gt;[&#8230;] 以前このブログでは、Promise について書きました。 （約束の地） その時には、 wilk/Ext.ux.Deferred: Promises for ExtJS 4 and Sencha Touch というライブラリを紹介しました。 [&#8230;]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] 以前このブログでは、Promise について書きました。 （約束の地） その時には、 wilk/Ext.ux.Deferred: Promises for ExtJS 4 and Sencha Touch というライブラリを紹介しました。 [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

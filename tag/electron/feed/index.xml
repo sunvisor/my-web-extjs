@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Electron &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/electron/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Sat, 17 Sep 2016 01:17:37 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Ext JS と Electron でインストール可能なデスクトップ アプリケーションを作る</title>
+		<link>/933</link>
+					<comments>/933#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 17 Sep 2016 01:17:37 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Electron]]></category>
+		<category><![CDATA[ExtJS6]]></category>
+		<guid isPermaLink="false">/?p=933</guid>
+
+					<description><![CDATA[この記事は、Sencha の公式ブログ記事 Creating Installable Desktop Applications with Ext JS and Electron を翻訳したものです。 ベテランの Ext  [&#8230;]]]></description>
+										<content:encoded><![CDATA[<blockquote>
+  <p>この記事は、Sencha の公式ブログ記事
+  <a href="https://www.sencha.com/blog/creating-installable-desktop-applications-with-ext-js-and-electron/">Creating Installable Desktop Applications with Ext JS and Electron</a>
+  を翻訳したものです。</p>
+</blockquote>
+
+<p><img decoding="async" loading="lazy" src="/wp-content/uploads/2016/09/extjs-electron-img1-300x100.png" alt="extjs-electron-img1" width="300" height="100" class="alignright size-medium wp-image-935" srcset="/wp-content/uploads/2016/09/extjs-electron-img1-300x100.png 300w, /wp-content/uploads/2016/09/extjs-electron-img1.png 765w" sizes="(max-width: 300px) 100vw, 300px" /></p>
+
+<p>ベテランの Ext JS 開発者であっても、Ext JS を使って (Windows、MacOS、Linuxで動作する) .exe とか .app ファイルの実行可能なデスクトップ アプリケーションを作る事ができると聞くと、驚くでしょう。
+実際に
+<a href="http://pages.sencha.com/themer">Sencha Themer</a>、
+<a href="https://www.sencha.com/products/architect/">Sencha Architect</a>、
+<a href="https://www.sencha.com/products/inspector/">Sencha Inspector</a>、
+<a href="https://www.sencha.com/products/test/#overview">Sencha Test</a>
+は、Ext JS でビルドし、Electron でパッケージした実行可能なデスクトップ アプリケーションです。
+Ext JS で作って Electron でパッケージしたアプリケーションは、
+<a href="https://en.wikipedia.org/wiki/Windows_Store">Windows Store</a> や
+<a href="https://en.wikipedia.org/wiki/Mac_App_Store">Mac App Store</a>
+にアップロードして販売することもできます。
+この記事では、Ext JS 6 のスターター アプリケーションをビルドしてパッケージするプロセスについてご案内します。
+<span id="more-933"></span></p>
+
+<p>Ext JS アプリケーションを実行可能にする為には、
+アプリケーションを Sencha Cmd でビルドした後、
+Electron でパッケージします。
+デスクトップの HTML5 アプリケーションをパッケージする考え方は、Apache Cordova や Adobe PhoneGap を使って HTML5 モバイル アプリをパッケージする考え方ととてもよく似ています。
+今のところ、二つのデスクトップ パッケージング フレームワークが支持を得ています。
+Github が作った <a href="http://electron.atom.io/">Electron</a> と
+Intel と GnorTech が作った
+<a href="http://nwjs.io/">NW.js</a>
+です。
+どちらの技術もオープンソースで MIT ライセンスの元で利用可能なので、無料で使うことができます。
+どちらにもそれぞれの利点がありますが、
+ここの記事では Electron と Ext JS にのみ焦点を当てます。
+Electron は現在の所、より新しいにもかかわらず NW.js より普及しています</p>
+
+<h3>Electron を見てみる</h3>
+
+<p>簡単に言うと、Electron はデスクトップの HTML5 アプリケーションを作るのに使われるランタイムです。
+内部では、
+<a href="https://www.chromium.org/developers/content-module">Chromium Content Module</a>
+と Node.js のランタイムが動作しています。
+Chromium (Google Chrome のオープンソース バージョン)
+で動作する Ext JS ウェブアプリなら、Electron でも動作します。
+Chromium で Ext JS ウェブアプリが動作することの効果は、
+モダンな HTML5 機能の一部が欠落している IE の古いバージョンでアプリのテストをする必要がなくなることです。
+Electron のウェブサイトには、いくつかの有名なデスクトップ アプリケーションが
+<a href="http://electron.atom.io/apps/">リストアップ</a>
+されていますが、みなさんは多分それらが実は HTML5 アプリケーションだと気付かずに使っていたのではないでしょうか。
+Electron の JavaScript API を使うと、クリップボード、ネイティブのアプリケーション メニュー、コンテクスト メニュー、通知、ファイルシステムなどといった、
+OS のネイティブ API にアクセスできます。</p>
+
+<h3>Electron の基礎</h3>
+
+<p>Electron はメイン プロセスを起動することで動作し、メイン プロセスは一つ以上の描画プロセスを起動します。
+メイン プロセスはアプリケーションのライフサイクル イベントを取り扱います。
+ライフサイクル イベントには、開始、終了、OS ネイティブのシステム API とのやり取りを含みます。
+描画プロセスは、メイン プロセスが生成し、Web ページをロードするために使われます。
+それぞれのプロセスは独自のスレッドで動作します。</p>
+
+<div id="attachment_12766" class="wp-caption alignnone"
+style="width: 310px">
+<img decoding="async" loading="lazy" src="/wp-content/uploads/2016/09/extjs-electron-img2-300x239.png" alt="extjs-electron-img2-300x239" width="300" height="239" class="alignright size-full wp-image-936" />
+図1: Electron はメイン プロセスを起動します。
+メイン プロセスは複数の描画プロレスを生成できます。
+
+</div>
+
+<p>Node.js を使うため、package.json というマニフェスト ファイルを作る必要があります。
+このファイルは Node.js が、パッケージ処理で取り込む、多くの依存関係を理解するのに役立ちます。</p>
+
+<h3>Ext JS 6 スターター アプリケーションをパッケージしましょう</h3>
+
+<p>Sencha Cmd を使うと、一つのコマンドでシンプルなスターター アプリケーションをビルドすることができます。
+このセクションでは、まず Sencha Cmd でスターター アプリケーションを生成し、次に Electron でスターター アプリケーションを実行可能にパッケージします。</p>
+
+<p>前提として、
+<a href="https://www.sencha.com/products/extjs/cmd-download/">Sencha Cmd</a>
+をダウンロードしてインストールし、
+Ext JS 6 フレームワークを使って
+<a href="https://docs.sencha.com/cmd/guides/workspaces.html">Sencha Cmd のワークスペース</a>
+を生成する必要があります。
+Sencha Cmd でワークスペースを作るために、インストール方法をご覧ください。
+また、
+<a href="http://nodejs.org/">Node.js</a>
+もインストールする必要があります。</p>
+
+<p>最初に、スターター アプリケーションを生成します。
+Sencha Cmd のワークスペース内でコマンドを一つ実行すると生成できます。</p>
+
+<div>[bash]
+sencha -sdk /path/to/ExtSDK generate app -classic StarterApp ./starterapp
+[/bash]</div>
+
+<p>スターター アプリケーションが生成されたら、
+スターター アプリケーションのディレクトリ内で次のコマンドを実行して、
+開発用にアプリケーションをビルドします。</p>
+
+<div>[bash]
+sencha app watch
+[/bash]</div>
+
+<p>上記のコマンドにより、次のリンクにブラウザーでアクセスすると、スターター アプリケーションを表示することができます。<br />
+<a href="http://locahost:1841/starterapp">http://locahost:1841/starterapp</a></p>
+
+<p>ブラウザーでスターター アプリケーションが表示できたら、
+ウェブアプリが動作するという確認ができました。
+別なターミナル ウィンドウを開いてスターター アプリケーションのディレクトリに移動します。</p>
+
+<p>次に、スターター アプリケーションのディレクトリで Sencha Cmd を使って、アプリケーションをビルドします。
+次のコマンドで electron/app サブディレクトリが作られ、Ext JS コードがミニファイされたて electron/app サブディレクトリに配置されます。</p>
+
+<div>[bash]
+sencha app build -des electron/app
+[/bash]</div>
+
+<p>-des フラグで、app.json の
+<a href="https://docs.sencha.com/cmd/guides/microloader.html#microloader_-_output">“output”プロパティ</a>
+を変更せずにアプリケーションを electron/app ディレクトリにビルドできます。</p>
+
+<p>この時点で、ディレクトリ構造は図2 のようになっているはずです。</p>
+
+<div id="attachment_12767" class="wp-caption alignnone"
+style="width: 219px">
+<img decoding="async" loading="lazy" src="/wp-content/uploads/2016/09/extjs-electron-img3.jpg" alt="extjs-electron-img3" width="209" height="498" class="alignright size-full wp-image-937" srcset="/wp-content/uploads/2016/09/extjs-electron-img3.jpg 209w, /wp-content/uploads/2016/09/extjs-electron-img3-126x300.jpg 126w" sizes="(max-width: 209px) 100vw, 209px" />
+図2: electron/app サブディレクトリは sencha app build コマンドで生成されます。
+</div>
+
+<p>次に、starterapp/electron サブディレクトリに package.json というマニフェスト ファイルを作る必要があります。</p>
+
+<p><a href="https://gist.github.com/shikhirsingh/ae86d4b8c1735cf9cd19e23130612044">サンプルの package.json ファイル</a>
+を作っておきました。サポートするすべてのOS用の実行可能バイナリを生成するように設定してあります。
+MacOS を使ってて MacOS 用にパッケージするだけで良いのでしたら、
+次の
+<a href="https://gist.github.com/shikhirsingh/a2bd9116b0c2418d065f3519592692a6">sample package.json
+ファイル</a>
+を代わりに使って下さい。
+ファイルをダウンロードして、starterapp/electron サブディレクトリに配置します。</p>
+
+<p>次にメイン プロセスを書いたファイルを作ります。
+main.js という名前にして、starterapp/electron/app サブディレクトリに配置します。
+こちらも
+<a href="https://gist.github.com/shikhirsingh/c690c39a690f63b69ab70a8b1f95bd78">基本的なメイン プロセス ファイル</a>
+を用意してありますので、ダウンロードして
+starterapp/electron/app サブディレクトリに配置します。</p>
+
+<p>次に、Electron と
+<a href="https://github.com/electron-userland/electron-packager">Electron Packager</a>
+をプロジェクトにインストールします。
+次の二つのコマンドを starterapp ディレクトリで実行します。</p>
+
+<div>[bash]
+npm install electron-prebuilt -save
+npm install electron-packager &#8211;save-dev
+[/bash]</div>
+
+<p>上記のコマンドを実行したら、node&#95;modules というサブディレクトリが、
+starterapp/electron
+サブディレクトリに配置されます。</p>
+
+<p>Electron アプリケーションを実行するには次のようにタイプします。</p>
+
+<div>[bash]
+npm start
+[/bash]</div>
+
+<p>これで、独自の Ext JS 6 コードを書く準備ができました。
+Ext JS アプリケーションを変更する毎に、Sencha Cmd でリビルドして、npm start コマンドを再実行します。
+Chrome のインスペクターにアクセスしたい場合は、
+starterapp/electron/app/main.js
+ファイルの14行目のコメントを外します。</p>
+
+<p>アプリケーションのコーディングが済んだら、実行可能バイナリを生成するために、アプリケーションをパッケージします。
+MacOS や Linux 上でパッケージしていて、Windows の実行ファイルを生成したい場合は、
+アプリケーションをパッケージする前に、
+<a href="https://www.winehq.org/download">Wine</a>
+をインストールする必要があります。
+Wine は MacOS や Linux 上で Windows アプリをパッケージするのをアシストします。
+注: MacOS 上に Wine をインストールするには 30分ほどかかります。
+MacOS を使っていて Windows 用にパッケージして .exe バイナリを作るつもりがない場合は、この前に説明した適切な package.json ファイルを使いましょう。</p>
+
+<p><a href="https://www.macports.org/">MacPorts</a>
+がすでにインストールされていたら、次のコマンドでワンステップで Wine をインストールできます。</p>
+
+<div>[bash]
+sudo port install wine
+[/bash]</div>
+
+<p>次に、アプリケーションをパッケージします。
+次のコマンドを実行してください。</p>
+
+<div>[bash]
+npm run-script package
+[/bash]</div>
+
+<p>上記のコマンドを実行すると
+starterapp/electron/dist
+サブディレクトリに、アプリケーションのバイナリが新たに配置されます。
+このサブディレクトリには、生成された Linux、Windows そして MacOS 用のバイナリがあるはずです。</p>
+
+<h3>次のステップ</h3>
+
+<p>Ext JS は、美しいアプリケーションを作るための全てのコンポーネントを提供しますし、Electron は Ext JS アプリケーションをパッケージし、ネイティブ機能へのアクセスを提供しますから、Ext JS と Electron は一緒に使うととても便利です。</p>
+
+<p>これでExt JS のスターター アプリケーションをパッケージできましたので、
+Electron のネイティブ機能にアクセスする方法を学びましょう。
+<a href="http://electron.atom.io/docs/">Electron docs</a>
+を確認して下さい。
+また、2冊の本が Manning からまもなく発行されます。
+それらは、
+<a href="https://www.manning.com/">Manning のウェブサイト</a>
+で、早期アクセスで読むことができます。
+さらに、
+<a href="https://www.senchacon.com/">SenchaCon</a>
+において、
+Electron と Ext JS のセッションがあり、これらのフレームワークを統合して、デスクトップ アプリケーションを作成する方法について詳細を検討します。</p>
+
+<h5>Written by <span class="entry-author" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person"><span class="entry-author-name" itemprop="name">Shikhir Singh</span></span></h5>
+
+<p>Shikhir is a Sr. Developer Relations Manager at Sencha. He specializes
+in enterprise mobility, cryptography and JavaScript technologies. Prior
+to joining Sencha, he worked at BlackBerry, Lockheed Martin, Sun
+Microsystems and a couple of startups.</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/933/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>

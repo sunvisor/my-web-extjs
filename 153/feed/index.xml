@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	Ext JS4 MVC でのViewport.jsって？ へのコメント	</title>
+	<atom:link href="/153/feed" rel="self" type="application/rss+xml" />
+	<link>/153</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Fri, 26 Aug 2011 22:39:46 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>
+		続）Ext JS4 MVC でのViewport.jsって？&#124; Sunvisor Lab. Ext JS 別館 より		</title>
+		<link>/153#comment-2</link>
+
+		<dc:creator><![CDATA[続）Ext JS4 MVC でのViewport.jsって？&#124; Sunvisor Lab. Ext JS 別館]]></dc:creator>
+		<pubDate>Tue, 24 May 2011 07:27:05 +0000</pubDate>
+		<guid isPermaLink="false">/?p=153#comment-2</guid>
+
+					<description><![CDATA[&lt;p&gt;[...] Ext JS4 MVC でのViewport.jsって？ のエントリーでうやむやのまま終わってたViewport.js の件，調べてみました。なおこのエントリーの中には，PerfectDay で @kotsutsumi さんに教えられたことがもと [...]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] Ext JS4 MVC でのViewport.jsって？ のエントリーでうやむやのまま終わってたViewport.js の件，調べてみました。なおこのエントリーの中には，PerfectDay で @kotsutsumi さんに教えられたことがもと [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

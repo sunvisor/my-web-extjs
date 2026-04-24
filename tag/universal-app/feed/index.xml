@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Universal App &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/universal-app/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Fri, 30 Oct 2015 08:55:30 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>オシャレなユニバーサル アプリの作り方 – その２</title>
+		<link>/865</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Fri, 30 Oct 2015 08:55:30 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[ExtJS6]]></category>
+		<category><![CDATA[Universal App]]></category>
+		<guid isPermaLink="false">/?p=865</guid>
+
+					<description><![CDATA[連載記事の一回目を翻訳してしまったので、パート２も翻訳しました。 Sencha 公式ブログの How to Build a Great Looking Universal App with Ext JS – Part 2 [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>連載記事の一回目を翻訳してしまったので、パート２も翻訳しました。</p>
+
+<p>Sencha 公式ブログの
+<a href="https://www.sencha.com/blog/how-to-build-a-great-looking-universal-app-with-ext-js-part-2/">How to Build a Great Looking Universal App with Ext JS – Part 2 | Sencha</a> の翻訳になります。</p>
+
+<p>ユニバーサル アプリを構築する際のキモとなる、2つのツールキット。そして双方にまたがるコードはどこに置くのか。2つのツールキットで作成したアプリは、実行時にどのように選択されるのか。</p>
+
+<p>といった、「ユニバーサル アプリ」と聞いて、湧いてくる疑問に答えてくれています。</p>
+
+<p>著者は Lee Boonstra です。彼女のブログは翻訳しやすくて、内容も整っているので大好きです。</p>
+
+<p>ではご覧ください。</p>
+
+<p><span id="more-865"></span>
+<style>
+    img {
+        max-width: 100%
+    }
+</style></p>
+
+<p>この連載の
+<a href="https://www.sencha.com/blog/how-to-build-a-great-looking-universal-app-with-ext-js-part-1/">パート1</a>
+では、
+ユニバーサル アプリとは何かということと、Ext JS 6 で作成する方法について解説しました。
+ここでは、アプリケーションを構築する方法をお見せしましょう。</p>
+
+<h3>フォルダ構造</h3>
+
+<p>ハイパフォーマンスの Ext JS 6 ユニバーサル アプリを作るために、Sencha Cmd を使います。
+フォルダ内にパッケージやフレームワークを共有する、アプリケーションの複数バージョン(フリーと商用)を配置するため、まず、ワークスペースを生成します。</p>
+
+<p>ワークスペースを生成するには、ダウンロード済みの Ext JS 6 の SDK にカレントディレクトリを移して、そこから次のコマンドを実行します。</p>
+
+<div>[bash]
+    sencha generate workspace ../spotifinderworkspace6
+[/bash]</div>
+
+<p>これで次のファイル構造が生成されます。</p>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/10/build-universal-app-img7-1024x483.png" alt="Generate workspace" /></p>
+
+<p>次に、アプリケーションを生成します。
+<strong>&#95;engine</strong>
+と名付けました。
+なぜかというと、動作やブランディングの違うカスタムバージョンのアプリを作成することができるからです。
+例えば、Pandora の曲を再生する音楽アプリです。
+そのため、Ext.Application を拡張して、特定の要素をオーバーライドする必要があります。</p>
+
+<p>ここでのアプリケーションの生成方法は次の通りです。</p>
+
+<div>[bash]
+    cd spotifinderworkspace6/ext
+    sencha generate app Engine ../_engine
+[/bash]</div>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/10/build-universal-app-img8-1024x572.png" alt="Generate application" /></p>
+
+<h3>Toolkits</h3>
+
+<p><strong>classic</strong>
+フォルダは、classic ツールキットのフォルダ構造です。
+デスクトップ (またはタブレット) に最適なリッチなコンポーネントが含まれます。
+また、従来のブラウザもサポートします。</p>
+
+<p>classic ツールキットのアプリは次のようになります。</p>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/10/build-universal-app-img9-1024x590.png" alt="App in Classic
+toolkit" /></p>
+
+<p>Spotify の一種のように見えます。
+伝統的なデスクトップ コンポーネントにカスタム スタイルシートを設定して使っています。
+アプリケーションは大きなスクリーンに表示されるので、アルバムのアートワークや、追加情報、設定画面 (横にドッキングした) などの情報を表示するスペースがあります。</p>
+
+<p>独自のビューを作成しました。
+その中には独自のロジックを必要とするものがあります。
+そのため、classic ツールキットのフォルダ構造は次のようになります。</p>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/10/build-universal-app-img10-1024x508.png" alt="Folder structure in Classic toolkit" /></p>
+
+<p><strong>modern</strong> フォルダには、軽量なタッチ コンポーネントが含まれます。
+スマホ (またはタブレットの場合も) などのタッチデバイスに最適です。
+これらのコンポーネントは、マウスやキーボードではなくタッチ操作に最適化されています。
+コンポーネントは軽量ですので、性能の低いモバイル デバイス上でも快適に動作します。</p>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/10/build-universal-app-img11-300x300.png" alt="App in Modern toolkit" /></p>
+
+<p>画面が小さいので、必要なコンポーネントだけが表示されています。
+設定ビューを開くには、歯車ボタンをタップします。
+すると、設定画面がアニメーションしながらスライドインしてきます。</p>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/10/build-universal-app-img12-1024x430.png" alt="Folder structure is small" /></p>
+
+<p>コンポーネントが沢山あるわけではないので、フォルダ構造も小さくなっています。
+ここでも、このビューで必要とされる、ビューや動作のコードだけがユニークです。
+他のものはすべて、ツールキットをまたいで共有されます。</p>
+
+<p>共通のコードは、<strong>app</strong> フォルダにあります。</p>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/10/build-universal-app-img13-1024x601.png" alt="Shared code in app folder" /></p>
+
+<p>Tip: ビュー コントローラ (VC) を継承することもできます。</p>
+
+<p>例えば、動作のほとんどを記述したビューポートの VC を作ります。
+classic ツールキットと modern ツールキットのフォルダには、自身のコンポーネントに必要なコードだけを記述します。</p>
+
+<p>次がそのサンプルです。
+次のものは、
+<strong>app/main/</strong> 
+フォルダに配置されたビューポートの VC の一部です。
+ご覧の通り、<code>Ext.app.ViewController</code> を継承しています。
+クラス自身の名前は、
+<code>Engine.view.main.MainController</code>
+です。</p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2015/10/build-universal-app-img14.png" alt="Snippet of Viewport VC" /></p>
+
+<p>さて、次が classic フォルダ内のビューポート VC のコードです。
+<strong>classic/src/main/</strong>
+フォルダ内にあって、こちらは
+共有の VC である
+<code>Engine.view.main.MainController</code>
+を継承しています。
+このクラスに <code>alias</code> を設定する事を忘れないようにしてください。
+これにより、この classic のビュー コントローラが、classic のメイン ビューｗにリンクされます。</p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2015/10/build-universal-app-img15.png" alt="Code of Viewport VC in Classic
+folder" /></p>
+
+<h3>マイクロローダー</h3>
+
+<p>マイクロローダーは、実行環境を検出して、適切な体験を提供します。
+これは、デスクトップ上でアプリケーションをロードした場合には、Spotify テーマのデスクトップ バージョンのアプリが表示され、iPhone 上でアプリケーションを開いたら、iOS テーマのスマホ インターフェースのものが利用できます。</p>
+
+<p>この仕掛けは
+<code>Ext.platformTags</code>
+にあります。
+既存の Ext JS 6 アプリでブラウザのコンソールからこのコマンドを実行できます。
+実行しているブラウザのバージョン、OS、デバイスの種類などの、全ての種類の情報を持ったオブジェクトが提供されます。</p>
+
+<p>アプリを設定して、適切な経験を提供することができます。
+秘密は <strong>app.json</strong> ファイルにあります。
+ビルド プロファイルを生成し、それぞれの app.json 設定を、ツールキット (コンポーネント セット) やテーマなどのビルド プロファイルにバインドできます。</p>
+
+<div>[js]
+    &quot;builds&quot;: {
+        &quot;classic&quot;: { //name of the build profile
+            &quot;toolkit&quot;: &quot;classic&quot;, //component set
+            &quot;theme&quot;: &quot;theme-spotifext&quot;, //name of the theme
+        },
+        &quot;modern&quot;: {
+            &quot;toolkit&quot;: &quot;modern&quot;,
+            &quot;theme&quot;: &quot;theme-cupertino&quot;,
+        }
+    }
+[/js]</div>
+
+<p>体験の切替は、
+<strong>index.html</strong>
+で処理されます。
+Sencha Cmd でアプリケーションを生成すると、スタブ アウトされます。</p>
+
+<p><img decoding="async" src="https://wp-test.sencha.com/wp-content/uploads/2015/10/build-universal-app-img16-1024x433.png" alt="Index.html file" /></p>
+
+<h3>MVVM パターン</h3>
+
+<p>Ext JS 6 では MVVM パターンが使えます。</p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2015/10/build-universal-app-img17-300x262.png" alt="MVVM pattern" /></p>
+
+<p><strong>View</strong> – 画面上の全てのコンポーネント<br />
+ <strong>ViewController</strong> – ビューのロジック<br />
+ <strong>ViewModel</strong> – ビューにバインドするデータ</p>
+
+<p><strong>data model</strong> – エンティティの構造<br />
+ <strong>data record</strong> – 実際のデータ<br />
+ <strong>data store</strong> – クライアントサイドのキャッシュ</p>
+
+<p>Ext JS のビューはネストでき、同様に ViewModel や ViewController もネストできます。</p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2015/10/build-universal-app-img18-300x202.png" alt="Nested views, view models, and view controllers" /></p>
+
+<p>このパターンの利点は、コードが読みやすく保守が容易であるという点です。
+コードとクラスは一貫したファイル構造にあり、コードの再利用が容易になります。</p>
+
+<h3>なぜオープンソースじゃなくて Ext JS なの？</h3>
+
+<p>Ext JS 6 では、オールインワンのソリューションが得られます。
+いくつもの依存関係を管理し、
+協働する必要があるいくつもの異なるテクノロジーの致死行きを持つ必要がありません。</p>
+
+<p>私の作ったアプリケーションは、次の Ext JS 6 のソリューションを使いました。</p>
+
+<table style="width: 100%; border-collapse: separate; margin-top: 2em;" border="0" cellpadding="">
+<tbody>
+<tr>
+<td style="padding: 9px 22px; border-color: transparent;">
+<h4 class="flat">Ext JS 6</h4>
+</td>
+<td style="padding: 9px 22px; border-color: transparent;">
+<h4 class="flat">オープンソースでの例</h4>
+</td>
+</tr>
+<tr style="background-color: #e6f3f9;">
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">Sencha クラス システム</td>
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">ECMAScript 6 Classes</td>
+</tr>
+<tr>
+<td style="padding: 9px 22px; border-color: transparent;">Border レイアウト</td>
+<td style="padding: 9px 22px; border-color: transparent;">JS + CSS</td>
+</tr>
+<tr style="background-color: #e6f3f9;">
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">MVVM アーキテクチャ</td>
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">Angular JS</td>
+</tr>
+<tr>
+<td style="padding: 9px 22px; border-color: transparent;">デスクトップ App</td>
+<td style="padding: 9px 22px; border-color: transparent;">Bootstrap / Responsive CSS</td>
+</tr>
+<tr style="background-color: #e6f3f9;">
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">モバイル App</td>
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">jQuery Mobile / Ionic</td>
+</tr>
+<tr>
+<td style="padding: 9px 22px; border-color: transparent;">Promise</td>
+<td style="padding: 9px 22px; border-color: transparent;">ECMAScript 6</td>
+</tr>
+<tr style="background-color: #e6f3f9;">
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">グリッド</td>
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">jQuery Plugin</td>
+</tr>
+<tr>
+<td style="padding: 9px 22px; border-color: transparent;">Touch ジェスチャー / イベント</td>
+<td style="padding: 9px 22px; border-color: transparent;">JS</td>
+</tr>
+<tr style="background-color: #e6f3f9;">
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">ルーティング</td>
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">AngularJS Plugin</td>
+</tr>
+<tr>
+<td style="padding: 9px 22px; border-color: transparent;">オフライン キャッシュ</td>
+<td style="padding: 9px 22px; border-color: transparent;">HTML5 / JS</td>
+</tr>
+<tr style="background-color: #e6f3f9;">
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">テーマ</td>
+<td style="line-height: normal; padding: 9px 22px; border-color: transparent;">Sass / CSS</td>
+</tr>
+<tr>
+<td style="padding: 9px 22px; border-color: transparent;">Sencha Cmd</td>
+<td style="padding: 9px 22px; border-color: transparent;">Grunt + Yeoman + Bower</td>
+</tr>
+</tbody>
+</table>
+
+<p>オープンソースのソリューションを採用することもできましたが、
+そうしていたらあるものの上に技術を積み重ねる必要があったでしょう。
+例えば、ECMAScript 6 はインターネット エクスプローラではまだサポートされていません。
+Bootstrap やレスポンシブ ウェブ デザインでは、
+より大きなコードをダウンロードする必要があり、
+(この前のブログ記事で言及したように)
+それぞれのデバイスに最適化されていません。
+jQuery プラグインのグリッド コンポーネントがありますが、
+それは半分程度の性能で、大きなデータセットでは充分なパフォーマンスを得られません。
+また、ブラウザが最新に更新されたときに、AngularJS プラグインが突然動作しなくなったら誰に連絡すれば良いのでしょうか？</p>
+
+<p>このアプリケーションは単純なアプリですが、すでに 10 におよぶ依存関係を持っています。
+50倍ものコードベースを持つ実際のエンタープライズ アプリではどうでしょうか？
+これらのいくつものツールの知識を持ち、それらの技術が上手く一緒に動きますように、機能が (ブラウザをアップデートしても) 5年から10年年後も使えますようにと神頼しなくてはなりません。</p>
+
+<h3>まとめ</h3>
+
+<p>これらが、正に Ext JS 6 を選択した理由です。
+全てが同じ方法で設定され、全ての部品が協働し、同じように見えるオールインワンのソリューションです。
+そして、Sencha は営利企業ですので、サポートの連絡先があり、アプリは将来にわたって動作することが保証されます。</p>
+
+<h4>リソース</h4>
+
+<p>ウェビナーをご覧ください: <a href="https://www.sencha.com/webinars/secrets-to-building-a-great-looking-universal-app/">Secrets to Building a Great Looking Universal
+App</a> (オシャレなユニバーサル アプリを作る秘訣)
+音楽アプリを作る時に使った、多くのトピックを公開しています。</p>
+
+<p><strong>その他の便利なリンク:</strong><br />
+ <a href="https://docs.sencha.com/extjs/6.0/getting_started/getting_started.html">Getting Started with Ext JS 6</a><br />
+ <a href="https://www.sencha.com/blog/how-to-create-a-dark-ext-js-theme-part-1/">How to Create a Dark Ext JS Theme</a></p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>オシャレなユニバーサル アプリの作り方 &#8211; その１</title>
+		<link>/862</link>
+					<comments>/862#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Thu, 29 Oct 2015 02:02:31 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[ExtJS6]]></category>
+		<category><![CDATA[Universal App]]></category>
+		<guid isPermaLink="false">/?p=862</guid>
+
+					<description><![CDATA[Ext JS 6 の最大の「売り」は、デスクトップとモバイルのアプリを1つのコードベースで記述できるという点です。Sencha ではそうしたアプリのことをユニバーサル アプリと呼んでいます。 とはいえ、これまで Ext  [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext JS 6 の最大の「売り」は、デスクトップとモバイルのアプリを1つのコードベースで記述できるという点です。Sencha ではそうしたアプリのことをユニバーサル アプリと呼んでいます。
+とはいえ、これまで Ext JS と Sencha Touch で、重複するコードを書かされてきた我々としては、実際にどうやれば1つのコードベースに統一できるのか、というところが見えてきません。</p>
+
+<p>Sencha の公式ブログで、ユニバーサル アプリの作り方について書かれた記事が掲載されました。それを翻訳してみましたので、ご覧ください。</p>
+
+<p><span id="more-862"></span>
+元記事: <a href="https://www.sencha.com/blog/how-to-build-a-great-looking-universal-app-with-ext-js-part-1/">How to Build a Great Looking Universal App with Ext JS – Part 1</a></p>
+
+<h3>背景</h3>
+
+<p>去る 2011年、私はあるアプリを作ろうとしていました。
+私は音楽が好きで、Spotify の大ファンです。
+たくさんデータベースから曲を聴けるのが好きでした。
+手動で検索しなければならないのが、玉に瑕でした。
+ノートパソコンを使っていると気には問題はありませんが、
+歩いている時や自転車に乗っているときに、Spotify を携帯電話で使う時はあまりよくありませんでした。
+仮想キーボードで文字を入力するのは面倒です。</p>
+
+<p>そこで、私は、私の LastFm アカウント
+(&#8220;scrobble&#8221; ができ聴いた音楽を保存できるオンライン データベース)
+に接続する Sencha touch アプリを作りました。</p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2015/10/build-universal-app-img1-153x300.png" alt="Sencha Touch app" /></p>
+
+<p>Sencha Touch はこのアプリを作るのに最適でした。
+パワフルでスムースなスクロールリストと、iPhone で綺麗に表示されるスタイルシートがあります。
+すぐに作って使えるようになりました。</p>
+
+<p>私はこのアプリがとても気に入ったので公開することにしました。
+私はアプリを Cordova でラッピングして Apple の App Store に公開しました。
+その後、私はそれをデスクトップでも使っていることに気付きました。
+曲の選択が非常に簡単なそのアプリを、私の Web サーバーにデプロイして、Google Chrome Web Store にホストしました。</p>
+
+<p>一週間後、Chrome Web Store のレビューをチェックしました。
+私は、酷評ばかりのレビューを見て心が折れました。
+「なんておかしな見た目なんだ」とか
+「どうして、マウスホイールでスクロールしないんだ」</p>
+
+<p>それは全く仰るとおりでした。
+このアプリは iPhone 用にデザインされてました。
+スタイルシートのおかげで iPhone アプリに似ていますし、
+タッチイベントやジェスチャーを使う Sencha Touch で作りましたから、
+タッチアプリと同様の動作をしました。
+音楽リストをスクロールさせるには、リストをタップして上下にドラッグしなければなりません。
+これはタッチ デバイスではすばらしいのですが、デスクトップではおかしな動作です。
+私はアプリのデスクトップ バージョンも作らなければならないことに気付きました。</p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2015/10/build-universal-app-img2-300x216.png" alt="Ext JS app" /></p>
+
+<p>これが Ext JS を使ってみた最初でした。
+Ext JS はデスクトップ アプリケーションを作るすばらしいフレームワークです。
+グリッドなどの高速なデスクトップ コンポーネントがあり、Sencha Touch 2 と同様の MVC アーキテクチャやクラス システムがありました。
+私は、デスクトップ バージョンを作成し、後に Ext JS 4 から Ext JS 5 に更新しました。
+Ext JS 5 を選んだのは、コードをクリーンアップし、新しい MVVM パターンが使いたかったのと、タッチイベント、レスポンシブ デザイン、タブレットバージョン用のスタイルが使いたかったからです。
+しかし、2つのフレームワークによる2つの違ったコードベースを保守する必要があることに気付いたとき、Ext JS 6 に切り替えました。</p>
+
+<p>現在では、Ext JS 6 を使うことで、胸痛のアプリを作成できます。
+1つのコードベースで、アプリはサポートされているあらゆるデバイス上で動作します。</p>
+
+<h4>アプリケーションの仕様</h4>
+
+<p>始める前に、アプリの動作に関するいくつかの技術的仕様を示します。</p>
+
+<ul>
+<li>Spotify の曲を再生する為に、URLスキームを使います。</li>
+<li>LastFm からデータを取得するために、
+外部の JavaScript API を使います。
+これはパッケージの一部にカスタム プロキシーを書く必要があります。</li>
+<li>LastFm のユーザー名は、HTML5 ブラウザのローカルストレージに保存します。</li>
+<li>スマホでは iOS 表示のような modern タッチ コンポーネントを使います。</li>
+<li>タブレットとデスクトップでは、Spotify のルック＆フィールの
+リッチな classic デスクトップ コンポーネントを使います。</li>
+<li>MVVM パターンを使います。</li>
+</ul>
+
+<h3>ユニバーサル アプリとレスポンシブ Web デザイン</h3>
+
+<p>Sencha フレームワークでのユニバーサル アプリの動作と、
+特定の環境に対応するモバイル ウェブサイトに使われる「レスポンシブ デザイン」
+の動作には、違いがあります。</p>
+
+<p>レスポンシブ デザインは、
+特定の HTML エレメントを並べ替えたり、表示／非表示したりするために、
+関連するユニット、パーセンテージの値、ブレークポイント (メディアクエリー)
+を使って、スタイルシート内で実施されます。</p>
+
+<p>次のコードをご覧ください。</p>
+
+<div>[css]
+@media all and (min-width: 800px) and (max-width: 1024px) {
+    ul li.products {
+        width: 50%;
+        display: inline-block;
+    }
+}
+@media all and (min-width: 1025px) {
+    ul li.products {
+        width: 25%;
+        display: inline-block;
+    }
+}
+@media all and (max-width: 799px){
+    ul li.products {
+        display: none;
+    }
+}
+[/css]</div>
+
+<p>このサンプルにはいくつかのブレークポイントがあります。
+ビューポートの幅が 799px 以下の小さなスクリーン、
+800px から 1024px の幅のスクリーン、
+そして 1025px 以上の幅がある大きなビューポートです。
+大きなスクリーンでは、list エレメントは、それぞれ 25%の幅で、並びます。
+中間のスクリーンでは、50%になり、小さなスクリーン (スマホなど) では、リストは表示されません。</p>
+
+<p>このテクニックは、ウェブサイトにはピッタリですが、
+実際のアプリケーションではあまりよくありません。
+なぜでしょう。</p>
+
+<ul>
+<li>スマホで使う時、ネットワークが遅かったり、
+(高価な) データプランを使うことになります。
+これらのエレメントやデータは見ることはないのに、コストがかかります。</li>
+<li><p>また、小さなスクリーンサイズでの表示テキストを変更したいこともあるでしょう。
+私は多くのコピーライターと仕事をしましたが、
+彼らはスマホでの文字はデスクトップと違うものを表示すべきだと考えています。
+小さなスクリーンで本全体を読む気にはなれません。</p></li>
+<li><p>レスポンシブ ウェブデザインを使うだけだと、1つのコードベースを提供するだけなので、内容をリファインしたり、デバイスの特徴を働かせる多くの機会を逃しているのではないでしょうか。
+たとえば、あなたのファンシーなフローティングのカレンダーコンポーネントはデスクトップで大きく見えますが、スマホではうまく動作しません。
+マウスでアプリを操作していると、文字のハイパーリンクは問題なく動作しますが、小型のタッチ デバイスでタップするのに苦労することでしょう。
+ユーザーは、ネイティブ アプリケーションふるまい（例えばiPhoneのビルトインデートピッカーや大きなボタンのリンク）に慣れています。
+多くの場合、レスポンシブなモバイルウェブサイトは、ネイティブ アプリケーションと同じユーザー経験を用意していません。</p></li>
+</ul>
+
+<p>そういうわけで Sencha のアプローチはこれとは違って、よりよくなっています。
+Ext JS 6 の一般的なアプリは、単なるレスポンシブ デザインをはるかに越えています。
+私たちは、要素の順番を変えたり表示を切り替えたりするだけではなく、UI をよりコントロールしたいということを理解しています。
+いろいろなアプローチがあって、そのほとんどは単に見た目に限ったものではありません。
+データや動作もコントロールすることができます。</p>
+
+<p><strong>ツールキット / ユニバーサル アプリのアプローチ:</strong>
+フレームワークがダウンロードされる前に、ユーザー体験が選択されます。</p>
+
+<p><strong>どのように動作するか:</strong>
+タッチ (modernツールキット) とデスクトップ (classic ツールキット) のコンポーネント セットで、違うビューを作成できます。
+マイクロローダーがデバイス、OS、ブラウザーを検出して、ビルド プロファイルをロードすることで適切なコンポーネントを提供します。
+ビルド プロファイルには特定のテーマを適用できます。
+いくつものビルド プロファイルを好きなだけ作成できますし、
+それはビューに限らずデータ ストアや動作に関するコードも変更できます。</p>
+
+<p>次のスクリーンショットでは、
+アプリがデスクトップではどのように表示され、iPhone ではどう表示されるのかを確認できます。</p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2015/10/build-universal-app-img3-300x172.png" alt="App UI on desktop and
+phone" /></p>
+
+<p><strong>デバイス固有のスタイルシート:</strong>
+スタイルシートはフレームワークがダウンロードされる前に選択されます。</p>
+
+<p><strong>どのように動作するか:</strong>
+Ext JS 6 には、classic ツールキット用、 (iOS、Android、Windows Phone のルック＆フィールを持った) タッチ インターフェース用のテーマ (Sass のスタイルシート) や、両方のツールキットで使えるスタイルシートが同梱されています。
+マイクロローダーは、環境を検出し適切なテーマを提供します。</p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2015/10/build-universal-app-img4-300x253.png" alt="Device specific stylesheets" /></p>
+
+<p><strong>デバイス プロファイル:</strong>
+アプリケーションの起動時に各ユーザーのプロファイルが選択されます。</p>
+
+<p><strong>どのように動作するか:</strong>
+デバイスのプロファイルを作成し、それぞれのコードやコンポーネントの位置を変更することができます。
+例えば、メールアプリをスマホで開いたときには、全てのメールの概要のリストが表示され、項目をタップするとメールが開きます。
+しかし、メールアプリをタブレットで開いた場合は、リストは左側にドッキングして、メールの本体はスクリーンの右側に位置します。
+このようなレイアウトをデバイス プロファイルで実現できます。
+これは単にあるコンポーネントの位置を変えている (リストがドッキングしているかどうか) だけではありません。
+その背後での、動作も変更されます。
+ (メールをタップしたときに、別なウィンドウが開くのか、リストの横にロードするのかの違い)</p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2015/10/build-universal-app-img5.png" alt="Device profiles" /></p>
+
+<p><strong>JavaScript によるレスポンシブ デザイン:</strong>
+コードが実行時に指定した条件に応じた動きをします。</p>
+
+<p><strong>どのように動作するか:</strong>
+JavaScript が実行時にある条件 (例えばスクリーン サイズ) に応じた動作をします。</p>
+
+<p>あらゆる条件を指定して、ビューやデータ、振る舞いを対応させることができます。</p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2015/10/build-universal-app-img6.gif" alt="Responsive Design with
+JavaScript" /></p>
+
+<p><strong>Traditional Web Design with CSSによる伝統的なウェブデザイン:</strong>
+表示が実行時に環境に応じた動きをします。</p>
+
+<p><strong>どのように動作するか:</strong>
+<strong>How it works:</strong>
+以前からのレスポンシブ ウェブ デザインを使うこともできます。
+ビューの単純なエレメントのスタイル設定に使えます。</p>
+
+<h3>まとめ</h3>
+
+<p>この記事では、Ext JS のユニバーサル アプリケーションについて説明しました。
+私がどれほどユニバーサル アプリのアプローチを気に入っていて、
+なぜアプリをコンバートしようと思ったのかを説明しました。
+パート2 では、私が実際に音楽アプリをユニバーサル アプリにコンバートした方法をご覧に入れます。</p>
+
+<hr />
+
+<p>これで、Part 2 も翻訳しなきゃならくなってしまった。(;´д｀)</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/862/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>

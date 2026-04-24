@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>DirectStore &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/directstore/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Mon, 14 Nov 2011 22:50:06 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>サーバーサイドでDirectStoreの更新処理を書く</title>
+		<link>/127</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 28 Mar 2011 07:59:18 +0000</pubDate>
+				<category><![CDATA[Direct]]></category>
+		<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[xFrameworkPX]]></category>
+		<category><![CDATA[DirectStore]]></category>
+		<category><![CDATA[Ext3]]></category>
+		<guid isPermaLink="false">/?p=127</guid>
+
+					<description><![CDATA[08.で DirectStore でのサーバー更新について調べましたが，それでは実際にサーバー側のルーチンはどう書いたらいいのでしょうか。ここでは，PHPとxFrameworkPXを使った場合を例示します。xFramew [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>08.で DirectStore でのサーバー更新について調べましたが，それでは実際にサーバー側のルーチンはどう書いたらいいのでしょうか。ここでは，PHPとxFrameworkPXを使った場合を例示します。xFrameworkPXでは，ExtDirectコントローラーを使えば，モジュールのメソッドがそのままExtDirectで使えるという便利な機能があります。ここでは，そのモジュールのメソッドの記述例を示してExtDirectでのサーバー側の実装を示します。ただ，他のフレームワークを使った場合でも，API周りの処理に違いがあるとは思いますが，実際に処理するメソッド自体は大同小異だと思いますので，参考にはなると思います。<span id="more-127"></span></p>
+
+<h2>クライアント側 JavaScript</h2>
+
+<h3>DirectStore の定義</h3>
+
+<p>次のような DirectStore を定義して，このストアの save メソッドをコールしたときに，ちゃんとサーバー側で更新がかかるようにします。例では autoSave を false にして自動保存されないようにしていますが，自動保存する場合でもほぼ同じです。この例では，保存するときの beforewrite イベントでローディングマスクを表示する処理を加えて， write イベントでマスクを解除しています。API コンフィグで指定しているのは，ExtDirect で公開されているメソッドです。Ext.remote というネームスペースに定義されるようになっています。CRUDそれぞれのメソッドが定義されています。</p>
+
+<ul>
+<li>Create = insertDataメソッド</li>
+<li>Read = readDataメソッド</li>
+<li>Update = updateData メソッド</li>
+<li>Delete = deleteData メソッド</li>
+</ul>
+
+<h3>Store へのレコードの追加</h3>
+
+<p>ここでは参考までに Store にデータを追加するコードを紹介します。</p>
+
+<div>[js]
+var newRec;
+
+newRec = new me.store.recordType(obj, null);
+me.store.add( newRec );
+[/js]</div>
+
+<p>このように，recordType でレコードを作り，add メソッドで追加します。上記の例ではobjに追加したいレコードのデータが入っているという前提です。レコードの id プロパティが空の時に ExtJS はそれが追加されたレコードであると判断します。</p>
+
+<h2>サーバー側 PHP(xFrameworkPX)</h2>
+
+<p>次にサーバー側のコードを書いていきます。</p>
+
+<h3>ExtDirect コントローラー</h3>
+
+<p>.extdirect.php を webapp フォルダに作成します。</p>
+
+<div>[php]
+class extdirect extends xFrameworkPX_Controller_ExtDirect
+{
+
+    public $direct = array(
+    &#8216;namespace&#8217; =&amp;gt; &#8216;Ext.remote&#8217;
+    );
+    public $modules = array(
+    &#8216;employee&#8217; =&amp;gt; array( &#8216;conn&#8217; =&amp;gt; &#8216;default&#8217; )
+    );
+
+}
+[/php]</div>
+
+<p>ネームスペースを設定して，利用するモジュール(employee)をuseしています。これだけで xFrameworkPX がいろいろと世話をしてくれるので， employee モジュールのメソッドを ExtDirect から利用可能になります。</p>
+
+<h3>employee モジュール</h3>
+
+<div>[php]
+class employee extends xFrameworkPX_Model
+{
+
+    public $usetable = &#8216;employee&#8217;;
+
+    // メソッドを記述
+
+}
+[/php]</div>
+
+<p>xFrameworkPX でのモジュールは，modules ディレクトリに配置します。</p>
+
+<h3>readData メソッド</h3>
+
+<p>データを読み出すための readData メソッドを実装します。</p>
+
+<div>[php]
+public function readData()
+    {
+
+        $fields = array(
+            &#8216;id&#8217;,
+            &#8216;name_kanji&#8217;,
+            &#8216;name_kana&#8217;,
+            &#8216;birth_date&#8217;
+        );
+        $order = array(
+            &#8216;id&#8217;
+        );
+
+        $result = $this-&amp;gt;get(
+            &#8216;all&#8217;,
+            array(
+                &#8216;fields&#8217; =&amp;gt; $fields,
+                &#8216;order&#8217; =&amp;gt; $order
+            )
+        );
+
+        return array(
+            &#8216;success&#8217; =&amp;gt; true,
+            &#8216;total&#8217; =&amp;gt; count( $result ),
+            &#8216;items&#8217; =&amp;gt; $result
+        );
+
+    }
+[/php]</div>
+
+<p>データベースから従業員データをとってきて，その一覧を返しています。返却するデータは最後の return 文のような形式で返します。</p>
+
+<p>この中の items というキー名は任意ですが，このキー名を Store の root コンフィグにセットしなければなりません。他のキー名にした場合には，Store の root コンフィグにその名前をセットします。</p>
+
+<h3>deleteData メソッド</h3>
+
+<p>destroy アクションが発行された場合に実行されます。この場合，サーバに渡されるオブジェクトの items プロパティに削除すべきレコードの id が渡されます。削除するレコードが複数ある場合には items は配列になります。この例での items となっている要素ですが，この items というキーは前述の通り， root コンフィグに設定されている値になります。root コンフィグの値が違っていればこのキー名も変わります。（この点については他のメソッドでも同様です）</p>
+
+<p>実際の deleteData メソッドのコードです。</p>
+
+<pre><code>&lt;div&gt;[php]
+public function deleteData( $pData )
+{
+
+    $data = $pData-&amp;amp;gt;items;
+    if( ! is_array($data) ){
+        $data = array($data);
+    }
+
+    $result = true;
+
+    foreach( $data as $id ){
+        $result = $result &amp;amp;gt;&amp;amp;gt; $this-&amp;amp;gt;_deleteOne( $id );
+    }
+    return array(
+        'success' =&amp;amp;gt; $result,
+        'items' =&amp;amp;gt; $data
+    );
+
+}
+</code></pre>
+
+<p>    private function _deleteOne( $id )
+    {</p>
+
+<pre><code>    $where = array(
+        'id = :id'
+    );
+    $bind = array(
+        'id' =&amp;amp;gt; $id
+    );
+    $result = $this-&amp;amp;gt;delete(
+        array(
+            'where' =&amp;amp;gt; $where,
+            'bind' =&amp;amp;gt; $bind
+        )
+    );
+    return $result;
+
+}
+</code></pre>
+
+<p>[/php]</div></p>
+
+<p>サーバーに渡されるのはJSONのデータですが，PHPで受け取ったときには StdObject型のデータになります。配列の場合は配列で受け取れるのですが，オブジェクトの場合は StdObject のデータが渡されます。そこで最初に渡されたデータを配列にキャストしています。</p>
+
+<p>Store の中で一つのレコードが削除された場合と，複数のレコードが削除された場合で，渡されるデータが違います。複数の場合のみデータは配列になっています。渡されたデータが配列であるかどうか判断して，配列でない場合は要素が一つの配列に格納してます。そしてその後，配列の各要素を引数にして _deleteOne メソッドをコールしています。</p>
+
+<p>このメソッドの戻り値ですが，次のような内容を返す必要があります。</p>
+
+<pre>{ success: &lt;flag>, items: [ {id : &lt;id1>}, {id: &lt;id2>}, ....] }</pre>
+
+<p>success プロパティには実行結果をセットします。true の場合は成功，false の場合は失敗ですね。成功した場合には，items （例によって root コンフィグの値によって変わります）プロパティに，削除されたレコードの id フィールドの値をプロパティに持つオブジェクトの配列をセットします。戻り値の方は1件の削除でも配列にする必要があります。_deleteOne メソッドの最後の方でこの1件ごとのオブジェクトを作成して返しています。deleteData メソッドの最後では，それらの結果の配列と success プロパティをつけて返しています。</p>
+
+<p>渡されるオブジェクトと返すオブジェクトの形式は，update や insert でもほぼ同じですので，よく覚えておいてください。</p>
+
+<h3>updateData メソッド</h3>
+
+<p>update アクションの時には，更新されたレコードのデータが渡されます。ここでも1レコードの場合は1件のオブジェクトが，複数レコードの場合はオブジェクトの配列が渡されます。Store の writeAllFields コンフィグの値によって，渡されるオブジェクトの内容が変わります。この値が true の場合は，すべてのフィールドが渡されますし，この値が false の場合はキーのフィールドと変更があったフィールドだけが渡されます。</p>
+
+<div>[php]
+public function updateData( $pData )
+    {
+
+        $data = $pData-&amp;gt;items;
+        if( ! is_array($data) ){
+            $data = array($data);
+        }
+        $result = true;
+        foreach( $data as $rec ){
+            $result = $result &amp;gt;&amp;gt; $this-&amp;gt;_updateOne( $rec );
+        }
+
+        return array(
+            &#8216;success&#8217; =&amp;gt; $result,
+            &#8216;items&#8217; =&amp;gt; $data
+        );
+
+    }
+
+    private function _updateOne( $pRec )
+    {
+
+        $rec = (array)$pRec;
+
+        $fields = array(
+            &#8216;name_kanji&#8217;,
+            &#8216;name_kana&#8217;,
+            &#8216;birth_date&#8217;
+        );
+        $values = array(
+            &#8216;:name_kanji&#8217;,
+            &#8216;:name_kana&#8217;,
+            &#8216;:birth_date&#8217;
+        );
+        $where = array(
+            &#8216;id = :id&#8217;
+        );
+
+        return $this-&amp;gt;update(
+            array(
+                &#8216;field&#8217; =&amp;gt; $fields,
+                &#8216;value&#8217; =&amp;gt; $values,
+                &#8216;where&#8217; =&amp;gt; $where,
+                &#8216;bind&#8217; =&amp;gt; $rec
+            )
+        );
+
+    }
+[/php]</div>
+
+<p>このメソッドでは渡されたデータをひもといて update メソッドでレコードの更新をかけています。ここでも適切な値を返さなければなりません。やはり success プロパティと items プロパティが必要です。</p>
+
+<p>ToDo:（items が id さえあればいいのかどうか確認。writeAllFields が false の場合も検証）</p>
+
+<h3>insertData メソッド</h3>
+
+<p>create アクションの時には，追加されたレコードのデータが渡されます。ここでも1レコードの場合は1件のオブジェクトが，複数レコードの場合はオブジェクトの配列が渡されます。戻り値も同様です。</p>
+
+<div>[php]
+public function addData( $pData )
+    {
+
+        $data = $pData-&amp;gt;items;
+        if( ! is_array($data) ){
+            $data = array($data);
+        }
+
+        $result = true;
+        $rData = array();
+        foreach( $data as $rec ){
+            $rRec = (array)$rec;
+            $id = $this-&amp;gt;_addOne( $rRec );
+            $rRec[&#8216;id&#8217;] = $id;
+            $rData[] = $rRec;
+        }
+        return array(
+            &#8216;success&#8217; =&amp;gt; $result,
+            &#8216;items&#8217; =&amp;gt; $rData
+        );
+
+    }
+
+    private function _addOne( $rec )
+    {
+
+        $fields = array(
+            &#8216;name_kanji&#8217;,
+            &#8216;name_kana&#8217;,
+            &#8216;birth_date&#8217;
+        );
+        $values = array(
+            &#8216;:name_kanji&#8217;,
+            &#8216;:name_kana&#8217;,
+            &#8216;:birth_date&#8217;
+        );
+        // 挿入実行
+        $result = $this-&amp;gt;insert(
+            array(
+                 &#8216;field&#8217; =&amp;gt; $fields,
+                 &#8216;value&#8217; =&amp;gt; $values,
+                 &#8216;bind&#8217; =&amp;gt; $rec
+            )
+        );
+        $id = $this-&amp;gt;lastId();
+
+        return $id;
+
+    }
+[/php]</div>
+
+<p>このメソッドでは，id フィールドは auto increment になっているという前提です。</p>
+
+<p>ここのコードは，記事に書くためにちょっと短くしています。<a href="https://github.com/sunvisor/DirectStoreSample">こちらのGitHubリポジトリ</a>ですべてのソースをご覧になれます。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

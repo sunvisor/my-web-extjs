@@ -1,0 +1,495 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>ExtJS5 &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/extjs5/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Sat, 14 Jun 2014 08:24:35 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Ext JS 5 で ViewModel と ViewController を使ってみた。</title>
+		<link>/777</link>
+					<comments>/777#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 14 Jun 2014 06:34:42 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[未分類]]></category>
+		<category><![CDATA[ExtJS5]]></category>
+		<guid isPermaLink="false">/?p=777</guid>
+
+					<description><![CDATA[Ext JS 5 の ViewModel / ViewController の使い方を検証してみました。 参考にしてください。 仕様 ユーザー一覧を Grid 表示する Grid の行をダブルクリックしたらそのデータをフ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext JS 5 の ViewModel / ViewController の使い方を検証してみました。
+参考にしてください。
+<span id="more-777"></span></p>
+
+<h3>仕様</h3>
+
+<ul>
+<li>ユーザー一覧を Grid 表示する</li>
+<li>Grid の行をダブルクリックしたらそのデータをフォームに表示する</li>
+<li>フォームを編集するとグリッドに反映される</li>
+</ul>
+
+<p>これを、ViewModel で備わった双方向データバインディングで実現させます。</p>
+
+<p>まずは、model を作ります。</p>
+
+<h6>app/model/User.js</h6>
+
+<div>[js]
+Ext.define(&#8216;Ext5.model.User&#8217;, {
+    extend: &#8216;Ext.data.Model&#8217;,
+    fields: [
+        &#8216;id&#8217;, &#8216;name&#8217;, &#8216;email&#8217;
+    ]
+});
+[/js]</div>
+
+<p>Sencha Cmd で generate したプロジェクトの view/main/Main.js を変更します。</p>
+
+<h6>app/view/main/Main.js</h6>
+
+<div>[js]
+    Ext.define(&#8216;Ext5.view.main.Main&#8217;, {
+        extend: &#8216;Ext.container.Container&#8217;,
+
+        requires: [
+            &#8216;Ext5.view.edit.Edit&#8217;,
+            &#8216;Ext5.view.list.List&#8217;
+        ],
+
+        xtype: &#8216;app-main&#8217;,
+
+        layout: {
+            type: &#8216;border&#8217;
+        },
+
+        items: [{
+            xtype: &#8216;component&#8217;,
+            padding: 8,
+            html: &#8216;My Ext JS 5 App&#8217;,
+            region: &#8216;north&#8217;
+        },{
+            xtype: &#8216;mylist&#8217;,
+            region: &#8216;center&#8217;
+        },{
+            xtype: &#8216;myedit&#8217;,
+            width: 300,
+            region: &#8216;east&#8217;
+        }]
+    });
+[/js]</div>
+
+<p>同じディレクトリにある、MainModel.js と MainController.js はいらないので削除します。
+<code>items</code> の 2つめと3つめのビューを作っていきます。</p>
+
+<h6>app/view/list/List.js</h6>
+
+<div>[js]
+    Ext.define(&quot;Ext5.view.list.List&quot;,{
+        extend: &quot;Ext.grid.Panel&quot;,
+
+        xtype: &#8216;mylist&#8217;,
+
+        controller: &quot;list-list&quot;,    // ViewControllerの指定
+
+        viewModel: {                // ViewModelの指定
+            type: &quot;list-list&quot;
+        },
+
+        bind: &#8216;{users}&#8217;,            // データバインド
+
+        columns: [{
+            dataIndex: &#8216;id&#8217;,
+            text: &#8216;ID&#8217;
+        },{
+            dataIndex: &#8216;name&#8217;,
+            text: &#8216;名前&#8217;,
+            width: 300
+        },{
+            dataIndex: &#8216;email&#8217;,
+            text: &#8216;メール&#8217;,
+            width: 300
+        }],
+
+        listeners: {                    // イベントリスナー
+            itemdblclick: {
+                fn: &#8216;onSelectItem&#8217;,
+                scope: &#8216;controller&#8217;
+            }
+        }
+    });
+[/js]</div>
+
+<p>ごく普通の GridPanel です。
+最初の方で、ViewController と ViewModel を指定しています。</p>
+
+<p><code>bind: '{users}'</code> という記述が見慣れないですね。
+これが、データバインドです。この Grid に ViewModel の持っているデータをバインドします。
+Grid の場合は、その対象はストアです。
+このビューが持つ ViewModel に <code>users</code> という名前のストアがなくてはいけません。</p>
+
+<p><code>listeners</code> では、<code>fn</code> に <code>'onSelectItem'</code> と文字列で指定しています。
+<code>scope: 'controller'</code> の指定があるので、実際のリスナー関数は、ViewController が持っている <code>onSelectItem</code> メソッドになります。</p>
+
+<p>次にこのビューの ViewModel を見てみます。</p>
+
+<h6>app/view/list/ListModel.js</h6>
+
+<div>[js]
+    Ext.define(&#8216;Ext5.view.list.ListModel&#8217;, {
+        extend: &#8216;Ext.app.ViewModel&#8217;,
+        alias: &#8216;viewmodel.list-list&#8217;,
+        requires: [
+            &#8216;Ext5.model.User&#8217;
+        ],
+        stores: {
+            users: {
+                model: &#8216;Ext5.model.User&#8217;,
+                data: [{
+                    id:1, name: &#8216;中村&#8217;, email: &#8216;nakamura@examplecom&#8217;
+                },{
+                    id:2, name: &#8216;山田&#8217;, email: &#8216;yamada@examplecom&#8217;
+                },{
+                    id:3, name: &#8216;田中&#8217;, email: &#8216;tanaka@examplecom&#8217;
+                },{
+                    id:4, name: &#8216;佐藤&#8217;, email: &#8216;sato@examplecom&#8217;
+                },{
+                    id:5, name: &#8216;齋藤&#8217;, email: &#8216;saito@examplecom&#8217;
+                }]
+            }
+        }
+    });
+[/js]</div>
+
+<p><code>stores</code> の中に <code>users</code> というキーの値としてオブジェクトリテラルをセットしています。
+これで、Grid にバインドするストアを定義しています。
+Ext JS 5 では、app/store 下にストアの定義を書くよりも、このように ViewModel の中でインスタンスを作る方法がメインになるようです。
+ここでは、<code>data</code> コンフィグを使ってインラインでデータを指定しています。</p>
+
+<p>次に ViewController です。</p>
+
+<h6>app/view/list/ListController.js</h6>
+
+<div>[js]
+    Ext.define(&#8216;Ext5.view.list.ListController&#8217;, {
+        extend: &#8216;Ext.app.ViewController&#8217;,
+        alias: &#8216;controller.list-list&#8217;,
+
+        onSelectItem: function(grid, rec) {
+            var me = this,
+                form = me.getEditForm();
+            form.getViewModel().setData({rec: rec});
+        },
+
+        getEditForm: function() {
+            return Ext.ComponentQuery.query(&#8216;myedit&#8217;)[0];
+        }
+    });
+[/js]</div>
+
+<p>ここで、<code>onSelectItem</code> メソッドを定義しています。
+以前のコントローラーのように、control メソッドにどうこうという記述は不要です。</p>
+
+<p>リスナーの中で、Edit ビューを取得して、その ViewModel にレコードをセットしています。
+(ここのやり方はなんかイマイチだと思っています。もうちょっとスマートなやり方がありそう)</p>
+
+<p>では、データをセットされる Edit ビューを見てみます。</p>
+
+<h6>app/view/edit/Edit.js</h6>
+
+<div>[js]
+    Ext.define(&quot;Ext5.view.edit.Edit&quot;,{
+        extend: &quot;Ext.form.Panel&quot;,
+
+        xtype: &#8216;myedit&#8217;,
+
+        viewModel: {
+            type: &quot;edit-edit&quot;
+        },
+
+        bodyPadding: 10,
+        items: [{
+            xtype: &#8216;textfield&#8217;,
+            fieldLabel: &#8216;ID&#8217;,
+            bind: &#8216;{rec.id}&#8217;
+        }, {
+            xtype: &#8216;textfield&#8217;,
+            fieldLabel: &#8216;名前&#8217;,
+            bind: &#8216;{rec.name}&#8217;
+        }, {
+            xtype: &#8216;textfield&#8217;,
+            fieldLabel: &#8216;メール&#8217;,
+            bind: &#8216;{rec.email}&#8217;
+        }]
+    });
+[/js]</div>
+
+<p>なんの変哲も無い FormPanel です。
+ただ、ここも <code>items</code> の中に <code>bind</code> コンフィグがあります。</p>
+
+<p>ViewModel を見てみましょう。</p>
+
+<h6>app/view/edit/EditModel.js</h6>
+
+<div>[js]
+    Ext.define(&#8216;Ext5.view.edit.EditModel&#8217;, {
+        extend: &#8216;Ext.app.ViewModel&#8217;,
+        alias: &#8216;viewmodel.edit-edit&#8217;,
+        data: {
+            rec: null
+        }
+    });
+[/js]</div>
+
+<p>これだけです。
+この <code>data</code> コンフィグの中のものとビューがバインドします。
+<code>data</code> コンフィグの中には <code>rec</code> があります。
+この rec にレコード (モデルのインスタンス) をセットしてやると、フォームの方では、<code>{rec.id}</code> などとバインドさせているので、そのデータが表示されます。</p>
+
+<p>これで、Grid の行をダブルクリックすると Form に内容が表示されます。
+そこで、フォームの内容を書き換えると、リアルタイムで Grid の表示も変化するのがわかります。
+これが双方向データバインディングです。</p>
+
+<p><a href="/wp-content/uploads/2014/06/extjs5gridform.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2014/06/extjs5gridform-1024x509.png" alt="extjs5gridform" width="640" height="318" class="alignnone size-large wp-image-783" srcset="/wp-content/uploads/2014/06/extjs5gridform-1024x509.png 1024w, /wp-content/uploads/2014/06/extjs5gridform-300x149.png 300w, /wp-content/uploads/2014/06/extjs5gridform.png 1083w" sizes="(max-width: 640px) 100vw, 640px" /></a></p>
+
+<p>次の URL から Sencha Fiddle で実際の動きを見ることができます。</p>
+
+<p><a href="https://fiddle.sencha.com/#fiddle/6lp">https://fiddle.sencha.com/#fiddle/6lp</a></p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/777/feed</wfw:commentRss>
+			<slash:comments>2</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Ext JS 5 のViewModel を使ってみる</title>
+		<link>/764</link>
+					<comments>/764#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sun, 13 Apr 2014 03:11:54 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[ExtJS5]]></category>
+		<guid isPermaLink="false">/?p=764</guid>
+
+					<description><![CDATA[Ext JS 5 から導入された ViewModel を使ってみます。 ViewModel はデータをビューにバインドする新しい方法です。 いろいろと機能が高く、API ドキュメントやチュートリアルを読んでも、まだすべて [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext JS 5 から導入された ViewModel を使ってみます。
+ViewModel はデータをビューにバインドする新しい方法です。
+いろいろと機能が高く、API ドキュメントやチュートリアルを読んでも、まだすべてが解説されているというわけではないようです。</p>
+
+<p>今回は、2way binding と呼ばれる、View と ViewModel 間での双方向のデータバインディングについて実験してみます。
+<span id="more-764"></span>
+まずは、 Sencha Cmd 5.0 でプロジェクトを作ってみます。</p>
+
+<div>[js]
+$ sencha -sdk /path/to/sdk generate workspace ext5_ws
+$ cd ext5_ws/ext
+$ sencha generate app MyApp ../firstapp
+[/js]</div>
+
+<p>以前と同じようにスケルトンのプロジェクトが生成されます。
+スケルトンの中にも、すでに ViewModel が使われているのがわかります。
+view/main ディレクトリの中に、Main.js の他に、MainController.js と MainModel.js があります。</p>
+
+<div>[js]
+Ext.define(&#8216;MyApp.view.main.MainModel&#8217;, {
+    extend: &#8216;Ext.app.ViewModel&#8217;,
+
+    alias: &#8216;viewmodel.main&#8217;,
+
+    data: {
+        name: &#8216;MyApp&#8217;
+    }
+
+    //TODO &#8211; add data, formulas and/or methods to support your view
+});
+[/js]</div>
+
+<p>ここでは、name に MyApp を設定しています。</p>
+
+<div>[js]
+    items: [{
+        xtype: &#8216;panel&#8217;,
+        bind: {
+            title: &#8216;{name}&#8217;
+        },
+[/js]</div>
+
+<p>View の方では、このようにパネルのタイトルにその値を、バインドしています。
+これで、MainModel.js の方の、 data.name を変更してやると、表示も変わるのがわかります。</p>
+
+<p>では、双方向のデータバインディングを実験してみます。</p>
+
+<p>フォームを作ります。</p>
+
+<p>スケルトンをまねて、view/form 下に Form.js / FormController.js / FormModel.js を作ります。</p>
+
+<h4>app/view/form/FormModel.js</h4>
+
+<div>[js]
+Ext.define(&#8216;MyApp.view.form.FormModel&#8217;, {
+    extend: &#8216;Ext.app.ViewModel&#8217;,
+
+    alias: &#8216;viewmodel.form&#8217;,
+
+    data: {
+        name: &#8216;鬼瓦権三&#8217;,
+        zip: &#8216;999-9999&#8217;,
+        email: &#8216;gonzo@example.com&#8217;
+    }
+});
+[/js]</div>
+
+<p>これが ViewModel です。ここでは、data を定義しています。
+alias コンフィグで、&#8217;viewmodel.hoge&#8217; とすると、hoge がこの ViewModel の名前になります。</p>
+
+<h4>app/view/form/Form.js</h4>
+
+<div>[js]
+Ext.define(&#8216;MyApp.view.form.Form&#8217;, {
+    extend: &#8216;Ext.form.Panel&#8217;,
+    xtype: &#8216;app-form&#8217;,
+
+    requires: [
+        &#8216;MyApp.view.form.FormModel&#8217;,
+        &#8216;MyApp.view.form.FormController&#8217;
+    ],
+
+    bodyPadding: 10,
+
+    viewModel: {
+        type: &#8216;form&#8217;
+    },
+
+    controller: &#8216;form&#8217;,
+
+    bind: {
+        title: &#8216;{name}&#8217;
+    },
+
+    items: [{
+        fieldLabel: &#8216;氏名&#8217;,
+        xtype: &#8216;textfield&#8217;,
+        bind: &#8216;{name}&#8217;
+    },{
+        fieldLabel: &#8216;郵便番号&#8217;,
+        xtype: &#8216;textfield&#8217;,
+        bind: &#8216;{zip}&#8217;
+    },{
+        fieldLabel: &#8216;メール&#8217;,
+        xtype: &#8216;textfield&#8217;,
+        bind: &#8216;{email}&#8217;
+    }],
+    tbar: [{
+        text: &#8216;保存&#8217;,
+        handler: &#8216;onSave&#8217;,
+        bind: {
+            disabled: &#8216;{!name}&#8217;
+        }
+    }]
+});
+[/js]</div>
+
+<p>普通のフォームです。
+ViewModel と、これから作る ViewController をrequires に入れています。
+Main.js の所では requires に入れてないのにロードされています。これ不思議なんですよね。</p>
+
+<ol>
+<li>viewModel コンフィグで、ViewModel を指定しています。ViewModel の alias で定義したものですね。</li>
+<li>同様に、controller コンフィグで、ViewController を指定しています。</li>
+<li>items 配列の中の、各フィールドに bind コンフィグで、ViewModel のデータをバインドしています。
+このように、ブレスを使って定義するのは XTemplate と似ています。</li>
+<li>tbar コンフィグでツールバーを定義していますが、そこでも bind コンフィグを使っています。
+これは、名前が入力されていない場合に、ボタンを disabled にするという指定です。</li>
+<li>またボタンのハンドラーには、文字列が設定されています。ViewController のこのメソッドが呼ばれます。</li>
+</ol>
+
+<h4>app/view/form/FormController.js</h4>
+
+<div>[js]
+Ext.define(&#8216;MyApp.view.form.FormController&#8217;, {
+    extend: &#8216;Ext.app.ViewController&#8217;,
+
+    alias: &#8216;controller.form&#8217;,
+
+    onSave: function () {
+        console.log(&#8216;Save Button Clicked!&#8217;);
+    }
+
+});
+[/js]</div>
+
+<p>こちらでは、onSave メソッドを定義しているだけです。
+View の handler で文字列にて &#8220;onSave&#8221; を設定しましたから、このメソッドが呼び出されます。</p>
+
+<h6>app/view/main/Main.js</h6>
+
+<div>[js]
+    requires: [
+        &#8216;MyApp.view.form.Form&#8217;
+    ],
+
+    &#8230;.
+
+    },{
+        region: &#8216;center&#8217;,
+        xtype: &#8216;app-form&#8217;
+    }]
+[/js]</div>
+
+<p>Center リージョンのコンポーネントのタブパネルを削除して、このフォームを表示させます。
+requires もわすれずに。</p>
+
+<p>これで、ブラウザをリロードして結果を見てみましょう。</p>
+
+<p><a href="/wp-content/uploads/2014/04/viewmodel.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2014/04/viewmodel.png" alt="viewmodel" width="669" height="311" class="alignnone size-full wp-image-769" srcset="/wp-content/uploads/2014/04/viewmodel.png 669w, /wp-content/uploads/2014/04/viewmodel-300x139.png 300w" sizes="(max-width: 669px) 100vw, 669px" /></a></p>
+
+<p>このように表示されます。
+ViewModel の data がフォームフィールドにセットされているのがわかります。
+このフォームでは、タイトルにも {name} がバインドされているので、name を変更すると、タイトルバーが自動的に変更されるのがわかると思います。</p>
+
+<p>フォーム上のデータを書き換えて、コンソールに次の様に入力してみてください。</p>
+
+<div>[js]
+Ext.ComponentQuery.query(&#8216;app-form&#8217;)[0].getViewModel().getData()
+[/js]</div>
+
+<p>data の内容が即座に変わっているのがわかります。</p>
+
+<p>bind の定義は、</p>
+
+<div>[js]
+    bind: {
+        title: &#8216;{name}&#8217;
+    },
+[/js]</div>
+
+<p>のように、bind のオブジェクトの中に、コンフィグのキーとバインドするプレースホルダをセットするのが普通だと思うのですが、field の部分では、 <code>bind: '{name}'</code> といきなりプレースホルダをセットできています。
+このあたり、ちょっとまだわからないところがありますが、なかなかに便利そうな機能なので、調査していきたいと思います。</p>
+
+<p>あと ViewModel と Store の関係についての記事も書きたいな。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/764/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>

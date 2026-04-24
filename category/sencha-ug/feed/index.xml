@@ -1,0 +1,606 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Sencha UG &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/category/sencha-ug/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Wed, 08 Oct 2014 06:34:13 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Sencha UG 勉強会@大阪に登壇します</title>
+		<link>/787</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 08 Oct 2014 06:33:53 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Sencha UG]]></category>
+		<guid isPermaLink="false">/?p=787</guid>
+
+					<description><![CDATA[来る 10月24日に、Sencha UG の第20回勉強会@大阪が開催されます。 大阪でやりますので、僕も登壇します。 参加申し込みはこちら 日時 :2014/10/24 19:00 to 21:00 定員 :15 人  [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p><img decoding="async" src="https://atnd.org/event_images/0006/1862/extjs_original.png?1412661627" alt="" /></p>
+
+<p>来る 10月24日に、Sencha UG の第20回勉強会@大阪が開催されます。
+大阪でやりますので、僕も登壇します。</p>
+
+<p><a href="https://atnd.org/events/57399"><strong>参加申し込みはこちら</strong></a></p>
+
+<ul>
+<li><strong>日時</strong> :2014/10/24 19:00 to 21:00</li>
+<li><strong>定員</strong> :15 人</li>
+<li><strong>参加費</strong> :無料</li>
+<li><strong>会場</strong> :株式会社ゼノフィ関西事業所 （大阪府大阪市北区東天満1-14-10 MF南森町2ビル 2階）</li>
+</ul>
+
+<p>Sencha Ext JS 5 が公開されてしばらく経ちましたが、もうお使いの方、様子見の方、これから Ext JS を始められる方、といろいろではないでしょうか。Sencha UG 大阪では、全国に先立って Ext JS 5 をテーマにした勉強会を開催します。</p>
+
+<p><span id="more-787"></span></p>
+
+<p>Sencha Ext JS は、HTML5ベースのJavaScriptフレームワークで、アプリケーションの構造部分から、豊富なウィジェット、開発ツールとすべてがオールインワンで揃っている唯一のフレームワークです。
+Sencha Ext JS 5 では、MVVM アーキテクチャが導入され、タッチデバイスに対応しました。今回はそんな Ext JS の魅力を皆さんにお伝えしたいと思います。</p>
+
+<h3>テーマ概要</h3>
+
+<p>今回は講義形式で、Ext JS 5 について多方面からスポットを当てていきます。Ext JS をこれから始める方から、ヘビーに旧バージョンをお使いの方まで、多くの方に Ext JS 5 の魅力を伝えたいと思います。</p>
+
+<h3>コンテンツ</h3>
+
+<ul>
+<li>Ext JS のアーキテクチャ</li>
+<li>Ext JS 5 の新しいところ</li>
+<li>Ext JS 5 でできるこんなことあんなこと</li>
+</ul>
+
+<p>近畿圏の方（ソウでない方も）ぜひともお越し下さいませ。</p>
+
+<p><a href="https://atnd.org/events/57399"><strong>参加申し込みはこちら</strong></a></p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha UG 勉強会 第19回大阪を開催します</title>
+		<link>/739</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 05 Mar 2014 08:49:41 +0000</pubDate>
+				<category><![CDATA[Sencha UG]]></category>
+		<guid isPermaLink="false">/?p=739</guid>
+
+					<description><![CDATA[なんとタイトルは Yeoman vs Sencha Cmd &#8211; HTML5時代の統合開発ツール &#8211; 今回は、Sencha の世界だけでなく、より広く HTML5 の世界へ拡げてみようという企画です [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>なんとタイトルは</p>
+
+<h3>Yeoman vs Sencha Cmd &#8211; HTML5時代の統合開発ツール &#8211;</h3>
+
+<p><a href="/wp-content/uploads/2014/03/20140418ug_catch.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2014/03/20140418ug_catch.png" alt="20140418ug_catch" width="750" height="500" class="alignnone size-full wp-image-744" srcset="/wp-content/uploads/2014/03/20140418ug_catch.png 750w, /wp-content/uploads/2014/03/20140418ug_catch-300x200.png 300w" sizes="(max-width: 750px) 100vw, 750px" /></a>
+<span id="more-739"></span>
+今回は、Sencha の世界だけでなく、より広く HTML5 の世界へ拡げてみようという企画です。</p>
+
+<hr />
+
+<p>HTML5での開発では以前のHTMLにくらべCSS/JavaScriptのコーティング量が格段に多くなっています。我々システムエンジニアは何をすれば良いのでしょうか？どうすれば効率良く開発でき、品質の高いアプリケーションが作れるのでしょうか。その答えをこのセミナーで見つけ出したいと思います。</p>
+
+<p>多くの処理をブラウザで行うSingle-page Applicaionでは、コーティングのサポートするためにaltJSやCSS Preprocessorを利用します。またコーティングチェックのためにjslint/csslintを利用する、単体テストを行うためにQUnit/Jasminなど様々なタスクを使いこなす必要があります。これらのタスクを効率よく行うためには何かしらのツールを用いる必要があります。</p>
+
+<p>現在では、新しいプロジェクトを始めるときのスキャッフォルディングから、製品を出荷するときのビルド作業に至るまで、タスクを自動化する統合開発ツールが登場しています。OSSの世界でその名を馳せている統合開発ツールYeoman、Senchaフレームワークの世界ではSencha Cmdがその役割を担っています。
+今回は、Yeoman vs Sencha Cmd と題して、この二つの統合環境の角度からWeb Applicationそのもののあるべき姿について理解を深めます。Yeomanの解説には、HTML5WEST.jp代表の村岡正和さんをお招きして熱く語っていただきます。</p>
+
+<hr />
+
+<p>詳しい内容や申し込みは、<a href="http://atnd.org/events/48362">こちらのページ</a> からお願いします。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>約束の地 &#8211; Promised land</title>
+		<link>/707</link>
+					<comments>/707#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 11 Dec 2013 15:14:21 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Sencha UG]]></category>
+		<guid isPermaLink="false">/?p=707</guid>
+
+					<description><![CDATA[この記事は、 Sencha Advent Calendar 2013 の12日目の記事です。 都市再開発で、オフィスを市のやや北寄りの区域に移さなければならなくなった。 新しいオフィスは、マサチュセッツ大通りとボイルスト [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>この記事は、
+<a href="http://www.adventar.org/calendars/137">Sencha Advent Calendar 2013</a>
+の12日目の記事です。</p>
+
+<div style="margin: 10px">
+<em>
+    都市再開発で、オフィスを市のやや北寄りの区域に移さなければならなくなった。
+    新しいオフィスは、マサチュセッツ大通りとボイルストン通りの角に突っ立っている二階建ての丸い塔のような建物の二階にあって、一階は煙草屋である。
+    前の住人は女占い師で、彼女が看板がわりに窓に貼りつけたつぎはぎの金文字をかみそりの刃で削りとっている時、その男の姿に気がついた。
+</em>
+</div>
+
+<p>ロバート・Ｂ・パーカー著「約束の地」より。</p>
+
+<p>パーカーも亡くなっちゃったんですね。</p>
+
+<p>今回はPromiseについてお話しします。
+<span id="more-707"></span></p>
+
+<p>Senchaのフレームワークでは、多くの場面で非同期の処理をする必要があります。
+その最たるものがサーバーとの通信です。</p>
+
+<div>[js]
+    Ext.Ajax.request({
+        url: &#8216;page.php&#8217;,
+        params: {
+            id: 1
+        },
+        success: function(response){
+            var text = response.responseText;
+            // process server response here
+        }
+    });
+    // next step
+[/js]</div>
+
+<p><code>failure</code>がありませんね。ごめんなさい。<code>m(_ _)m</code>
+<code>failure</code>は<a href="http://code.xenophy.com/?p=1974">ちゃんと書きましょう</a>。
+リクエストの結果は、非同期で実行される<code>success</code>関数内で受け取ります。
+受け取った結果をもとに次の処理をするときには、当然ながら<code>success</code>関数内から実行しなくてはなりません。
+コード中の process server response here という所で実行するわけですね。
+コード上の next step と書かれた場所で何かを実行しても、サーバーからのレスポンスはこの時点では通常は返ってきていません。</p>
+
+<p>複数の非同期処理をチェーンの様に実行したい時ってあります。
+そんな時は、こうして関数の中にネストして処理してやると、どんどんネストが深くなって悲しいことになります。</p>
+
+<div>[js]
+    Ext.Ajax.request({
+        params: {
+            id: 1
+        },
+        success: function(response){
+            var text = response.responseText;
+            Ext.Ajax.request({
+                url: &#8216;page2.php&#8217;,
+                params: {
+                    text: text
+                },
+                success: function(response){
+                    var text = response.responseText;
+                    Ext.Ajax.request({
+                        url: &#8216;page3.php&#8217;,
+                        params: {
+                            text: text
+                        },
+                        success: function(response){
+                            var text = response.responseText;
+                            // process server response here
+                        }
+                    });
+                }
+            });
+        }
+    });
+[/js]</div>
+
+<p>そこで、非同期の処理をシーケンシャルな処理のように書く方法ってないものかなぁ、と思うわけです。
+こういう要求にはいろいろなライブラリとかあるんですよね。</p>
+
+<p>CommonJSのPromiseパターンというのがあって、それがどうもこのやり方のこれからの標準のようですね。</p>
+
+<p>Senchaのブログ記事、
+<a href="http://www.sencha.com/blog/implementing-user-extensions-for-architect-3-0-preview/">Implementing User Extensions for Sencha Architect 3.0 Preview</a>
+（日本語訳は「
+<a href="http://www.xenophy.com/sencha-blog/8504">Sencha Architect 3.0 プレビューでのユーザー拡張機能の実装</a>」）
+では、
+深くネストした関数コールバックの解決に、promiseを使うことにした、ということが記述されています。</p>
+
+<pre><code>なんかいいライブラリないかな？
+</code></pre>
+
+<p>私は、みつけました。</p>
+
+<p>＿人人人人人人人人＿<br />
+＞ Ext.ux.Deferred ＜<br />
+￣Y^Y^Y^Y^Y^Y^￣</p>
+
+<p><a href="https://github.com/wilk/Ext.ux.Deferred">Github &#8211; wilk/Ext.ux.Deferred</a></p>
+
+<p>今日は、このクラスの使い方を勉強してみましょう。</p>
+
+<p>名簿のアプリを例にします。</p>
+
+<p><a href="/wp-content/uploads/2013/12/fa5d87746de0ee9344fbefc2c2cf6e17.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2013/12/fa5d87746de0ee9344fbefc2c2cf6e17.png" alt="er" width="461" height="305" class="alignnone size-full wp-image-709" srcset="/wp-content/uploads/2013/12/fa5d87746de0ee9344fbefc2c2cf6e17.png 461w, /wp-content/uploads/2013/12/fa5d87746de0ee9344fbefc2c2cf6e17-300x198.png 300w" sizes="(max-width: 461px) 100vw, 461px" /></a></p>
+
+<p>このように、personsテーブルでは、prefectures(都道府県)、carriers(携帯キャリア)、companies(会社)という3つのマスターを参照しています。これを</p>
+
+<p><a href="/wp-content/uploads/2013/12/49640f18775fef8723c4f1605e6bffd9.png"><img decoding="async" src="/wp-content/uploads/2013/12/49640f18775fef8723c4f1605e6bffd9.png" alt="スクリーンショット" width="700" class="alignnone size-full wp-image-711" srcset="/wp-content/uploads/2013/12/49640f18775fef8723c4f1605e6bffd9.png 855w, /wp-content/uploads/2013/12/49640f18775fef8723c4f1605e6bffd9-300x234.png 300w" sizes="(max-width: 855px) 100vw, 855px" /></a></p>
+
+<p>このようにGridの中に表示したいとします。</p>
+
+<p>それぞれのテーブルは、Persons/Prefectures/Carriers/Companies というストアに格納され、それぞれがAjaxプロキシでもってサーバーからデータを取得します。</p>
+
+<p>グリッドでは、次のように&#8217;renderer&#8217;関数を使って表示してやります。</p>
+
+<div>[js]
+        xtype: &#8216;grid&#8217;,
+        store: &#8216;Persons&#8217;,
+        columns: [{
+            text: &#8216;名前&#8217;,
+            dataIndex: &#8216;name&#8217;,
+            flex: 1
+        }, {
+            text: &#8216;都道府県&#8217;,
+            dataIndex: &#8216;pref_id&#8217;,
+            renderer: function(value) {
+                var store = Ext.getStore(&#8216;Prefectures&#8217;),
+                    rec = store.getById(value);
+
+                return rec.get(&#8216;pref_name&#8217;);
+            },
+            flex: 1
+[/js]</div>
+
+<p>4つのストアは、コントローラーのonLaunchメソッドでロードしましょう。</p>
+
+<div>[js]
+    onLaunch2: function() {
+        var me = this;
+
+        me.getPrefecturesStore().load();
+        me.getCarriersStore().load();
+        me.getCompaniesStore().load();
+        me.getPersonsStore().load();
+    },
+[/js]</div>
+
+<p>Personsストアをロードする前にちゃんと他のマスターをロードしてますね。これで大丈夫です。</p>
+
+<p>って、そんなわけないだろ！(｀Д´)ノ</p>
+
+<p>こちら、<code>load</code>メソッドは非同期ですので、マスターのロードが終わっていなくても、Personsストアのロードが始まってしまう可能性があります。
+ためしに、マスターのサーバー側メソッドでWaitをかまして、遅くしてやると。</p>
+
+<p><a href="/wp-content/uploads/2013/12/803070d52469dab0e5736af8b0b9cb82.png"><img decoding="async" src="/wp-content/uploads/2013/12/803070d52469dab0e5736af8b0b9cb82.png" alt="スクリーンショット" width="700" class="alignnone size-full wp-image-712" srcset="/wp-content/uploads/2013/12/803070d52469dab0e5736af8b0b9cb82.png 855w, /wp-content/uploads/2013/12/803070d52469dab0e5736af8b0b9cb82-300x234.png 300w" sizes="(max-width: 855px) 100vw, 855px" /></a></p>
+
+<p>このようにエラーが発生して、カラムにデータが表示されません。
+これは、マスターがロードし終わる前にPersonsストアがロードされてしまって、Gridの<code>renderer</code>が呼ばれてしまっているからです。</p>
+
+<p>これを <code>Ext.ux.Deferred</code>ですべてのマスターのストアがロードされてから、Personsストアをロードするようにしてみましょう。</p>
+
+<p>まず、<code>Ext.ux.Deferred</code>をプロジェクトに追加します。
+僕の場合は、 app/ux/Deferred.js に置きました。
+Ext.uxというネームスペースなので、そのままだとSDKのソースディレクトリに取りに行ってエラーになるので、app.jsで、Ext.Loaderにパスを教えます。
+app以外のところ（classpathが通っていないところ）においた場合は、app.jsonとかsencha.cfgとかでclasspathを設定してやる必要があります。</p>
+
+<div>[js]
+    Ext.Loader.setConfig({
+        paths: {
+            &#8216;Ext.ux.Deferred&#8217;: &#8216;app/ux/Deferred.js&#8217;
+        }
+    });
+[/js]</div>
+
+<p>そして、これを使う、コントローラーの requires に指定してロードさせます。</p>
+
+<div>[js]
+    requires: [
+        &#8216;Ext.ux.Deferred&#8217;
+    ],
+[/js]</div>
+
+<p><code>Ext.ux.Deferred</code>の使い方は、</p>
+
+<div>[js]
+    Ext.ux.Deferred.when( promise ).then(resolve[, reject]);
+[/js]</div>
+
+<p>こんな風に呼び出します。promiseは、非同期処理をする関数です。resolveはpromiseの非同期処理が完了したら呼び出される関数。rejectは非同期処理が却下されたときに呼び出される関数です。
+<code>then</code>の後に更に、<code>.then</code>として処理をチェーンすることもできます。</p>
+
+<p>promiseにセットする関数は、<code>Ext.ux.Deferred</code>のインスタンスを返す関数である必要があります。</p>
+
+<pre><code>async = function() {
+    var dfd = Ext.create('Ext.ux.Deferred');
+    asyncFunc(function() {
+        dfd.resolve();
+    });
+}
+</code></pre>
+
+<p>このような感じになります。
+関数の中で<code>Ext.ux.Deferred</code>のインスタンスを生成して、非同期処理が終わったらそのインスタンスの<code>resolve</code>メソッドを呼んでやります。
+それを<code>Ext.ux.Deferred</code>のスタティックメソッドである<code>when</code>に渡してやります。</p>
+
+<div>[js]
+    Ext.ux.Deferred.when( async ).then(function () {
+        // 終わった後の処理
+            :
+    });
+[/js]</div>
+
+<p>また、<code>when</code>メソッドに渡すpromise関数は複数指定できます。</p>
+
+<pre><code>Ext.ux.Deferred.when( promise1, promise2, promise3 ).then(resolve[, reject]);
+</code></pre>
+
+<p>この方法で、3つのマスターをロードして、それらがすべて整ったらPersonsストアをロードするというのを実現できそうです。</p>
+
+<p>ストアをオープンするためのpromise関数は次のような感じになります。</p>
+
+<div>[js]
+    promise =  function() {
+        var me = this,
+            dfd = Ext.create(&#8216;Ext.ux.Deferred&#8217;);
+
+        me.getPrefecturesStore().load({
+            callback: function(rec, op, success) {
+                if( success ) {
+                    dfd.resolve();
+                } else {
+                    dfd.reject(arguments);
+                }
+            }
+        });
+        return dfd;
+    };
+[/js]</div>
+
+<p><code>Ext.ux.Deferred</code>オブジェクトを生成して、<code>load</code>メソッドのコールバックの中で、<code>resolve</code>または<code>reject</code>を呼び出しています。</p>
+
+<p>このやり方でマスター全部のpromise関数を作ってやります。
+出来上がったonLaunchメソッドは次のようになりました。</p>
+
+<div>[js]
+    onLaunch: function() {
+        var me = this,
+            promise = function(store) {
+                return function() {
+                    var dfd = Ext.create(&#8216;Ext.ux.Deferred&#8217;);
+
+                    store.load({
+                        callback: function(rec, op, success) {
+                            if( success ) {
+                                dfd.resolve();
+                            } else {
+                                dfd.reject(arguments);
+                            }
+                        }
+                    });
+                    return dfd;
+                };
+            };
+
+        Ext.ux.Deferred
+        .when(
+            promise(me.getPrefecturesStore()),
+            promise(me.getCarriersStore()),
+            promise(me.getCompaniesStore())
+        )
+        .then(
+            function(){
+                // when resolved
+                me.getPersonsStore().load();
+            },
+            function(){
+                // when rejected
+                console.log(arguments);
+            }
+        );
+
+    }
+[/js]</div>
+
+<p>3行目からの<code>promise</code>という関数は、指定されたストアをロードするpromise関数を返します。
+この関数を使ってpuromise関数を3つつくって<code>when</code>メソッドに渡しています。
+こうすることで、全てのマスターストアがロードされてから、Personsテーブルをロードすることを確実にすることができました。</p>
+
+<p><code>Ext.ux.Deferred</code>は、この他にもExt.Directでのサーバーサイド関数呼び出しでのチェーンなんかにも使えますし、コンポーネントテストを書くときに使っても便利ですね。
+Senchaフレームワークの標準で、非同期の実行を待つ処理を書けるのは、たしかSencha TouchのRouter機能のbeforeフィルターの中だけだったと思います。
+beforeフィルターのように、ある処理をする前に、なにかがどうにかなっているのを確実にするために、この<code>Ext.ux.Deferred</code>を使うと、より安定したアプリケーションを構築できる可能性がありますね。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/707/feed</wfw:commentRss>
+			<slash:comments>4</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>一日もかからないさ、数時間でできるよ</title>
+		<link>/696</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 04 Dec 2013 15:05:03 +0000</pubDate>
+				<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Sencha UG]]></category>
+		<category><![CDATA[未分類]]></category>
+		<guid isPermaLink="false">/?p=696</guid>
+
+					<description><![CDATA[この記事は、 Sencha Advent Calendar 2013 の5日目の記事です。 もうAdvent Calendarを書く時期になったんですね。 去年のAdvent Calendarの記事から、今年に入って5つ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>この記事は、
+<a href="http://www.adventar.org/calendars/137">Sencha Advent Calendar 2013</a>
+の5日目の記事です。</p>
+
+<p>もうAdvent Calendarを書く時期になったんですね。
+去年のAdvent Calendarの記事から、今年に入って5つしか記事を書いていないことがわかりました。ごめんなさい。
+今年は、もう少し、記事書きます。</p>
+
+<p><span id="more-696"></span>
+去年の今頃は、今とは違う仕事をしていました。なんだか遠い昔のような気がします。</p>
+
+<p>さて、Sencha Touchの入門を扱ったような記事も、いくつかのブログで紹介されるようになってきました。</p>
+
+<p>このAdvent Calendarでも @kotsutsumi さんが、
+<a href="http://code.xenophy.com/?p=1968">Sencha Touch 2.3 MVC 1 &#8211; 導入編</a>
+<a href="http://code.xenophy.com/?p=1970">Sencha Touch 2.3 MVC 2 &#8211; プロファイル機能</a>
+と、二つも記事を書いてくださっています。</p>
+
+<p>僕も、入門用のコンテンツを用意してみました。
+Sencha Touchを始めてみたい、とか取りあえずどんなもんかさわってみたい。
+とか思っている方は、この記事読んでください。
+用意した、とか言ってますが、実は使い回しですｗ</p>
+
+<p><a href="/wp-content/uploads/2013/12/egg.png"><img decoding="async" loading="lazy" src="/wp-content/uploads/2013/12/egg-1024x875.png" alt="egg" width="640" height="546" class="alignnone size-large wp-image-698" srcset="/wp-content/uploads/2013/12/egg-1024x875.png 1024w, /wp-content/uploads/2013/12/egg-300x256.png 300w, /wp-content/uploads/2013/12/egg.png 1272w" sizes="(max-width: 640px) 100vw, 640px" /></a></p>
+
+<p>去る10月26日に、大阪イノベーションハブを会場にして、Innovation EGG というイベントが開催されました。
+こちらは、比企宏之さんが主催されている、IT系コミュニティ合同で初心者向けの勉強会で、この日が栄えある第1回目でした。
+僕もSencha UGを代表しまして、登壇させて頂きました。
+沢山の方が来場され、僕のセッションも沢山の方に聞いて頂きました。</p>
+
+<p><a href="http://eventregist.com/e/InnovationEGG01">http://eventregist.com/e/InnovationEGG01</a></p>
+
+<p>このイベントは「初心者向け」の勉強会です。
+僕は、もちろん Sencha について話したわけですが、Senchaの事を知らない人や、始めたばかりの人が対象です。
+また、一つのセッションの時間が2時間弱という長いスパンでしたので、どうしようか考えたあげく、ハンズオン形式でやることにしました。
+ハンズオンで、実際に作るところをみてもらうのと、みるみるうちにアプリができていくのをみてもらえば、Sencha Touchの魅力が伝わるかなと思ったのです。
+ハンズオンの内容としては、Senchaコマンドでスケルトンをジェネレートするところから、アプリケーションが完成するまでを2時間でやってみてもらおう、というものです。</p>
+
+<p><a href="http://www.youtube.com/watch?v=G0UC-C2Y7ME">Building Mobile HTML5 Apps in Hours, Not Days</a>
+というオライリーのWebcastがありますが、それを実際にやるって感じです。</p>
+
+<pre><code>「一日もかからないさ、数時間でできるよ」
+</code></pre>
+
+<p>Senchaのフレームワークは、取っつきが難しいとかよく言われますが、この勉強会の資料を作ってみると、以外と初心者が始めてもいけんじゃね？という感じがしてきました。
+会場でお聞きくださった方の中にも、興味を持って始められた方が沢山おられましたしね。</p>
+
+<p>もちろん、2時間で Sencha Touchのすべてがわかるわけはありませんが、作り始めるところからデプロイまで、一通りができるようになるというのは、大きな一歩です。</p>
+
+<p><a href="http://preview.xenophy.com/xenophy/senchaug/egg/#!/guide">こちらにハンズオン資料があります</a></p>
+
+<p>このハンズオンでは、</p>
+
+<ul>
+<li>Sencha クラスシステムとMVCの基本</li>
+<li>モデル／ストアの作成</li>
+<li>Listビュー</li>
+<li>Panelでの表示／テンプレート</li>
+<li>NavigationView</li>
+<li>コントローラー</li>
+<li>表示の調整</li>
+<li>ビルド</li>
+<li>テーマの変更（オプション）</li>
+</ul>
+
+<p>について学べます。
+ひととおり揃っているでしょ？
+実際の所は、少し時間が足りなくて後半は走り気味な進行になってしまいましたが、なんとかやりました。
+時間が余るようなら、と、用意したテーマの変更にはたどり着けませんでした。</p>
+
+<p>あなたが初心者の方なら、
+<a href="http://preview.xenophy.com/xenophy/senchaug/egg/#!/guide">こちら</a>
+から資料にアクセスして、実際にやってみてください。
+ステップバイステップでアプリケーションを作成することができます。</p>
+
+<p>あなたが新人の教育に悩んでいるのなら、
+まず
+<a href="http://preview.xenophy.com/xenophy/senchaug/egg/#!/guide">こちら</a>
+の資料を見せて、「とりあえずやっておきなさい」とやらせてみてください。</p>
+
+<p>ちなみに、Innovation Egg の第2回は、2月15日に大阪イノベーションハブにて開催されます。
+このイベントに関しては、
+<a href="https://www.facebook.com/InnovationEgg">Innovation Eggのfacebookページ</a>
+をご覧ください。
+（次回は、僕は参加できないんですけどね）</p>
+
+<p>そうそう。Sencha UGの勉強会、次の大阪会場は、1月24日(金)に開催します。
+関西のSenchaフリークの皆さん、ふるってご参加ください。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha UGがまもなく1周年</title>
+		<link>/689</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sun, 22 Sep 2013 06:22:29 +0000</pubDate>
+				<category><![CDATA[Sencha UG]]></category>
+		<guid isPermaLink="false">/?p=689</guid>
+
+					<description><![CDATA[Sencha UGが活動を始めて、まもなく1年になります。 この間にも、Senchaを取り巻く環境が大きく変わりました。Sencha Touchの本は、3冊もでました。そのうち一つは僕の本ですが。 僕の方も、会社も変わっ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Sencha UGが活動を始めて、まもなく1年になります。
+この間にも、Senchaを取り巻く環境が大きく変わりました。Sencha Touchの本は、3冊もでました。そのうち一つは僕の本ですが。
+僕の方も、会社も変わったし、Sencha Con 2013にも行ったし、Bryntumの社長Matsとも知り合ったし。
+ほんと、変わったなぁ、と思います。</p>
+
+<p>Senchaのフレームワークは、日本での知名度はまだまだだけど、もっともっと日本国内で広まって欲しいと思っています。</p>
+
+<p>さて、Sencha UGが1年ということで、Sencha誕生祭と銘打って、アニバーサリーパーティーが開催されます。</p>
+
+<p><img decoding="async" src="http://photos2.meetupstatic.com/photos/event/2/e/5/6/600_276191862.jpeg" alt="" /></p>
+
+<p><span id="more-689"></span></p>
+
+<h1>日時：10月11日</h1>
+
+<h1>場所：新宿パーティスペース アルファ</h1>
+
+<p>パーティですからお酒を飲みながら、料理を食べながらワイワイと交流しつつ、いろいろなものを仕掛けてあります。</p>
+
+<ul>
+<li>Sencha UGのオーガナイザーは全員なにか発表します。</li>
+<li>スペシャルゲストも呼びました。</li>
+<li>来たらなにかグッズもらえます！</li>
+</ul>
+
+<p>イベントについての詳細と申込は
+<a href="http://www.meetup.com/Japan-Sencha-User-Group/events/136415072/">こちらのページ</a>
+からお願いします。</p>
+
+<p>これまで、Sencha UGの勉強会に参加されていない方も大歓迎です。
+これからSenchaを一緒に盛り上げていきましょう！</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>JAWS-FESTA KANSAI 2013に登壇します</title>
+		<link>/681</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 16 Sep 2013 13:26:17 +0000</pubDate>
+				<category><![CDATA[Sencha UG]]></category>
+		<guid isPermaLink="false">/?p=681</guid>
+
+					<description><![CDATA[2013年9月28日に京セラドーム大阪で開催される，AWSユーザーグループの祭典，JAWS-FESTA KANSAI 2013（通称JFK2013）に登壇します。 JAWS FEST Kansai 2013 のページ こ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>2013年9月28日に京セラドーム大阪で開催される，AWSユーザーグループの祭典，JAWS-FESTA KANSAI 2013（通称JFK2013）に登壇します。</p>
+
+<p><a href="http://jfk2013.jaws-ug.jp/">JAWS FEST Kansai 2013 のページ</a></p>
+
+<p><img decoding="async" alt="人生が変わるその日 JAWS FESTA Kansai 2013 – 9/28(sat)" src="http://cdn.wpbooster.net/7a1b5033e1a656592b6c75a15dcf2645/wp-content/themes/jfk2013/images/headers/main-image.jpg" width="750" /></p>
+
+<p><span id="more-681"></span>
+こちらは，JAWS-UG（AWS User Group – Japan）の全国規模のイベントで，今回は大阪で開催されるというものです。JAWS-UG大阪の比企さんからお誘いいただきまして，Sencha UG代表として登壇させていただくことになりました。</p>
+
+<p>私のセッションは，「クラウドのUXをSenchaフレームワークで」というタイトルで，Trac 2
+の 17:00からの枠になります。</p>
+
+<p>クラサバからWebという流れは，さらにクラウドへと進んでいます。しかしクラサバでの操作性に慣れているユーザーは，Webのアプリケーションは，操作性が悪いと感じています。一方，Webではfacebookに代表される優れた操作性のアプリケーションが提供され，ユーザーはそのユーザー体験を，自分が使うWebアプリケーションにも求めてきます。</p>
+
+<p>クラウドを使って実現するアプリケーションにとっては，UXというのが非常に重要な位置を占めているのです。いくら優れたバックエンドをクラウド上に構築しようとも，そのUXが貧弱では誰も使ってくれません。</p>
+
+<p>私のセッションでは，Senchaを使ってUXを構築することで，クラウド上に素晴らしいソリューションを構築する方法についてご紹介します。</p>
+
+<p>私のスピーカープロフィールは<a href="http://jfk2013.jaws-ug.jp/speaker/martini3oz/">こちら</a>です。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

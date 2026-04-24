@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Ext.Loader &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/ext-loader/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Fri, 26 Aug 2011 22:37:43 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>アプリケーションでExt.Loaderを使う</title>
+		<link>/270</link>
+					<comments>/270#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Tue, 12 Jul 2011 00:49:36 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Ext.Loader]]></category>
+		<guid isPermaLink="false">/?p=270</guid>
+
+					<description><![CDATA[この記事は、 Senchaの英文ブログ記事、 Using Ext Loader for Your Application の邦訳です。文中の図はSenchaのサイトから引っ張ってきてますから、画像がリンク切れになってたら [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>この記事は、
+Senchaの英文ブログ記事、
+<a href="http://www.sencha.com/blog/using-ext-loader-for-your-application/" target="_blank">
+Using Ext Loader for Your Application
+</a>
+の邦訳です。文中の図はSenchaのサイトから引っ張ってきてますから、画像がリンク切れになってたら、英語の原文のページがなくなっている可能性があります。</p>
+
+<p>Ext JS4 の新機能クラスローダーシステムは、新しい依存関係システムを利用できるようにします。
+これら二つのパワフルな新機能により、
+ブラウザが必要なコードだけをダウンロードする、
+拡張性の高いアプリケーションを作成できるようになります。</p>
+
+<p><span id="more-270"></span>
+今日は、この新しいクラスローダのシステムを使った小さなアプリケーションを作成してお見せし、依存関係の管理システムの実習をします。
+その道中でExt.Loaderシステムのさまざまな設定オプションを説明します。</p>
+
+<p>始める前に、未来に早送りして結果を覗きみてみましょう。そうすることで、拡張するのに必要なクラスを識別することができます。</p>
+
+<p><img decoding="async" src="http://img1.sencha.com/files/misc/001_2.jpg" alt="fig-1" /></p>
+
+<p>この簡単なアプリには、お互いに連結しているUserGridPanelとUserFormPanelという名のグリッドパネルとフォームのパネルがあります。
+UserGridPanelはその操作をサポートするためにModelとStoreを生成する事が必要になります。
+UserGridPanelとUserFormPanelは Ext JSのWindowクラスを継承したUserEditorWindowの中にレンダリングされ管理されます。これら全てのクラスが、MyAppという名前空間のもとに置かれます。</p>
+
+<p>コードを書き始める前に、ディレクトリ構造のレイアウトを設定しなくてはなりません。
+この名前空間が管理するフォルダー構造は次のようになります。</p>
+
+<p><img decoding="async" src="http://img1.sencha.com/files/misc/002.jpg" alt="fig-2" /></p>
+
+<p>上記の図でわかるように、MyAppは、名前空間のグルーピングまたは&#8221;packeges&#8221;に応じて分割されています。その結果、アプリケーション全体が次の図のように機能する相互依存関係のモデルができあがります。</p>
+
+<blockquote>
+  <p>Ext JS4のMVCパターンをまねて構成してますけど、MVCパターンを使っているわけではありません。</p>
+</blockquote>
+
+<p><img decoding="async" src="http://img1.sencha.com/files/misc/003_1.jpg" alt="fig-3" /></p>
+
+<p>では、index.htmlの内容を満たすことから始めましょう。index.htmlはアプリケーションのルートにあって、アプリケーションを開始するのに必要な全てのものを含んでいます。</p>
+
+<div>
+[html]
+&lt;!DOCTYPE HTML PUBLIC  &quot;-//W3C//DTD HTML 4.01//EN&quot; &quot;http://www.w3.org/TR/html4/strict.dtd&quot;&gt;
+&lt;html&gt;
+&lt;head&gt;
+    &lt;title&gt;Ext 4 Loader&lt;/title&gt;
+    &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot;  href=&quot;js/ext-4.0.1/resources/css/ext-all.css&quot; /&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;js/ext-4.0.1/ext-debug.js&quot;&gt;&lt;/script&gt;
+    &lt;script type=&quot;text/javascript&quot; src=&quot;js/MyApp/app.js&quot;&gt;&lt;/script&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+[/html]
+</div>
+
+<p>index.html ファイルには、Ext JS4のCSSファイルへのリンクタグがあります。これは何度も見たことがあるでしょう、しかしext-debug.js というJavaScriptファイルをインクルードしている部分を見たら思わずなにこれって眉毛が上がるでしょう？
+きっとこれまで ext-all-debug.js は開発時にext-all.jsをリリース時に使っていたでしょうからね。</p>
+
+<p>Ext JS にはすぐに使える選択肢がいくつかあり、それぞれに、利点と欠点があります。</p>
+
+<p>それぞれのファイルの概説をします。</p>
+
+<dl>
+<dt>ext-all-debug-w.comments.js</dt>
+<dd>フレームワーク全体のデバッグバージョン、コメント付きです。このファイルサイズは最大で、ブラウザに表示するときに最も処理時間が必要です。</dd>
+
+<dt>ext-all-debug.js</dt>
+<dd>上記と同じですが、コメントがありません。これも非常に大きいですが、ほとんどの場合ではデバッグに便利です。</dd>
+
+<dt>ext-all.js</dt>
+<dd>フレームワーク全体が連結・ミニファイされています。このファイルでのデバッグは不可能ですので、リリース時にのみ使います。</dd>
+
+<dt>ext-degug.js</dt>
+<dd>このファイルはExt JS の基本部分だけが入っています。このファイルでは、必要なすべてのExt JSをリモートロードでき、最良のデバッグ環境を提供します。トレードオフはこの方法が最も遅いです。</dd>
+
+<dt>ext.js</dt>
+<dd>ext-debug.js のミニファイバージョン。</dd>
+</dl>
+
+<p>さきほどのindex.htmlはext-debug.jsを使うように作られています。これはダイナミックローディングを動作させる最低限のシステムです。
+後ほど、両方の長所が得られるext-allバージョンの使い方を紹介します。</p>
+
+<p>UserGridPanelクラスがModelとデータStoreを必要とするので、まずそれらのサポートクラスを開発する必要があります。ModelとStoreを作成することから始めましょう。</p>
+
+<div>
+[js]
+Ext.define(&#8216;MyApp.models.UserModel&#8217;, {
+    extend   : &#8216;Ext.data.Model&#8217;,
+    fields   : [
+        &#8216;firstName&#8217;,
+        &#8216;lastName&#8217;,
+        &#8216;dob&#8217;,
+        &#8216;userName&#8217;
+    ]
+});
+[/js]
+</div>
+
+<p>上記のサンプルでは、Ext.data.Modelを拡張してUserModelクラスを生成しています。
+こうすることによって、Ext JS は動的にdata.Modelクラスをロードした後UserModelクラスを生成し、data.Modelの依存関係をロードします。これがdata.Modelクラスを拡張する利点です。</p>
+
+<p>次に、Ext.data.Storeを拡張してUserStoreクラスを生成します。</p>
+
+<div>
+[js]
+Ext.define(&#8216;MyApp.stores.UserStore&#8217;, {
+    extend    : &#8216;Ext.data.Store&#8217;,
+    singleton : true,
+    requires  : [&#8216;MyApp.models.UserModel&#8217;],
+    model     : &#8216;MyApp.models.UserModel&#8217;,
+    constructor : function() {
+        this.callParent(arguments);
+        this.loadData([
+            {
+                firstName : &#8216;Louis&#8217;,
+                lastName  : &#8216;Dobbs&#8217;,
+                dob       : &#8217;12/21/34&#8242;,
+                userName  : &#8216;ldobbs&#8217;
+            },
+            {
+                firstName : &#8216;Sam&#8217;,
+                lastName  : &#8216;Hart&#8217;,
+                dob       : &#8217;03/23/54&#8242;,
+                userName  : &#8216;shart&#8217;
+            },
+            {
+                firstName : &#8216;Nancy&#8217;,
+                lastName  : &#8216;Garcia&#8217;,
+                dob       : &#8217;01/18/24&#8242;,
+                userName  : &#8216;ngarcia&#8217;
+            }
+        ]);
+    }
+});
+[/js]
+</div>
+
+<p>シングルトンのUserStoreクラスを生成するとき、UserStoreプロトタイプに新しいrequiresキーを追加します。
+requiresキーは、クラスのインスタンスが作成される前にExt JSに必要なクラスをフェッチするように指示するリストです。
+この場合は、UserModelクラスを必要なクラスとして指定しています。</p>
+
+<blockquote>
+  <p>ストアのmodelプロパティの中に定義されるUserModelクラスの利点により、
+  Ext JSはそれを自動的にロードします。
+  requiresキーにクラスをリストするということは、
+  必要なクラスを忘れないようにするために、自己文書化していることになると思います。</p>
+</blockquote>
+
+<p>views.UserGridPanelの基礎となるクラスは生成されましたので、UserGridPanelそのものを作ることにします。</p>
+
+<div>
+[js]
+Ext.define(&#8216;MyApp.views.UsersGridPanel&#8217;, {
+    extend   : &#8216;Ext.grid.Panel&#8217;,
+    alias    : &#8216;widget.UsersGridPanel&#8217;,
+    requires : [&#8216;MyApp.stores.UserStore&#8217;],
+    initComponent : function() {
+        this.store   = MyApp.stores.UserStore;
+        this.columns = this.buildColumns();
+        this.callParent();
+    },
+    buildColumns : function() {
+        return [
+            {
+                header    : &#8216;First Name&#8217;,
+                dataIndex : &#8216;firstName&#8217;,
+                width     : 70
+            },
+            {
+                header    : &#8216;Last Name&#8217;,
+                dataIndex : &#8216;lastName&#8217;,
+                width     : 70
+            },
+            {
+                header    : &#8216;DOB&#8217;,
+                dataIndex : &#8216;dob&#8217;,
+                width     : 70
+            },
+            {
+                header    : &#8216;Login&#8217;,
+                dataIndex : &#8216;userName&#8217;,
+                width     : 70
+            }
+        ];
+    }
+});
+[/js]
+</div>
+
+<p>上記のコードを見るとき、requiresキーをよく見てください。どのようにUserStoreキーを追加しているかに注目してください。単に自前のグリッドパネルと自前のデータストアの間に依存関係を定義しているだけです。</p>
+
+<p>次、フォームパネルを作ります。</p>
+
+<div>
+[js]
+Ext.define(&#8216;MyApp.views.UserFormPanel&#8217;, {
+    extend      : &#8216;Ext.form.Panel&#8217;,
+    alias       : &#8216;widget.UserFormPanel&#8217;,
+    bodyStyle   : &#8216;padding: 10px; background-color: #DCE5F0;&#8217; 
+            + &#8216; border-left: none;&#8217;,
+    defaultType : &#8216;textfield&#8217;,
+    defaults    : {
+        anchor     : &#8216;-10&#8217;,
+        labelWidth : 70
+    },
+    initComponent : function() {
+        this.items = this.buildItems();
+        this.callParent();
+    },
+    buildItems : function() {
+        return [
+            {
+                fieldLabel : &#8216;First Name&#8217;,
+                name       : &#8216;firstName&#8217;
+            },
+            {
+                fieldLabel : &#8216;Last Name&#8217;,
+                name       : &#8216;lastName&#8217;
+            },
+            {
+                fieldLabel : &#8216;DOB&#8217;,
+                name       : &#8216;dob&#8217;
+            },
+            {
+                fieldLabel : &#8216;User Name&#8217;,
+                name       : &#8216;userName&#8217;
+            }
+        ];
+    }
+});
+[/js]
+</div>
+
+<p>UserFormクラスはこれまで開発してきたクラスを必要としませんので、requireディレクティブを追加する必要はありません。</p>
+
+<p>ほとんど完成してきました。あとUserEditorWindowクラスとアプリケーションを起動するapps.jsを作る必要があります。
+UserEditorWindowクラスのコードは下記のとおりです。
+このクラスは
+グリッドとフォームパネルを連結するコードを含んでいるので、
+少し長くなっていますが、辛抱してください。</p>
+
+<div>
+[js]
+Ext.define(&#8216;MyApp.views.UserEditorWindow&#8217;, {
+    extend   : &#8216;Ext.Window&#8217;,
+    requires : [&#8216;MyApp.views.UsersGridPanel&#8217;,&#8217;MyApp.views.UserFormPanel&#8217;],
+    height : 200,
+    width  : 550,
+    border : false,
+    layout : {
+        type  : &#8216;hbox&#8217;,
+        align : &#8216;stretch&#8217;
+    },
+    initComponent : function() {
+        this.items   = this.buildItems();
+        this.buttons = this.buildButtons();
+        this.callParent();
+        this.on(&#8216;afterrender&#8217;, this.onAfterRenderLoadForm, this);
+    },
+    buildItems : function() {
+        return [
+            {
+                xtype     : &#8216;UsersGridPanel&#8217;,
+                width     : 280,
+                itemId    : &#8216;userGrid&#8217;,
+                listeners : {
+                    scope     : this,
+                    itemclick : this.onGridItemClick
+                }
+            },
+            {
+                xtype  : &#8216;UserFormPanel&#8217;,
+                itemId : &#8216;userForm&#8217;,
+                flex   : 1
+            }
+        ];
+    },
+    buildButtons : function() {
+        return [
+            {
+                text    : &#8216;Save&#8217;,
+                scope   : this,
+                handler : this.onSaveBtn
+            },
+            {
+                text    : &#8216;New&#8217;,
+                scope   : this,
+                handler : this.onNewBtn
+            }
+        ];
+    },
+    onGridItemClick : function(view, record) {
+        var formPanel = this.getComponent(&#8216;userForm&#8217;);
+        formPanel.loadRecord(record)
+    },
+    onSaveBtn : function() {
+        var gridPanel  = this.getComponent(&#8216;userGrid&#8217;),
+            gridStore  = gridPanel.getStore(),
+            formPanel  = this.getComponent(&#8216;userForm&#8217;),
+            basicForm  = formPanel.getForm(),
+            currentRec = basicForm.getRecord(),
+            formData   = basicForm.getValues(),
+            storeIndex = gridStore.indexOf(currentRec),
+            key;
+        //loop through the record and set values
+        currentRec.beginEdit();
+        for (key in formData) {
+            currentRec.set(key, formData[key]);
+        }
+        currentRec.endEdit();
+        currentRec.commit();
+        // Add and select
+        if (storeIndex == -1) {
+            gridStore.add(currentRec);
+            gridPanel.getSelectionModel().select(currentRec)
+        }
+    },
+    onNewBtn : function() {
+        var gridPanel = this.getComponent(&#8216;userGrid&#8217;),
+            formPanel = this.getComponent(&#8216;userForm&#8217;),
+            newModel  = Ext.ModelManager.create({}, 
+                              &#8216;MyApp.models.UserModel&#8217;);
+        gridPanel.getSelectionModel().clearSelections();
+        formPanel.getForm().loadRecord(newModel)
+    },
+    onAfterRenderLoadForm : function() {
+        this.onNewBtn();
+    }
+});
+[/js]
+</div>
+
+<p>UserEditorWindowのコードにはUserGripPanelとUserFormPanelクラスの結合と生成を管理する多くのものが含まれています。Ext JS に以前に作成した二つのクラスをロードするように指示するために、requiresキーにリストしなければなりません。</p>
+
+<p>app.jsファイルの中に全て一緒に結びつける準備ができました。
+よくわかるように3つの段階を経ながら作成します。
+最も単純な設定から初めて、徐々に増やしていきます。</p>
+
+<div>
+[js]
+Ext.Loader.setPath(&#8216;MyApp&#8217;, &#8216;js/MyApp&#8217;);
+Ext.onReady(function() {
+    Ext.create(&#8216;MyApp.views.UserEditorWindow&#8217;).show();
+});
+[/js]
+</div>
+
+<p>最初に、app.js ファイルはMyApp名前空間へのパスを追加するようにExt JSに指示します。
+最初の引数に名前空間を、2つめの引数にページをロードする相対パスを渡して
+Ext.loader.setPathを呼び出します。</p>
+
+<p>次に、Ext.createをコールする無名関数を渡して、Ext.onReadyをコールします。
+Ext JS 4.0 でのExt.createは遅延インスタンス化をサポートします。
+Ext.createには、インスタンス化するUserEditorWindowクラスの文字列表記を渡しています。
+クラスのインスタンスを参照する必要はなく、すぐに表示したいので、showメソッドを連鎖呼び出ししています。</p>
+
+<p>私たちのページ(
+[
+<a href="http://moduscreate.com/senchaarticles/01/pass1.html" target="_blank">
+http://moduscreate.com/senchaarticles/01/pass1.html
+</a>
+)で表示すると、UIがレンダリングするのが見えますが、かなり遅いですし、Firebugの中でExt JSからのメッセージが表示されます。</p>
+
+<p><img decoding="async" src="http://img1.sencha.com/files/misc/004.jpg" alt="fig-4" /></p>
+
+<p>最適な方法でローダーシステムを使っていないので、Ext JSに怒鳴られてしまいました。
+2番目にこの問題を取り上げます。
+しかしながら、これは活用すべきすばらしい学習の機会です。</p>
+
+<p>Netタブに切り替えなくても見えるように、
+すべてのXHRリクエストをコンソールの中に表示するようにFireBugを設定します。
+これで、すべてのExt JSクラスをロードしたとしても、それをフィルタリングすることができるようになり、
+クラス依存システムの動作を見ることができます。</p>
+
+<p>FireBugのコンソールフィルターに&#8221;User&#8221;とタイプするだけで、次のように表示されます。</p>
+
+<p><img decoding="async" src="http://img1.sencha.com/files/misc/005.jpg" alt="fig-5" /></p>
+
+<p>見たとおり、UserEditorWindowクラスが最初にロードされ、UserGridPanelをrequireしてます。UserGridPanelはUserStoreとUserModelをrequireしています。最後に、UserFormPanlクラスがロードされます。</p>
+
+<p>私はさきほど、最適な方法でローダーシステムを使っていないので、Ext JSに怒鳴られてしまったと言いました。
+これは、Ext.onReadyが起動した後に特定の依存関係が同期XHRでロードされるためです。これは最も効率的な方法ではありませんし、デバッグも容易ではありません。</p>
+
+<p>この問題を解決するには、パフォーマンスがあってデバッグが容易な方法でクラスをロードするようにExt JSに指示するように、app.jsを更新しなければなりません。</p>
+
+<div>
+[js]
+Ext.Loader.setPath(&#8216;MyApp&#8217;, &#8216;js/MyApp&#8217;);
+Ext.require(&#8216;MyApp.views.UserEditorWindow&#8217;);
+Ext.onReady(function() {
+    Ext.create(&#8216;MyApp.views.UserEditorWindow&#8217;).show();
+});
+[/js]
+</div>
+
+<p>より速いローディングを可能にして、
+よりよいデバッグ環境を手に入れるには、
+Ext.onReadyの前に単にExt.requireの呼び出しを追加するだけです。
+それでExt JSにUserEditorWindowクラスをrequireするように指示します。
+こうすると、Ext.onReadyが実行される前にロードされるように、ドキュメントのHEADにスクリプトタグを挿入することができます。</p>
+
+<p><a href="http://moduscreate.com/senchaarticles/01/pass2.html" target="_blank">
+http://moduscreate.com/senchaarticles/01/pass2.html
+</a>
+にアクセスしてこの動きを確認してください。
+このページをロードし終わってもExt JS が警告メッセージをコンソールに吐き出さなくなったでしょう？</p>
+
+<p>ここでやったことはExt JSフレームワークとアプリケーションクラスの遅延ローディングを有効にすることです。
+これはデバッグの時にはよいのですが、ページのレンダリング時間はそれと引き替えに非常に痛いことになっています。
+なぜかって？</p>
+
+<p>簡単に言うと、ロードされたリソースの数が膨大だからです。
+この例では、Ext JSはJavaScriptのリソースだけで全部で193のリクエストをWebサーバーに対して投げています。ほとんどはキャッシュされています。</p>
+
+<p><img decoding="async" src="http://img1.sencha.com/files/misc/006.jpg" alt="fig-6" /></p>
+
+<p>これまで6つのJavaScriptファイル(5つのクラスとapp.js)を作りました。ということは必要とするExt JS ファイルをロードするために、ブラウザが187のリクエストをしなければならなかったということになります。
+このソリューションは、使えるには使えますが多くの場合望ましいとはいえません。ですが、ローカルの開発環境での開発には最適です。</p>
+
+<p>この問題を解決するために、ハイブリッドな状況を作り出すことができます。ext-all-debugを使ってフレームワーク全体をロードして、自作のクラスを動的にロードします。こうするためには、2つのファイルを更新します。</p>
+
+<p>最初は、index.thmlをext-debug.jsのかわりにext-all-debug.jsをインクルードするように変更します。</p>
+
+<div>
+[html]
+&lt;script type=&quot;text/javascript&quot;  src=&quot;js/ext-4.0.1/ext-all-debug.js&quot;&gt;&lt;/script&gt;
+[/html]
+</div>
+
+<p>次に、app.js を変更して、Ext.Loaderを有効にします。</p>
+
+<div>
+[js]
+(function() {
+    Ext.Loader.setConfig({
+        enabled : true,
+        paths   : {
+            MyApp : &#8216;js/MyApp&#8217;
+        } 
+    });
+ 
+    Ext.require(&#8216;MyApp.views.UserEditorWindow&#8217;);
+ 
+    Ext.onReady(function() {
+        Ext.create(&#8216;MyApp.views.UserEditorWindow&#8217;).show();
+    });
+})();
+[/js]
+</div>
+
+<p>enebledプロパティをtrueにセットし名前空間と相対パスをpathsに設定したオブジェクトを渡して、Loader.setConfigを呼び出してExt Loaderを有効にしています
+(訳注: Ext.Loaderはext-debug.jsで使うときにはデフォルトでenabled: true に設定されていますが、この場合には明示的にtrueをセットしてやらなければなりません)。
+app.jsを変更することによって、ローカル開発環境ではほんの数秒でアプリケーションをロード時表示することができるようになります。</p>
+
+<p><img decoding="async" src="http://img1.sencha.com/files/misc/007.png" alt="fig-7" /></p>
+
+<p>ついにできました！Ext JSクラス依存関係システムとダイナミックローディングを使うことができる簡単なアプリケーションを作成しました。
+これらのファイルは
+<a href="http://moduscreate.com/senchaarticles/01/files.zip">http://moduscreate.com/senchaarticles/01/files.zip</a>
+からダウンロードできます。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/270/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>

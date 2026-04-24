@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	Sencha Architectの中でExt Schedulerを使う へのコメント	</title>
+	<atom:link href="/665/feed" rel="self" type="application/rss+xml" />
+	<link>/665</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Wed, 15 Jun 2016 03:33:04 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>
+		Veruca より		</title>
+		<link>/665#comment-198167</link>
+
+		<dc:creator><![CDATA[Veruca]]></dc:creator>
+		<pubDate>Wed, 15 Jun 2016 03:33:04 +0000</pubDate>
+		<guid isPermaLink="false">/?p=665#comment-198167</guid>
+
+					<description><![CDATA[&lt;p&gt;Bij deze denk ik terug aan een klaslokaal, een warme kachel, een kring kinderen en een juf die voersoelt.Het wegdromen bij elke alinea,het vragen naar wat wordt jij later,de fantasie en nu toch vast stellen dat elk zijn richting heeft gekozen.Mooi Christiene, het verhaal en prent!&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>Bij deze denk ik terug aan een klaslokaal, een warme kachel, een kring kinderen en een juf die voersoelt.Het wegdromen bij elke alinea,het vragen naar wat wordt jij later,de fantasie en nu toch vast stellen dat elk zijn richting heeft gekozen.Mooi Christiene, het verhaal en prent!</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Sencha UG &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/sencha-ug/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Sun, 22 Sep 2013 06:25:34 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Sencha UGがまもなく1周年</title>
+		<link>/689</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sun, 22 Sep 2013 06:22:29 +0000</pubDate>
+				<category><![CDATA[Sencha UG]]></category>
+		<guid isPermaLink="false">/?p=689</guid>
+
+					<description><![CDATA[Sencha UGが活動を始めて、まもなく1年になります。 この間にも、Senchaを取り巻く環境が大きく変わりました。Sencha Touchの本は、3冊もでました。そのうち一つは僕の本ですが。 僕の方も、会社も変わっ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Sencha UGが活動を始めて、まもなく1年になります。
+この間にも、Senchaを取り巻く環境が大きく変わりました。Sencha Touchの本は、3冊もでました。そのうち一つは僕の本ですが。
+僕の方も、会社も変わったし、Sencha Con 2013にも行ったし、Bryntumの社長Matsとも知り合ったし。
+ほんと、変わったなぁ、と思います。</p>
+
+<p>Senchaのフレームワークは、日本での知名度はまだまだだけど、もっともっと日本国内で広まって欲しいと思っています。</p>
+
+<p>さて、Sencha UGが1年ということで、Sencha誕生祭と銘打って、アニバーサリーパーティーが開催されます。</p>
+
+<p><img decoding="async" src="http://photos2.meetupstatic.com/photos/event/2/e/5/6/600_276191862.jpeg" alt="" /></p>
+
+<p><span id="more-689"></span></p>
+
+<h1>日時：10月11日</h1>
+
+<h1>場所：新宿パーティスペース アルファ</h1>
+
+<p>パーティですからお酒を飲みながら、料理を食べながらワイワイと交流しつつ、いろいろなものを仕掛けてあります。</p>
+
+<ul>
+<li>Sencha UGのオーガナイザーは全員なにか発表します。</li>
+<li>スペシャルゲストも呼びました。</li>
+<li>来たらなにかグッズもらえます！</li>
+</ul>
+
+<p>イベントについての詳細と申込は
+<a href="http://www.meetup.com/Japan-Sencha-User-Group/events/136415072/">こちらのページ</a>
+からお願いします。</p>
+
+<p>これまで、Sencha UGの勉強会に参加されていない方も大歓迎です。
+これからSenchaを一緒に盛り上げていきましょう！</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>JAWS-FESTA KANSAI 2013に登壇します</title>
+		<link>/681</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 16 Sep 2013 13:26:17 +0000</pubDate>
+				<category><![CDATA[Sencha UG]]></category>
+		<guid isPermaLink="false">/?p=681</guid>
+
+					<description><![CDATA[2013年9月28日に京セラドーム大阪で開催される，AWSユーザーグループの祭典，JAWS-FESTA KANSAI 2013（通称JFK2013）に登壇します。 JAWS FEST Kansai 2013 のページ こ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>2013年9月28日に京セラドーム大阪で開催される，AWSユーザーグループの祭典，JAWS-FESTA KANSAI 2013（通称JFK2013）に登壇します。</p>
+
+<p><a href="http://jfk2013.jaws-ug.jp/">JAWS FEST Kansai 2013 のページ</a></p>
+
+<p><img decoding="async" alt="人生が変わるその日 JAWS FESTA Kansai 2013 – 9/28(sat)" src="http://cdn.wpbooster.net/7a1b5033e1a656592b6c75a15dcf2645/wp-content/themes/jfk2013/images/headers/main-image.jpg" width="750" /></p>
+
+<p><span id="more-681"></span>
+こちらは，JAWS-UG（AWS User Group – Japan）の全国規模のイベントで，今回は大阪で開催されるというものです。JAWS-UG大阪の比企さんからお誘いいただきまして，Sencha UG代表として登壇させていただくことになりました。</p>
+
+<p>私のセッションは，「クラウドのUXをSenchaフレームワークで」というタイトルで，Trac 2
+の 17:00からの枠になります。</p>
+
+<p>クラサバからWebという流れは，さらにクラウドへと進んでいます。しかしクラサバでの操作性に慣れているユーザーは，Webのアプリケーションは，操作性が悪いと感じています。一方，Webではfacebookに代表される優れた操作性のアプリケーションが提供され，ユーザーはそのユーザー体験を，自分が使うWebアプリケーションにも求めてきます。</p>
+
+<p>クラウドを使って実現するアプリケーションにとっては，UXというのが非常に重要な位置を占めているのです。いくら優れたバックエンドをクラウド上に構築しようとも，そのUXが貧弱では誰も使ってくれません。</p>
+
+<p>私のセッションでは，Senchaを使ってUXを構築することで，クラウド上に素晴らしいソリューションを構築する方法についてご紹介します。</p>
+
+<p>私のスピーカープロフィールは<a href="http://jfk2013.jaws-ug.jp/speaker/martini3oz/">こちら</a>です。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

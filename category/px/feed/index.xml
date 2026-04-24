@@ -1,0 +1,1165 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>xFrameworkPX &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/category/px/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Sat, 03 Mar 2012 07:37:25 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>UbuntuにPDO-OCIを設置してPXを使えるようにする</title>
+		<link>/393</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 28 Sep 2011 00:22:03 +0000</pubDate>
+				<category><![CDATA[xFrameworkPX]]></category>
+		<category><![CDATA[Oracle]]></category>
+		<category><![CDATA[PDO]]></category>
+		<guid isPermaLink="false">/?p=393</guid>
+
+					<description><![CDATA[このエントリは，ほぼ完全に僕のための構築メモです。Ubuntu に Oracle のクライアントを入れて，PDOから使えるようにして，PXの開発環境を整えます。 Oracle Instant Client のインストール [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>このエントリは，ほぼ完全に僕のための構築メモです。Ubuntu に Oracle のクライアントを入れて，PDOから使えるようにして，PXの開発環境を整えます。<span id="more-393"></span></p>
+
+<h2>Oracle Instant Client のインストール</h2>
+
+<p>https://help.ubuntu.com/community/Oracle%20Instant%20Client
+を参考にインストール。</p>
+
+<div>[bash]
+    $ sudo apt-get install apache2
+    $ sudo apt-get install php5 libapache2-mod-php5
+    $ sudo service apache2 restart
+[/bash]</div>
+
+<p><a href="https://help.ubuntu.com/community/Oracle%20Instant%20Client">https://help.ubuntu.com/community/Oracle%20Instant%20Client</a>
+からrpmファイルをダウンロードする。</p>
+
+<ul>
+<li>oracle-instantclient11.2-basic-11.2.0.2.0.i386.rpm</li>
+<li>oracle-instantclient11.2-devel-11.2.0.2.0.i386.rpm</li>
+<li>oracle-instantclient11.2-sqlplus-11.2.0.2.0.i386.rpm</li>
+</ul>
+
+<p>alien が必要なので入ってなければインストール。</p>
+
+<div>[bash]
+$ sudo apt-get install alien
+[/bash]</div>
+
+<p>alienを使うとrpmからインストールできるらしいです。</p>
+
+<div>[bash]
+    $ sudo alien -i oracle-instantclient11.2-basic-11.2.0.2.0.i386.rpm 
+    $ sudo alien -i oracle-instantclient11.2-devel-11.2.0.2.0.i386.rpm 
+    $ sudo alien -i oracle-instantclient11.2-sqlplus-11.2.0.2.0.i386.rpm 
+[/bash]</div>
+
+<p>basicのインストールは結構時間がかかりました。</p>
+
+<div>[bash]
+    $ sudo gvim /etc/ld.so.conf.d/oracle.conf
+[/bash]</div>
+
+<p>次の1行を追加。</p>
+
+<div>[text]
+    /usr/lib/oracle/11.2/client/lib/
+[/text]</div>
+
+<p>ldconfigを実行する。</p>
+
+<div>[bash]
+    $ sudo ldconfig
+[/bash]</div>
+
+<p>環境変数の指定。</p>
+
+<div>[bash]
+$ sudo gvim /etc/profile.d/oracle.sh
+[/bash]</div>
+
+<div>[text]
+    export ORACLE_HOME=/usr/lib/oracle/11.2/client
+    export LD_LIBRARY_PATH=/usr/lib/oracle/11.2/client/lib
+[/text]</div>
+
+<div>[bash]
+$ . /etc/profile.d/oracle.sh 
+[/bash]</div>
+
+<p>Oracle Homeディレクトリとincludeディレクトリの位置確認。</p>
+
+<div>[bash]
+    $ ls $ORACLE_HOME
+    bin  lib
+
+    $ ls -d /usr/include/oracle/*/client
+    /usr/include/oracle/11.2/client
+[/bash]</div>
+
+<p>シンボリックリンクの追加。</p>
+
+<div>[bash]
+    $ sudo ln -s /usr/include/oracle/11.2/client $ORACLE_HOME/include
+[/bash]</div>
+
+<h2>PDO-OCIのインストール</h2>
+
+<p><a href="http://www.sunvisor.net/node/406">http://www.sunvisor.net/node/406</a></p>
+
+<p>を参考にインストール。
+基本的には同じ操作をします。
+違う点は，iniファイルの場所は，/etc/php.d ではなく /etc/php5/conf.d であること
+など，Centとubuntuによる違い。</p>
+
+<h2>xFrameworkPXを使う準備</h2>
+
+<p>UserDir/Rewriteモジュールを有効化します。ubuntuの場合はこうしたコマンドがあるのですね。</p>
+
+<div>[bash]
+    $ sudo a2enmod userdir
+    $ sudo a2enmod rewrite
+[/bash]</div>
+
+<p>UserDirの設定。後ほど関係してきます。</p>
+
+<div>[text]
+&lt;IfModule mod_userdir.c&gt;
+        UserDir &quot;/home/sunvisor/devsite/*/public_html&quot;
+
+        &lt;Directory &quot;/home/sunvisor/devsite/*/public_html&quot;&gt;
+                AllowOverride All
+                Options Indexes FollowSymLinks Includes ExecCGI
+                &lt;Limit GET POST OPTIONS&gt;
+                        Order allow,deny
+                        Allow from all
+                &lt;/Limit&gt;
+                &lt;LimitExcept GET POST OPTIONS&gt;
+                        Order deny,allow
+                        Deny from all
+                &lt;/LimitExcept&gt;
+        &lt;/Directory&gt;
+&lt;/IfModule&gt;
+[/text]</div>
+
+<p>Apache再起動。</p>
+
+<div>[bash]
+$ sudo service apache2 restart
+[/bash]</div>
+
+<p>xFrameworkPXを取得</p>
+
+<div>[bash]
+$ cd ~/gitrep
+$ git clone https://github.com/xenophy/xFrameworkPX
+[/bash]</div>
+
+<p>開発サイト作成。$HOMEの下にdevsiteディレクトリを作成し，
+そのディレクトリのサブフォルダがプロジェクトになる。
+ブラウザからは，http://localhost/~hoge でアクセスする。
+先ほどのUserDirの設定が生きてくる。</p>
+
+<div>[bash]
+$ mkdir devsite
+[/bash]</div>
+
+<p>PXサイトを初期作成するスクリプト</p>
+
+<div>[bash]
+    #!/bin/sh
+    PXLib=/home/sunvisor/gitrep/xFrameworkPX
+    mkdir $1
+    ln -s $PXLib/bindtransfer/ $1/bindtransfer
+    ln -s $PXLib/library/ $1/library
+    cp -r $PXLib/behaviors/ $1/behaviors
+    cp -r $PXLib/configs/ $1/configs
+    cp -r $PXLib/console/ $1/console
+    cp -r $PXLib/controllers/ $1/controllers
+    cp -r $PXLib/locales/ $1/locales
+    cp -r $PXLib/modules/ $1/modules
+    cp -r $PXLib/public_html/ $1/public_html
+    cp -r $PXLib/templates/ $1/templates
+    cp -r $PXLib/tests/ $1/tests
+    cp -r $PXLib/webapp/ $1/webapp
+    ln -s /home/sunvisor/ext-4.0.2a $1/webapp/ext4
+    mkdir $1/cache
+    chmod 777 $1/cache
+    mkdir $1/logs
+    chmod 777 $1/logs
+    sed -i &quot;s/xFrameworkPX/&quot;$1&quot;/g&quot; $1/public_html/.htaccess
+[/bash]</div>
+
+<p>このスクリプトを叩くと，PXのプロジェクトが作られます。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>MVCでExt.Directを使う</title>
+		<link>/329</link>
+					<comments>/329#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 22 Aug 2011 23:19:35 +0000</pubDate>
+				<category><![CDATA[Direct]]></category>
+		<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[MVC]]></category>
+		<category><![CDATA[xFrameworkPX]]></category>
+		<guid isPermaLink="false">/?p=329</guid>
+
+					<description><![CDATA[2011年9月17日 Ext JS / Sencha Perfect Day #007 でLTした時の資料です。Ext JS 4 のMVCアーキテクチャにおいて、Ext.Directを使う方法を解説しています。 このエン [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>2011年9月17日 Ext JS / Sencha Perfect Day #007 でLTした時の資料です。Ext JS 4 のMVCアーキテクチャにおいて、Ext.Directを使う方法を解説しています。
+<span id="more-329"></span></p>
+
+<p>このエントリーを書いた後に、別なアドバイスを @kotsutsumi さんから頂きました。
+最後の部分もご覧ください。</p>
+
+<h2>はじめに</h2>
+
+<h3>Ext.Directとは</h3>
+
+<p>とは、とかいって解説するような立場にはありませんので、@kotsutsumiさんの言葉を引用します。</p>
+
+<ul>
+<li>RPC（Remote Procedure Call、リモートプロシージャコール）が行える便利な機能</li>
+<li>サーバー通信は、Ext.Ajaxを利用するか、Ext.data.Store経由での通信のみで、サーバー処理との連動は以外とコストがかかる。</li>
+<li>Ext.Directを使うとサーバーサイドの関数をJavaScriptの関数のように呼び出すことができて、可読性もよい。</li>
+<li>Ext.Directを使うためには、Ext.Direct Packを使うかサーバーサイドを自分で実装する必要がある。</li>
+</ul>
+
+<p>また、複数のリクエストをまとめてサーバーに送信するような仕組みが備わっているそうです。</p>
+
+<h3>サーバーサイドはxFrameworkPXで</h3>
+
+<p>現在開発が進んでいる
+<a href="https://github.com/xenophy/NextJS" >NextJS</a>
+でもExt.Directをサポートしていますが、
+この稿を書いている段階では、まだ動かせていないので、今回は
+@kotsutsumiさんの開発したPHPフレームワーク
+<a href="https://github.com/xenophy/xFrameworkPX" >xFrameworkPX</a>
+を使います。</p>
+
+<p>再び、@kotsutsumiさんの言葉。</p>
+
+<ul>
+<li>xFrameworkPXにはxFrameworkPX_Controller_ExtDirectクラスが存在する。</li>
+<li>モジュールを作成して、コントローラーに登録するだけでモジュール名でJS側からアクセスできる。</li>
+<li>サーバーサイドのやりとり（api.phpとかrouter.phpの部分）は、ちゃんとオリジナルで実装して動作確認済。</li>
+<li>MVCのModel部分をExt側から透過的に利用できるため、開発が高速。</li>
+</ul>
+
+<p>僕は、実際に業務でExt3とxFrameworkPXの組み合わせで開発をしていますが、大変楽ちんです。
+xFrameworkPX_Controller_ExtDirectクラスを一つ宣言するだけで、
+作り上げたモジュール(Model)のpublicメソッドがそのままクライアントサイドから利用できるようになります。</p>
+
+<p>なお、ここの解説の全ソースは、GitHubに登録してあります。</p>
+
+<p><a href="https://github.com/sunvisor/Ext4DirectWithMVC">https://github.com/sunvisor/Ext4DirectWithMVC</a></p>
+
+<h2>Directを利用するための準備</h2>
+
+<p>最初にサーバー側のメソッドをコールするというのをやってみます。
+PXのExtDirectコントローラーを用意し、そこでモジュールを読み込みます。</p>
+
+<div>[php]
+    class extdirect extends xFrameworkPX_Controller_ExtDirect
+    {
+        public $direct = array(
+            &#8216;namespace&#8217; =&gt; &#8216;AM&#8217;
+        ); 
+        public $modules = array(
+            &#8216;users&#8217; =&gt; array( &#8216;conn&#8217; =&gt; &#8216;default&#8217; )
+        );
+    }
+[/php]</div>
+
+<p>こんな感じです。namespaceによって、ダイレクトメソッドの名前空間も設定しています。
+モジュールに次のメソッドを用意します。</p>
+
+<div>[php]
+    public function getHero()
+    {
+        return &#8216;Thomas&#8217;;
+    }
+[/php]</div>
+
+<h3>APIを読み込みます</h3>
+
+<div>[html]
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;Ext JS 4 RPC Sample&lt;/title&gt;
+            &lt;meta charset=&quot;UTF-8&quot; /&gt;
+            &lt;link href=&quot;ext4/resources/css/ext-all.css&quot; rel=&quot;stylesheet&quot;&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;ext4/ext-all-debug.js&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;direct.js&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;extdirect.html&quot;&gt;&lt;/script&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+
+        &lt;/body&gt;
+    &lt;/html&gt;
+[/html]</div>
+
+<p>9行目の extdirect.html を読み込んでいるところが、APIの読み込みです。</p>
+
+<h3>Directプロバイダーを追加します。</h3>
+
+<div>[js]
+    Ext.ns(&#8216;Ext.app&#8217;, &#8216;AM&#8217;);
+
+    Ext.onReady(function() {
+
+        Ext.direct.Manager.addProvider(Ext.app.REMOTING_API);
+
+        AM.users.getHero(function(result){
+            Ext.Msg.alert(&#8216;主人公は&#8217; + result + &#8216;です&#8217;);
+        });
+
+    });
+[/js]</div>
+
+<p>おなじみのExt.onReadyの中でプロバイダーを追加しています。
+1行目では、名前空間を設定しています。
+この例ではサーバーサイドのExtDirectコントローラーは、
+ダイレクトメソッドの名前空間をAMとしていますし、
+プロバイダの名前空間はExt.appになっていますので、その両方を設定しています。</p>
+
+<p>そしてその直後に、リモートプロシージャーをコールしています。
+みてください、こんなに簡単にサーバー側のメソッドをコールできるのです。
+サーバーからの戻り値は、コールバック関数を用意してそこで読み取ります。</p>
+
+<h3>実行結果</h3>
+
+<p><a href="http://www.sunvisor.net/~ext4direct/rpc.html">http://www.sunvisor.net/~ext4direct/rpc.html</a></p>
+
+<h2>MVCアーキテクチャでDirectを使う</h2>
+
+<p>さて、これからが本題です。Ext JS 4 から導入された
+<a href="/application_architecture/">MVCアーキテクチャ</a>
+の中で、Ext.Directを使う方法です。</p>
+
+<p>MVCに限らず、Ext JS でデータを扱うときにはStoreを使いますね。
+サーバーからのデータをStoreに格納して処理しますが、
+それをExt.Directでどうやるのか、というところが本稿の本題です。</p>
+
+<h3>APIを読み込みます。</h3>
+
+<div>[html]
+    &lt;!DOCTYPE html&gt;
+    &lt;html&gt;
+        &lt;head&gt;
+            &lt;title&gt;My Ext JS 4 Application&lt;/title&gt;
+            &lt;meta charset=&quot;UTF-8&quot; /&gt;
+            &lt;link href=&quot;ext4/resources/css/ext-all.css&quot; rel=&quot;stylesheet&quot;&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;ext4/ext-debug.js&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;app.js&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;extdirect.html&quot;&gt;&lt;/script&gt;
+            &lt;script type=&quot;text/javascript&quot; src=&quot;ext-lang-ja.js&quot;&gt;&lt;/script&gt;
+        &lt;/head&gt;
+        &lt;body&gt;
+
+        &lt;/body&gt;
+    &lt;/html&gt;
+[/html]</div>
+
+<p>RPCのサンプルと同様です。
+app.jsを読み込んだ後に、extdirect.htmlを読み込んでいます。</p>
+
+<h3>Directプロバイダーを追加します。</h3>
+
+<p>MVCでは、Ext.onReadyを使いません。
+では、どこでプロバイダーの追加をすればいいのでしょうか。</p>
+
+<div>[js]
+    Ext.ns(&#8216;Ext.app&#8217;, &#8216;AM&#8217;);
+
+    Ext.application({
+        name: &#8216;AM&#8217;,
+        autoCreateViewport: true,
+
+        controllers: [
+            &#8216;Users&#8217;
+        ],
+
+        launch: function() {
+            
+            // Ext.Direct プロバイダーの追加
+            Ext.direct.Manager.addProvider(Ext.app.REMOTING_API);
+
+        }
+    });
+[/js]</div>
+
+<p>上記は、app.jsのコードです。
+MVCのアプリケーションでは、app.jsが起点になります。
+Applicationのlaunchメソッドはアプリケーションが起動するときに実行されるメソッドです。
+そのlaunchメソッドの中でプロバイダーの追加を行います。</p>
+
+<h3>StoreのAPIにDirectメソッドを設定します。</h3>
+
+<p>Ext.Directを使ったストアでは、directFnコンフィグかapiコンフィグに
+Ext.Directのメソッドを設定します。
+単にデータを読み取るだけの用途ならばdirectFnを使い、
+データの更新をする場合はapiを使うと思ってください。
+そこで、Storeの定義において、<u>次のように定義したくなりますがちょっと待ってください</u>。</p>
+
+<div>[js]
+    Ext.define(&#8216;AM.store.Users&#8217;, {
+        extend: &#8216;Ext.data.Store&#8217;,
+        model: &#8216;AM.model.User&#8217;,
+        autoLoad: false,
+        
+        proxy: {
+            type: &#8216;direct&#8217;,
+            api: {
+                create: AM.users.addRec,
+                read: AM.users.getAll,
+                update: AM.users.updateRec,
+                destroy: AM.users.removeRec
+            },
+            reader: {
+                type: &#8216;json&#8217;,
+                root: &#8216;data&#8217;,
+                successProperty: &#8216;success&#8217;
+            }
+        }
+    });
+[/js]</div>
+
+<p>これだと、Storeが定義される時点ではまだダイレクトプロバイダーが設定されていないので
+<u>エラーが発生します</u>。</p>
+
+<p>定義の時点では次のようにapiは空にしておきます。</p>
+
+<div>[js]
+    Ext.define(&#8216;AM.store.Users&#8217;, {
+        extend: &#8216;Ext.data.Store&#8217;,
+        model: &#8216;AM.model.User&#8217;,
+        autoLoad: false,
+        
+        proxy: {
+            type: &#8216;direct&#8217;,
+            directFn: Ext.emptyFn,  // リモートメソッドは空にしておく
+            reader: {
+                type: &#8216;json&#8217;,
+                root: &#8216;data&#8217;,
+                successProperty: &#8216;success&#8217;
+            }
+        }
+    });
+[/js]</div>
+
+<p>当然ながらautoLoadコンフィグもfalseにしてあります。
+そして、アプリケーションが起動してからStoreのAPIにDirectメソッドを設定します。
+どこで？
+それは、コントローラーのonLaunchメソッドで行います。</p>
+
+<div>[js]
+    onLaunch: function () {
+        var store = this.getUsersStore();
+
+        // Proxyにサーバー関数をセット
+        store.getProxy().api = {
+            create: AM.users.addRec,
+            read: AM.users.getAll,
+            update: AM.users.updateRec,
+            destroy: AM.users.removeRec
+        };
+        store.load();
+    },
+[/js]</div>
+
+<p>ここでは、StoreのAPIにDirectメソッドを設定して、loadメソッドを実行しています。</p>
+
+<h3>別な方法（というかこちらがおすすめ）</h3>
+
+<p>この記事を書いてからしばらく後に、twitter で @kotsutsumi さんとやりとりをしていたら、</p>
+
+<blockquote>
+  <p>launchでaddProviderしてもいいんだけど、別途Ext.application定義しているファイルで、
+  Ext.onReadyで処理した方がよいですよ</p>
+</blockquote>
+
+<p>と教えてもらいました。
+その会話は次のtogetterを参照してください。</p>
+
+<p><a href="http://togetter.com/li/218847">http://togetter.com/li/218847</a></p>
+
+<h3>initとonLaunchについて</h3>
+
+<p>ApplicationクラスのコンストラクタでExt.onReady() が作成されます。
+そのonReadyの処理の流れは次のようになります。</p>
+
+<ul>
+<li>最初に各コントローラーのinitがコールされます。</li>
+<li>その次にApplicationのonBeforeLaunchを呼び出します。onLaunchでは次の処理が実行されます。
+
+<ul>
+<li>QuickTipのinit</li>
+<li>CreateViewport</li>
+<li>Applicationのlaunchメソッドを実行</li>
+<li>Applicationのlaunchイベントを発火</li>
+<li>各コントローラーのonLaunchをコール。</li>
+</ul></li>
+</ul>
+
+<p>さきほど、Applicationのlaunchメソッドにおいて、ダイレクトプロバイダーを追加しましたので
+メソッドを設定するのは、その後ということになりますので、
+initではなくonLaunchでメソッドを設定する必要があるわけです。</p>
+
+<h2>サーバーサイドの実装</h2>
+
+<p>Storeと通信をする際には、どんなデータが送られてくるのでしょうか。
+またサーバー側ではどのようなデータを返したらよいのでしょうか。</p>
+
+<h3>Readアクション</h3>
+
+<p>データの読み取りの場合、
+サーバー側には、paramOrderコンフィグで設定された、パラメータが送られてきます。
+抽出条件や、ページングの情報などが渡されることが多いでしょう。
+サーバー側で受け取るパラメータの仕様を決めたら、
+Ext JS のparamOrderコンフィグにそれを設定します。</p>
+
+<p>サーバーから返すデータは次のような形式で返します。</p>
+
+<div>[js]
+    {
+        success: true,
+        total: 2,
+        data: [
+            {
+                id: 1,
+                name: &#8216;Thomas&#8217;,
+                email: &#8216;thomas@sodo.com&#8217;
+            }, {
+                id: 2,
+                name: &#8216;Edword&#8217;,
+                email: &#8216;edword@sodo.com&#8217;
+            }
+        ]
+    }
+[/js]</div>
+
+<p>この中の data という要素がレコードのデータになりますが、
+このプロパティ名は、Readerのroot コンフィグで設定します。
+total という要素にはレコードの総数がセットしますが、
+このプロパティ名は、ReaderのtotalPropertyコンフィグで設定します。
+デフォルトは&#8217;total&#8217;です。
+successという要素には、成功したかどうかをセットします。
+このプロパティ名は、ReaderのsuccessPropertyでセットします。
+デフォルトは&#8217;success&#8217;です。</p>
+
+<div>[php]
+    public function getAll() 
+    {
+        $fields = $this-&gt;_getFields(true);
+        $r = $this-&gt;get(
+            &#8216;all&#8217;,
+            array(
+                &#8216;fields&#8217; =&gt; $fields
+            )
+        );
+        return array(
+            &#8216;total&#8217; =&gt; count($r),
+            &#8216;data&#8217; =&gt; $r,
+            &#8216;success&#8217; =&gt; true
+        );        
+    }
+[/php]</div>
+
+<h3>更新系アクション</h3>
+
+<p>update, create, delete といった更新系のアクションでは、
+対象となるデータがサーバーに送信されます。
+Storeのsyncメソッドを実行すると、それまでにStoreに対して加えられた変更が
+上記の3つのアクションに分解されて、それぞれのリクエストがサーバーに送信されます。</p>
+
+<p>各アクションでは、
+一件のデータであれば、一つのオブジェクトが、
+複数のデータがあれば、オブジェクトの配列がサーバーに送信されます。
+WriterのallowSingleコンフィグをfalseにすると、
+1件の場合でも配列で送られるようになります。</p>
+
+<p>update アクションの場合は、更新されたレコードが送信されます。
+WriterのwriteAllFieldsコンフィグがtrueの場合は、Storeの全てのフィールドが、
+falseの場合は変更のあったフィールドのみが送信されます。
+デフォルトはtrueです。</p>
+
+<div>[php]
+    public function updateRec($arg)
+    {
+        if( is_array($arg) ){
+            foreach($arg as $rec){
+                $this-&gt;_updateOne($rec);
+            }
+        } else {
+            $this-&gt;_updateOne($arg);
+        }
+        
+        return array(
+            &quot;success&quot; =&gt; true,
+            &quot;data&quot; =&gt; $arg
+        );
+    }
+
+    private function _updateOne($arg)
+    {
+        $rec = (array)$arg;
+        $fields = $this-&gt;_getFields(false);
+        $id = $this-&gt;primaryKey;
+
+        $bind = array();
+        foreach($fields as $field){
+            $bind[$field] = $rec[$field];
+        }
+
+        $param = array(
+            &#8216;field&#8217; =&gt; $fields,
+            &#8216;value&#8217; =&gt; $this-&gt;_getValues(false),
+            &#8216;bind&#8217; =&gt; $bind,
+            &#8216;where&#8217; =&gt; $id . &#8216;=&#8217; . $rec[$id]
+        );
+
+        $this-&gt;update($param);
+    }
+[/php]</div>
+
+<p>Ext3では、オブジェクトが渡されその中のrootコンフィグで設定した要素の中に
+レコードが入ってきましたが、
+Ext4では、変更のあったレコードそのものがやってきます。</p>
+
+<p>create アクションの場合も、追加されたレコードのデータが送信されます。</p>
+
+<div>[php]
+    public function addRec($arg)
+    {
+        $id = $this-&gt;primaryKey;
+
+        if( is_array($arg) ){
+            foreach($arg as &amp;$rec){
+                $rec-&gt;$id = $this-&gt;_addOne($rec);
+            }
+        } else {
+            $arg-&gt;$id = $this-&gt;_addOne($arg);
+        }
+
+        return array(
+            &quot;success&quot; =&gt; true,
+            &quot;data&quot; =&gt; $arg
+        );
+    }
+
+    private function _addOne($arg)
+    {
+        $rec = (array)$arg;
+
+        $param = array(
+            &#8216;field&#8217; =&gt; $this-&gt;_getFields(true),
+            &#8216;value&#8217; =&gt; $this-&gt;_getValues(true),
+            &#8216;bind&#8217; =&gt; $rec
+        );
+        $r = $this-&gt;insert($param, true);
+        $this-&gt;insert($param);
+
+        return $this-&gt;lastId();
+    }
+[/php]</div>
+
+<p>delete アクションの場合は、削除されたレコードのidだけが送信されます。</p>
+
+<div>[php]
+    public function removeRec($arg)
+    {
+        $id = $this-&gt;primaryKey;
+
+        $conds = array();
+        if( is_array($arg) ){ 
+            foreach($arg as $rec){
+                $conds[] = $rec-&gt;$id;
+            }
+        } else {
+            $conds[] = $arg-&gt;$id; 
+        }
+        $this-&gt;remove($conds);
+        
+        return array(
+            &quot;success&quot; =&gt; true,
+            &quot;data&quot; =&gt; $arg
+        );
+    }
+[/php]</div>
+
+<h3>更新系アクションの戻り値</h3>
+
+<p>更新系アクションでは、</p>
+
+<div>[js]
+    {
+        success: true,
+        data: &lt;送られてきたデータ&gt;
+    }
+[/js]</div>
+
+<p>というデータを返します。dataのプロパティ名は例によって、
+rootコンフィグで設定したプロパティ名です。
+基本的に送られてきたデータと同じものを
+返さないと、その後の処理がうまくいきません。</p>
+
+<p>注意しなければならないのは、createアクションの場合です。
+createアクションで送られてくるレコードのidフィールドは空になっています。
+サーバー側では、それを登録した結果のidフィールドの値をセットしてから返さなければなりません。</p>
+
+<p>Ext3では、サーバーに送られてきたデータが1つだけであっても、
+戻り値は必ず配列で返す必要がありましたが、
+Ext4では単独レコードの場合は配列でなくてもよいようです。</p>
+
+<h2>参考資料・関連ページ</h2>
+
+<ul>
+<li><a href="http://goo.gl/tlV5r">Ext.application and Ext.direct: How to setup?</a></li>
+<li><a href="http://goo.gl/vxg2q">ExtDirect with Ext4 MVC and php &#8211; Video</a>
+
+<ul>
+<li><a href="http://dev.sk-typo3.de/ext4/workshop/">Demo</a></li>
+<li><a href="http://dev.sk-typo3.de/ext4/workshop.zip">Download Sample</a></li>
+</ul></li>
+<li><a href="https://github.com/sunvisor/Ext4DirectWithMVC">この記事のサンプルのソース</a></li>
+<li><a href="http://www.sunvisor.net/~ext4direct/">この記事のサンプルを実際に動かす</a></li>
+</ul>
+
+<h2>メモ</h2>
+
+<p>以下は、この記事を書いたときに気づいたことのメモです。</p>
+
+<h3>getHogeStore</h3>
+
+<p>コントローラーで、getHogeStore()という関数を使うと、そのコントローラーが
+保持するHogeというStoreを取得できる。</p>
+
+<h3>refs</h3>
+
+<p>コントローラーで、refsを定義するとコントロールの参照が簡単になる。</p>
+
+<div>[js]
+    refs: [
+        { ref: &#8216;hoge&#8217;, selector: &#8216;gridpanel&#8217; }
+    ]
+[/js]</div>
+
+<p>のように設定すると、</p>
+
+<div>[js]
+    this.getHoge();
+[/js]</div>
+
+<p>でコントロールを参照できる。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/329/feed</wfw:commentRss>
+			<slash:comments>3</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>サーバーサイドでDirectStoreの更新処理を書く</title>
+		<link>/127</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 28 Mar 2011 07:59:18 +0000</pubDate>
+				<category><![CDATA[Direct]]></category>
+		<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[xFrameworkPX]]></category>
+		<category><![CDATA[DirectStore]]></category>
+		<category><![CDATA[Ext3]]></category>
+		<guid isPermaLink="false">/?p=127</guid>
+
+					<description><![CDATA[08.で DirectStore でのサーバー更新について調べましたが，それでは実際にサーバー側のルーチンはどう書いたらいいのでしょうか。ここでは，PHPとxFrameworkPXを使った場合を例示します。xFramew [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>08.で DirectStore でのサーバー更新について調べましたが，それでは実際にサーバー側のルーチンはどう書いたらいいのでしょうか。ここでは，PHPとxFrameworkPXを使った場合を例示します。xFrameworkPXでは，ExtDirectコントローラーを使えば，モジュールのメソッドがそのままExtDirectで使えるという便利な機能があります。ここでは，そのモジュールのメソッドの記述例を示してExtDirectでのサーバー側の実装を示します。ただ，他のフレームワークを使った場合でも，API周りの処理に違いがあるとは思いますが，実際に処理するメソッド自体は大同小異だと思いますので，参考にはなると思います。<span id="more-127"></span></p>
+
+<h2>クライアント側 JavaScript</h2>
+
+<h3>DirectStore の定義</h3>
+
+<p>次のような DirectStore を定義して，このストアの save メソッドをコールしたときに，ちゃんとサーバー側で更新がかかるようにします。例では autoSave を false にして自動保存されないようにしていますが，自動保存する場合でもほぼ同じです。この例では，保存するときの beforewrite イベントでローディングマスクを表示する処理を加えて， write イベントでマスクを解除しています。API コンフィグで指定しているのは，ExtDirect で公開されているメソッドです。Ext.remote というネームスペースに定義されるようになっています。CRUDそれぞれのメソッドが定義されています。</p>
+
+<ul>
+<li>Create = insertDataメソッド</li>
+<li>Read = readDataメソッド</li>
+<li>Update = updateData メソッド</li>
+<li>Delete = deleteData メソッド</li>
+</ul>
+
+<h3>Store へのレコードの追加</h3>
+
+<p>ここでは参考までに Store にデータを追加するコードを紹介します。</p>
+
+<div>[js]
+var newRec;
+
+newRec = new me.store.recordType(obj, null);
+me.store.add( newRec );
+[/js]</div>
+
+<p>このように，recordType でレコードを作り，add メソッドで追加します。上記の例ではobjに追加したいレコードのデータが入っているという前提です。レコードの id プロパティが空の時に ExtJS はそれが追加されたレコードであると判断します。</p>
+
+<h2>サーバー側 PHP(xFrameworkPX)</h2>
+
+<p>次にサーバー側のコードを書いていきます。</p>
+
+<h3>ExtDirect コントローラー</h3>
+
+<p>.extdirect.php を webapp フォルダに作成します。</p>
+
+<div>[php]
+class extdirect extends xFrameworkPX_Controller_ExtDirect
+{
+
+    public $direct = array(
+    &#8216;namespace&#8217; =&amp;gt; &#8216;Ext.remote&#8217;
+    );
+    public $modules = array(
+    &#8216;employee&#8217; =&amp;gt; array( &#8216;conn&#8217; =&amp;gt; &#8216;default&#8217; )
+    );
+
+}
+[/php]</div>
+
+<p>ネームスペースを設定して，利用するモジュール(employee)をuseしています。これだけで xFrameworkPX がいろいろと世話をしてくれるので， employee モジュールのメソッドを ExtDirect から利用可能になります。</p>
+
+<h3>employee モジュール</h3>
+
+<div>[php]
+class employee extends xFrameworkPX_Model
+{
+
+    public $usetable = &#8216;employee&#8217;;
+
+    // メソッドを記述
+
+}
+[/php]</div>
+
+<p>xFrameworkPX でのモジュールは，modules ディレクトリに配置します。</p>
+
+<h3>readData メソッド</h3>
+
+<p>データを読み出すための readData メソッドを実装します。</p>
+
+<div>[php]
+public function readData()
+    {
+
+        $fields = array(
+            &#8216;id&#8217;,
+            &#8216;name_kanji&#8217;,
+            &#8216;name_kana&#8217;,
+            &#8216;birth_date&#8217;
+        );
+        $order = array(
+            &#8216;id&#8217;
+        );
+
+        $result = $this-&amp;gt;get(
+            &#8216;all&#8217;,
+            array(
+                &#8216;fields&#8217; =&amp;gt; $fields,
+                &#8216;order&#8217; =&amp;gt; $order
+            )
+        );
+
+        return array(
+            &#8216;success&#8217; =&amp;gt; true,
+            &#8216;total&#8217; =&amp;gt; count( $result ),
+            &#8216;items&#8217; =&amp;gt; $result
+        );
+
+    }
+[/php]</div>
+
+<p>データベースから従業員データをとってきて，その一覧を返しています。返却するデータは最後の return 文のような形式で返します。</p>
+
+<p>この中の items というキー名は任意ですが，このキー名を Store の root コンフィグにセットしなければなりません。他のキー名にした場合には，Store の root コンフィグにその名前をセットします。</p>
+
+<h3>deleteData メソッド</h3>
+
+<p>destroy アクションが発行された場合に実行されます。この場合，サーバに渡されるオブジェクトの items プロパティに削除すべきレコードの id が渡されます。削除するレコードが複数ある場合には items は配列になります。この例での items となっている要素ですが，この items というキーは前述の通り， root コンフィグに設定されている値になります。root コンフィグの値が違っていればこのキー名も変わります。（この点については他のメソッドでも同様です）</p>
+
+<p>実際の deleteData メソッドのコードです。</p>
+
+<pre><code>&lt;div&gt;[php]
+public function deleteData( $pData )
+{
+
+    $data = $pData-&amp;amp;gt;items;
+    if( ! is_array($data) ){
+        $data = array($data);
+    }
+
+    $result = true;
+
+    foreach( $data as $id ){
+        $result = $result &amp;amp;gt;&amp;amp;gt; $this-&amp;amp;gt;_deleteOne( $id );
+    }
+    return array(
+        'success' =&amp;amp;gt; $result,
+        'items' =&amp;amp;gt; $data
+    );
+
+}
+</code></pre>
+
+<p>    private function _deleteOne( $id )
+    {</p>
+
+<pre><code>    $where = array(
+        'id = :id'
+    );
+    $bind = array(
+        'id' =&amp;amp;gt; $id
+    );
+    $result = $this-&amp;amp;gt;delete(
+        array(
+            'where' =&amp;amp;gt; $where,
+            'bind' =&amp;amp;gt; $bind
+        )
+    );
+    return $result;
+
+}
+</code></pre>
+
+<p>[/php]</div></p>
+
+<p>サーバーに渡されるのはJSONのデータですが，PHPで受け取ったときには StdObject型のデータになります。配列の場合は配列で受け取れるのですが，オブジェクトの場合は StdObject のデータが渡されます。そこで最初に渡されたデータを配列にキャストしています。</p>
+
+<p>Store の中で一つのレコードが削除された場合と，複数のレコードが削除された場合で，渡されるデータが違います。複数の場合のみデータは配列になっています。渡されたデータが配列であるかどうか判断して，配列でない場合は要素が一つの配列に格納してます。そしてその後，配列の各要素を引数にして _deleteOne メソッドをコールしています。</p>
+
+<p>このメソッドの戻り値ですが，次のような内容を返す必要があります。</p>
+
+<pre>{ success: &lt;flag>, items: [ {id : &lt;id1>}, {id: &lt;id2>}, ....] }</pre>
+
+<p>success プロパティには実行結果をセットします。true の場合は成功，false の場合は失敗ですね。成功した場合には，items （例によって root コンフィグの値によって変わります）プロパティに，削除されたレコードの id フィールドの値をプロパティに持つオブジェクトの配列をセットします。戻り値の方は1件の削除でも配列にする必要があります。_deleteOne メソッドの最後の方でこの1件ごとのオブジェクトを作成して返しています。deleteData メソッドの最後では，それらの結果の配列と success プロパティをつけて返しています。</p>
+
+<p>渡されるオブジェクトと返すオブジェクトの形式は，update や insert でもほぼ同じですので，よく覚えておいてください。</p>
+
+<h3>updateData メソッド</h3>
+
+<p>update アクションの時には，更新されたレコードのデータが渡されます。ここでも1レコードの場合は1件のオブジェクトが，複数レコードの場合はオブジェクトの配列が渡されます。Store の writeAllFields コンフィグの値によって，渡されるオブジェクトの内容が変わります。この値が true の場合は，すべてのフィールドが渡されますし，この値が false の場合はキーのフィールドと変更があったフィールドだけが渡されます。</p>
+
+<div>[php]
+public function updateData( $pData )
+    {
+
+        $data = $pData-&amp;gt;items;
+        if( ! is_array($data) ){
+            $data = array($data);
+        }
+        $result = true;
+        foreach( $data as $rec ){
+            $result = $result &amp;gt;&amp;gt; $this-&amp;gt;_updateOne( $rec );
+        }
+
+        return array(
+            &#8216;success&#8217; =&amp;gt; $result,
+            &#8216;items&#8217; =&amp;gt; $data
+        );
+
+    }
+
+    private function _updateOne( $pRec )
+    {
+
+        $rec = (array)$pRec;
+
+        $fields = array(
+            &#8216;name_kanji&#8217;,
+            &#8216;name_kana&#8217;,
+            &#8216;birth_date&#8217;
+        );
+        $values = array(
+            &#8216;:name_kanji&#8217;,
+            &#8216;:name_kana&#8217;,
+            &#8216;:birth_date&#8217;
+        );
+        $where = array(
+            &#8216;id = :id&#8217;
+        );
+
+        return $this-&amp;gt;update(
+            array(
+                &#8216;field&#8217; =&amp;gt; $fields,
+                &#8216;value&#8217; =&amp;gt; $values,
+                &#8216;where&#8217; =&amp;gt; $where,
+                &#8216;bind&#8217; =&amp;gt; $rec
+            )
+        );
+
+    }
+[/php]</div>
+
+<p>このメソッドでは渡されたデータをひもといて update メソッドでレコードの更新をかけています。ここでも適切な値を返さなければなりません。やはり success プロパティと items プロパティが必要です。</p>
+
+<p>ToDo:（items が id さえあればいいのかどうか確認。writeAllFields が false の場合も検証）</p>
+
+<h3>insertData メソッド</h3>
+
+<p>create アクションの時には，追加されたレコードのデータが渡されます。ここでも1レコードの場合は1件のオブジェクトが，複数レコードの場合はオブジェクトの配列が渡されます。戻り値も同様です。</p>
+
+<div>[php]
+public function addData( $pData )
+    {
+
+        $data = $pData-&amp;gt;items;
+        if( ! is_array($data) ){
+            $data = array($data);
+        }
+
+        $result = true;
+        $rData = array();
+        foreach( $data as $rec ){
+            $rRec = (array)$rec;
+            $id = $this-&amp;gt;_addOne( $rRec );
+            $rRec[&#8216;id&#8217;] = $id;
+            $rData[] = $rRec;
+        }
+        return array(
+            &#8216;success&#8217; =&amp;gt; $result,
+            &#8216;items&#8217; =&amp;gt; $rData
+        );
+
+    }
+
+    private function _addOne( $rec )
+    {
+
+        $fields = array(
+            &#8216;name_kanji&#8217;,
+            &#8216;name_kana&#8217;,
+            &#8216;birth_date&#8217;
+        );
+        $values = array(
+            &#8216;:name_kanji&#8217;,
+            &#8216;:name_kana&#8217;,
+            &#8216;:birth_date&#8217;
+        );
+        // 挿入実行
+        $result = $this-&amp;gt;insert(
+            array(
+                 &#8216;field&#8217; =&amp;gt; $fields,
+                 &#8216;value&#8217; =&amp;gt; $values,
+                 &#8216;bind&#8217; =&amp;gt; $rec
+            )
+        );
+        $id = $this-&amp;gt;lastId();
+
+        return $id;
+
+    }
+[/php]</div>
+
+<p>このメソッドでは，id フィールドは auto increment になっているという前提です。</p>
+
+<p>ここのコードは，記事に書くためにちょっと短くしています。<a href="https://github.com/sunvisor/DirectStoreSample">こちらのGitHubリポジトリ</a>ですべてのソースをご覧になれます。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Ext Direct での更新処理</title>
+		<link>/36</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 24 Jan 2011 05:05:54 +0000</pubDate>
+				<category><![CDATA[Direct]]></category>
+		<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[xFrameworkPX]]></category>
+		<category><![CDATA[Ext3]]></category>
+		<guid isPermaLink="false">http://wp.sunvisor.net/?p=36</guid>
+
+					<description><![CDATA[Ext Directでの更新処理をやってみたいと思いました。やっぱりExtJSらしいところで，GridPanel（いや更新ですからEditorGridPanelか）で訂正したデータをサーバーに更新をかけるということになり [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext Directでの更新処理をやってみたいと思いました。やっぱりExtJSらしいところで，GridPanel（いや更新ですからEditorGridPanelか）で訂正したデータをサーバーに更新をかけるということになります。</p>
+
+<p>サーバーサイドのxFrameworkPXのモデルに更新用のメソッドを用意して，DirectStoreのapiにそれをセットするのかなと思ったのですが，apiの仕様がいまいちよくわかりません。パラメータの渡し方も。ですので，更新をStoreに任せるのではなくて，違う方法での実現を考えました。<span id="more-36"></span></p>
+
+<p>※ その後，勉強の甲斐あって，Storeに任せる方法もわかりました。こちらを参照ください＞<a href="http://www.sunvisor.net/node/412">08.DirectStore でサーバー更新をかける</a></p>
+
+<h2>JavaScript側での更新タイミング</h2>
+
+<p>更新をかけるタイミングとしてまず注目したのは，Storeのupdateイベントです。データの更新があったらこのイベントが発生します。このイベントで更新をかけてはどうかと考えました。</p>
+
+<p>EditorGridPanelに結びつけられたStoreでのupdateイベントは，Gridのセルが変更されたときに発火します。その際にoperationには，Ext.data.Record.EDITがセットされます。また，StoreのcommitChangesがコールされたときにも発火します。その際には，operationは，Ext.data.Record.COMMITが渡されます。また，このイベントにはStoreとRecordが渡されます。</p>
+
+<p>operationがExt.data.Record.EDITの時のイベントでサーバーを更新する方法もありですが，すべての更新を終えて「保存」ボタンをクリックしたようなときに更新をかけたいと思います。ですので，「保存」ボタンをクリックしたらStoreのcommitChangesをコールして，updateイベントでサーバーを更新させようと考えました。</p>
+
+<p>複数のレコードが更新されてCOMMITされた時に，どんな動作をするのでしょうか。更新されたレコード数だけupdateイベントが発生するのでしょうか。違います。一度だけしか発生しません。そのときのrecordは最後に更新されたレコードだけがセットされています。ではStoreのgetModifiedRecordメソッドで更新されたレコードを得て，それを対象に更新しましょう。とおもいきや，updateイベントが発生するのは，すでにStoreがコミットされた後みたいで，getModifiedRecordメソッドで返ってくるレコードは空っぽでした。</p>
+
+<p>ですので，updateイベントで処理するのではなく，「保存」ボタンのclickイベントハンドラの中でStoreをサーバー側に転送する処理を書くことにします。</p>
+
+<p>Storeの中での更新されたレコードを得るには，さきほどから出てきているgetModifiedRecordメソッドを使います。戻り値はrecordの配列です。さらにレコードの中の更新されたフィールドを得るには，recordのmodifiedプロパティで得られますよとAPIドキュメントに書いてあります。modifiedは変更されたフィールド名をキーにして変更前の値を値として持ちます。recordのdataプロパティとこのmodifiedプロパティを使えば，更新されたレコードとフィールドをサーバー側に伝えることができそうです。</p>
+
+<p>と，いま，APIドキュメントを参照していたら，recordには，getChanges()というメソッドもあります。こちらはそのものずばりで，変更されたフィールド名と変更後の値のセットが得られるようです。そこで，サーバー側には，RecordのidとgetChanges()で得られたオブジェクトを渡したらいいんじゃないでしょうか。JavaScript側のソースです。Saveボタンが押されたときのイベントハンドラです。</p>
+
+<div>[js]
+    onBtnSaveClick: function(button, e) {
+        var store = Ext.StoreMgr.get(&#8216;StaffStore&#8217;);
+        var mrec = store.getModifiedRecords();
+        var changed;
+        var rowId;
+
+        for(var r=0; r &amp;lt; mrec.length; r++){
+            changed = mrec[r].getChanges();
+            rowId = mrec[r].id;
+            // サーバーサイド関数を呼び出す
+            Staff.updateRec(rowId, changed);
+        }
+        store.commitChanges();
+    },
+[/js]</div>
+
+<p>getModifiedRecordsで変更のあったレコードを取り出し，それぞれのレコードについて，サーバー側のメソッドupdateRecを呼び出しています。その際に渡しているのが，Record.idとgetChanges()の戻り値です。結構簡単なハンドラになりましたね。</p>
+
+<p>サーバー側のモジュールのメソッドです。</p>
+
+<div>[php]
+public function updateRec($id, $changedData)
+    {
+        // 引数を連想配列にキャスト
+        $updateData = (array)$changedData;
+        // データの更新
+        $this-&amp;gt;set(
+            $updateData,
+            array(&#8216;id&#8217; =&amp;gt; $id)
+        );
+    }
+[/php]</div>
+
+<p>xFrameworkPXのモジュールのsetメソッドは，更新するフィールド名と値のセットを渡すので，ExtJSのgetChanges()メソッドの戻り値がそのままんま使えます。だからメソッドは上記のように超簡単な記述で済みます。すごい！簡単！かっこいい！</p>
+
+<p>なお，渡された$changeDataは，stdClassとして渡されるので，4行目で連想配列にキャストしています。</p>
+
+<p>いろいろ試行錯誤しましたが，最終的には非常にスマートな感じで更新部分ができました。これもxFramewordPXのおかげですね。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

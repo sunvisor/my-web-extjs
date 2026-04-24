@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	Sunvisor Lab. Ext JS 別館 へのコメント	</title>
+	<atom:link href="/comments/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Tue, 24 Mar 2020 12:30:06 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>
+		Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 3/6) &#124; Sunvisor Lab. Ext JS 別館 より Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 1/6) へのコメント		</title>
+		<link>/979#comment-277636</link>
+
+		<dc:creator><![CDATA[Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 3/6) &#124; Sunvisor Lab. Ext JS 別館]]></dc:creator>
+		<pubDate>Tue, 24 Mar 2020 12:30:06 +0000</pubDate>
+		<guid isPermaLink="false">/?p=979#comment-277636</guid>
+
+					<description><![CDATA[&lt;p&gt;[&#8230;] ビルトインのGridとColumnのプロパティを使ってカスタマイズする [&#8230;]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] ビルトインのGridとColumnのプロパティを使ってカスタマイズする [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 2/6) &#124; Sunvisor Lab. Ext JS 別館 より Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 1/6) へのコメント		</title>
+		<link>/979#comment-274973</link>
+
+		<dc:creator><![CDATA[Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 2/6) &#124; Sunvisor Lab. Ext JS 別館]]></dc:creator>
+		<pubDate>Tue, 10 Mar 2020 02:22:58 +0000</pubDate>
+		<guid isPermaLink="false">/?p=979#comment-274973</guid>
+
+					<description><![CDATA[&lt;p&gt;[&#8230;] この「Ext JS グリッドカスタマイズ」ブログ連載の初回の記事では、データグリッドをカスタマイズするためにグリッドやカラムのビルトインのプロパティを使ういくつかの方法を紹介し [&#8230;]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] この「Ext JS グリッドカスタマイズ」ブログ連載の初回の記事では、データグリッドをカスタマイズするためにグリッドやカラムのビルトインのプロパティを使ういくつかの方法を紹介し [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		Sencha Ext JS 構造概要(MVC) &#124; デーコムラボ より Model/StoreとProxyの関係 へのコメント		</title>
+		<link>/646#comment-250907</link>
+
+		<dc:creator><![CDATA[Sencha Ext JS 構造概要(MVC) &#124; デーコムラボ]]></dc:creator>
+		<pubDate>Mon, 26 Aug 2019 11:53:17 +0000</pubDate>
+		<guid isPermaLink="false">/?p=646#comment-250907</guid>
+
+					<description><![CDATA[&lt;p&gt;[&#8230;] 状況も一応存在する。使い分けが気になる人はModel/StoreとProxyの関係にある詳細比較を読むとよい。 [&#8230;]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] 状況も一応存在する。使い分けが気になる人はModel/StoreとProxyの関係にある詳細比較を読むとよい。 [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		Sencha Cmd6 - その3 - IT記事まとめ より Ext JS 6 で複数環境に対応する方法 へのコメント		</title>
+		<link>/853#comment-244636</link>
+
+		<dc:creator><![CDATA[Sencha Cmd6 - その3 - IT記事まとめ]]></dc:creator>
+		<pubDate>Tue, 12 Jun 2018 17:03:55 +0000</pubDate>
+		<guid isPermaLink="false">/?p=853#comment-244636</guid>
+
+					<description><![CDATA[&lt;p&gt;[&#8230;] 実はこの辺りの解説が、@martini3ozさんのブログ、Ext JS 6 で複数環境に対応する方法で詳しく載っています。 これを読んでしまうと、これ以上何も語ることがなくなってしまうのですが、ここではその投稿を参考にさせていただきながら、実際にコマンドを叩いてみましょう。 [&#8230;]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] 実はこの辺りの解説が、@martini3ozさんのブログ、Ext JS 6 で複数環境に対応する方法で詳しく載っています。 これを読んでしまうと、これ以上何も語ることがなくなってしまうのですが、ここではその投稿を参考にさせていただきながら、実際にコマンドを叩いてみましょう。 [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		Naoki Hada より LogicoolのCRAFTキーボードを買いました へのコメント		</title>
+		<link>/957#comment-242807</link>
+
+		<dc:creator><![CDATA[Naoki Hada]]></dc:creator>
+		<pubDate>Thu, 08 Mar 2018 07:29:35 +0000</pubDate>
+		<guid isPermaLink="false">/?p=957#comment-242807</guid>
+
+					<description><![CDATA[&lt;p&gt;ながらくお待たせいたしました。LogiOption 6.80でLightroomのサポートがされました。複数台のマシンを使われている方には、フローはとても便利と思いますので、ぜひ一緒にお試ししていただけたらと思います。ありがとうございます。&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>ながらくお待たせいたしました。LogiOption 6.80でLightroomのサポートがされました。複数台のマシンを使われている方には、フローはとても便利と思いますので、ぜひ一緒にお試ししていただけたらと思います。ありがとうございます。</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		pianyi より 約束の地 &#8211; Promised land へのコメント		</title>
+		<link>/707#comment-239338</link>
+
+		<dc:creator><![CDATA[pianyi]]></dc:creator>
+		<pubDate>Wed, 29 Mar 2017 09:40:27 +0000</pubDate>
+		<guid isPermaLink="false">/?p=707#comment-239338</guid>
+
+					<description><![CDATA[&lt;p&gt;ご回答ありがとうございます。&lt;/p&gt;
+
+&lt;p&gt;履歴の確認を怠っておりました。
+失礼いたしました。&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>ご回答ありがとうございます。</p>
+
+<p>履歴の確認を怠っておりました。
+失礼いたしました。</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		Sunvisor より 約束の地 &#8211; Promised land へのコメント		</title>
+		<link>/707#comment-239336</link>
+
+		<dc:creator><![CDATA[Sunvisor]]></dc:creator>
+		<pubDate>Wed, 29 Mar 2017 06:20:24 +0000</pubDate>
+		<guid isPermaLink="false">/?p=707#comment-239336</guid>
+
+					<description><![CDATA[&lt;p&gt;コメントありがとうございます。
+この記事の執筆時点では &lt;code&gt;return dfd&lt;/code&gt; で正しかったのが、ライブラリの方のバージョンアップで仕様が変わったのだと思います。最新の仕様に合わせて記述してください。&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>コメントありがとうございます。
+この記事の執筆時点では <code>return dfd</code> で正しかったのが、ライブラリの方のバージョンアップで仕様が変わったのだと思います。最新の仕様に合わせて記述してください。</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		pianyi より 約束の地 &#8211; Promised land へのコメント		</title>
+		<link>/707#comment-239335</link>
+
+		<dc:creator><![CDATA[pianyi]]></dc:creator>
+		<pubDate>Wed, 29 Mar 2017 05:55:03 +0000</pubDate>
+		<guid isPermaLink="false">/?p=707#comment-239335</guid>
+
+					<description><![CDATA[&lt;p&gt;こんにちは
+困ったらここにたどり着く事が多く、いつも重宝しております。
+1か所間違いでは？と思う個所が有りましたのでご連絡いたします。ご確認いただけないでしょうか。&lt;/p&gt;
+
+&lt;p&gt;一番最後に記載されているソースの16行目：
+「return dfd;」
+の部分ですが、
+「return dfd.promise();」
+の間違いでは無いでしょうか。&lt;/p&gt;
+
+&lt;p&gt;GithubのTutorial では、「return dfd.promise();」が記載されていると思われます。&lt;/p&gt;
+
+&lt;p&gt;よろしくお願いいたします。&lt;/p&gt;
+
+&lt;p&gt;Ext4.1.3
+chrome : 56.0.2924.87 (64-bit)&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>こんにちは
+困ったらここにたどり着く事が多く、いつも重宝しております。
+1か所間違いでは？と思う個所が有りましたのでご連絡いたします。ご確認いただけないでしょうか。</p>
+
+<p>一番最後に記載されているソースの16行目：
+「return dfd;」
+の部分ですが、
+「return dfd.promise();」
+の間違いでは無いでしょうか。</p>
+
+<p>GithubのTutorial では、「return dfd.promise();」が記載されていると思われます。</p>
+
+<p>よろしくお願いいたします。</p>
+
+<p>Ext4.1.3
+chrome : 56.0.2924.87 (64-bit)</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		Mateen より Ext JSでのOverrideについて へのコメント		</title>
+		<link>/632#comment-237725</link>
+
+		<dc:creator><![CDATA[Mateen]]></dc:creator>
+		<pubDate>Sat, 19 Nov 2016 01:58:49 +0000</pubDate>
+		<guid isPermaLink="false">/?p=632#comment-237725</guid>
+
+					<description><![CDATA[&lt;p&gt;Too many commeiplnts too little space, thanks!&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>Too many commeiplnts too little space, thanks!</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		Shirley より Ext JS と Electron でインストール可能なデスクトップ アプリケーションを作る へのコメント		</title>
+		<link>/933#comment-237699</link>
+
+		<dc:creator><![CDATA[Shirley]]></dc:creator>
+		<pubDate>Fri, 18 Nov 2016 12:56:27 +0000</pubDate>
+		<guid isPermaLink="false">/?p=933#comment-237699</guid>
+
+					<description><![CDATA[&lt;p&gt;gemacht hat habe ich auch schon des Ã¶fteren gemacht. Ich wurde auch schon im privaten auf BeitrÃ¤ge von mir angesprochen, aber das degnejige/diejenire etwas im Netz auf dem Blog dazu was schreiben das braucht man nicht erwarten. MfGFlo&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>gemacht hat habe ich auch schon des Ã¶fteren gemacht. Ich wurde auch schon im privaten auf BeitrÃ¤ge von mir angesprochen, aber das degnejige/diejenire etwas im Netz auf dem Blog dazu was schreiben das braucht man nicht erwarten. MfGFlo</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

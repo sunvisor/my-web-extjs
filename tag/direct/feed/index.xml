@@ -1,0 +1,916 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Direct &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/direct/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Mon, 02 Apr 2012 04:16:56 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Sencha Touch 2 で Ext Direct を使う (4)</title>
+		<link>/549</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 02 Apr 2012 04:15:15 +0000</pubDate>
+				<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Direct]]></category>
+		<guid isPermaLink="false">/?p=549</guid>
+
+					<description><![CDATA[この連載の最後は、リクエストのコンバインについてです。 リクエストのコンバイン Ext Direct では、短時間での複数のRemote Procedure Call をまとめて処理する機能が組み込まれています。 デフォ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>この連載の最後は、リクエストのコンバインについてです。
+<span id="more-549"></span></p>
+
+<h2>リクエストのコンバイン</h2>
+
+<p>Ext Direct では、短時間での複数のRemote Procedure Call をまとめて処理する機能が組み込まれています。
+デフォルトでは10ミリ秒以内に発生したリクエストは、まとめられてサーバーに送信されます。</p>
+
+<p>コンバインされては困る場合には、
+Ext.direct.RemotingProvider の enableBuffer コンフィグをfalseにします。
+また、サーバーサイドの処理に時間がかかることが予想される場合は
+timeout コンフィグに適切な値を設定します。</p>
+
+<p>この記事のソースコードは、
+<a href="http://www.assembla.com/code/martini3oz-rpc/git/nodes">Assembla</a>
+に置いてあります。
+例によって、<a href="http://www.xframeworkpx.com/">xFrameworkPX</a>
+で作っています。</p>
+
+<h3>コンバインに関するコンフィグ</h3>
+
+<ul>
+<li>enableBuffer</li>
+<li>timeout</li>
+</ul>
+
+<p>どちらも、Providerがインスタンス化されたあとも、</p>
+
+<pre><code>enabelBuffer = false
+timeout= 60
+</code></pre>
+
+<p>のように設定変更できる。</p>
+
+<p>この動作について検証をしてみます。</p>
+
+<p><em>Ext.Directコントローラー</em></p>
+
+<div>[php]
+    class extdirect extends xFrameworkPX_Controller_ExtDirect
+    {
+        public $modules = array(
+            &#8216;directm&#8217; =&gt; array()
+        );
+
+        public $direct = array(
+            &#8216;namespace&#8217; =&gt; &#8216;MyApp&#8217;,
+            &#8216;descriptor&#8217; =&gt; &#8216;Ext.REMOTING_API&#8217;
+        );
+
+        public function execute()
+        {
+            $this-&gt;log-&gt;trace(&#8216;Direct Called.&#8217;);
+            parent::execute();
+        }
+    }
+[/php]</div>
+
+<p>通常はしないのですが、Directコントローラーのexecuteメソッドをオーバーラードして、
+ログを残すようにしています。
+これで、クライアント側からリクエストがあったときにログが記録されます。</p>
+
+<p><em>Module (directm.php)</em></p>
+
+<div>[php]
+    class directm extends xFrameworkPX_Model
+    {
+        public $usetable = false;
+
+        public function test($param, $wait)
+        {
+            $log = xFrameworkPX_Log::getInstance();
+            $log-&gt;trace(&#8216;Function Called. param = &#8216; . $param);
+            sleep($wait);
+            return &#8216;param is &#8216; . $param . &#8216; &#8212; Server Time:&#8217; . date(&#8216;H:i:s&#8217;);
+        }
+
+    }
+[/php]</div>
+
+<p>モジュールのメソッドの方でも、呼び出しがあったことをログに記録するようにしています。
+サーバーへのリクエスト毎にコントローラーでログが取られ
+メソッドの呼び出し毎にモジュールでログが取られるというわけです。</p>
+
+<p>Module のtestメソッドは、指定した秒数だけwaitして返ってくるというものです。</p>
+
+<h3>普通にコンバイン</h3>
+
+<p>クライアント側のJSコードです。単純にRPCを10回、繰り返します。</p>
+
+<p><em>rpc.js</em></p>
+
+<div>[js]
+    Ext.ns(&#8216;MyApp&#8217;);
+
+    Ext.onReady(function () {
+        
+        var i;
+
+        Ext.direct.Manager.addProvider(Ext.REMOTING_API);
+
+        for(i=0; i&lt;10; i++) {
+            MyApp.directm.test(i, 0, function (ret) {
+                var now = new Date();
+
+                console.log(ret + &#8216; client time:&#8217; + Ext.Date.format(now, &#8216;H:i:s&#8217;));
+            });
+        }
+
+    });
+[/js]</div>
+
+<p>コンソールには次のように表示されます。待ち時間を0にしていますので一瞬で処理は終わっています。</p>
+
+<pre><code>rpc.js:13param is 0 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 1 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 2 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 3 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 4 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 5 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 6 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 7 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 8 --- Server Time:14:04:19 client time:14:04:19
+rpc.js:13param is 9 --- Server Time:14:04:19 client time:14:04:19
+</code></pre>
+
+<p>サーバーのログは次のようになっています。</p>
+
+<pre><code>2011-12-27 14:16:56,23     [00684] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 0
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 1
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 2
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 3
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 4
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 5
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 6
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 7
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 8
+2011-12-27 14:16:56,16     [00684] TRACE modules/directm.php - Function Called. param = 9
+</code></pre>
+
+<p>コントローラーは1度だけ呼び出されていて、Moduleのメソッドは10回呼び出されています。
+リクエストがまとめられていることがわかります。
+では、メソッドに遅延を入れた場合はどうなるのでしょうか。</p>
+
+<p>rpc.js の10行目でのRPC呼び出しで第2引数に1を渡してみます。</p>
+
+<pre><code>rpc.js:13param is 1 --- Server Time:14:21:13 client time:14:21:21
+rpc.js:13param is 2 --- Server Time:14:21:14 client time:14:21:21
+rpc.js:13param is 3 --- Server Time:14:21:15 client time:14:21:21
+rpc.js:13param is 4 --- Server Time:14:21:16 client time:14:21:21
+rpc.js:13param is 5 --- Server Time:14:21:17 client time:14:21:21
+rpc.js:13param is 6 --- Server Time:14:21:18 client time:14:21:21
+rpc.js:13param is 7 --- Server Time:14:21:19 client time:14:21:21
+rpc.js:13param is 8 --- Server Time:14:21:20 client time:14:21:21
+rpc.js:13param is 9 --- Server Time:14:21:21 client time:14:21:21
+</code></pre>
+
+<p>Server Time と client time を比べてみてください。10個のリクエストはサーバー上では1秒ごとに処理され、
+それらがまとめてクライアントに返ってきているのがわかります。</p>
+
+<p>リクエストのレスポンスは1秒ごとに返ってくるのではなく、10秒後に全部のレスポンスが返ります。
+ここでは10秒ですが、このリクエストが30とかまとまると確実にタイムアウトを引き起こします。
+一つひとつのリクエストは1秒で返ってくるはずですが、まとめられたため30秒(デフォルトのタイムアウト)を越えてタイムアウトになる訳です。</p>
+
+<h3>リクエストの分割</h3>
+
+<p>enableBufferコンフィグをfalseにすると、このリクエストのコンバインは行われなくなります。
+そうすれば、一つひとつの処理を分割してリクエストすることが出来ます。
+ただ、リクエストの数が多い場合は、XHRのオーバーヘッドは大きくなりますし、サーバー側に負担を掛けることにもなります。
+2番目の例をebanleBufferコンフィグをfalseにして実行してみます。</p>
+
+<p><em>rpc2.js</em></p>
+
+<pre><code>rpc2.js:14param is 4 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 3 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 2 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 0 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 5 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 1 --- Server Time:14:33:40 client time:14:33:40
+rpc2.js:14param is 7 --- Server Time:14:33:41 client time:14:33:41
+rpc2.js:14param is 6 --- Server Time:14:33:41 client time:14:33:41
+rpc2.js:14param is 8 --- Server Time:14:33:41 client time:14:33:41
+rpc2.js:14param is 9 --- Server Time:14:33:41 client time:14:33:41
+</code></pre>
+
+<p>もどってくる順番が面白いことになっています。
+応答時間を見ていると、サーバー側では6つのリクエストが一度に処理をされているような感じに見えます。
+これはapacheの設定で変わるのだろうとおもいます。
+それにしてももどってくる順番がでたらめですね。</p>
+
+<pre><code>2011-12-26 16:19:23,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:23,16     [32174] TRACE modules/directm.php - Function Called. param = 0
+2011-12-26 16:19:24,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:24,16     [32174] TRACE modules/directm.php - Function Called. param = 1
+2011-12-26 16:19:25,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:25,16     [32174] TRACE modules/directm.php - Function Called. param = 2
+2011-12-26 16:19:27,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:27,16     [32174] TRACE modules/directm.php - Function Called. param = 3
+2011-12-26 16:19:28,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:28,16     [32174] TRACE modules/directm.php - Function Called. param = 4
+2011-12-26 16:19:29,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:29,16     [32174] TRACE modules/directm.php - Function Called. param = 5
+2011-12-26 16:19:30,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:30,16     [32174] TRACE modules/directm.php - Function Called. param = 6
+2011-12-26 16:19:31,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:31,16     [32174] TRACE modules/directm.php - Function Called. param = 7
+2011-12-26 16:19:32,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:32,16     [32174] TRACE modules/directm.php - Function Called. param = 8
+2011-12-26 16:19:33,22     [32174] TRACE webapp/.extdirect.php - Direct Called.
+2011-12-26 16:19:33,16     [32174] TRACE modules/directm.php - Function Called. param = 9
+</code></pre>
+
+<p>サーバーのログを見ると、一つひとつが別のリクエストして送られてきていることがわかります。</p>
+
+<p>enableBufferコンフィグをfalseにせずにリクエストを分割する方法としては、
+リクエストを送り、そのレスポンスでのコールバックで次のリクエストを送るという方法があります。
+そうすれば、送って受けてまた送って、という風に同期的な処理ができます。</p>
+
+<p><em>rpc3.js</em></p>
+
+<div>[js]
+    Ext.onReady(function () {
+        
+        var i;
+
+        Ext.direct.Manager.addProvider(Ext.REMOTING_API);
+
+        i = 0;
+        MyApp.f = function() {
+            MyApp.directm.test(i, 1, function (ret) {
+                var now = new Date();
+
+                console.log(ret + &#8216; client time:&#8217; + Ext.Date.format(now, &#8216;H:i:s&#8217;));
+                i++;
+                if( i &amp;lt; 10 ){
+                    MyApp.f();
+                }
+            });
+            
+        };
+
+        MyApp.f();
+
+    });
+[/js]</div>
+
+<p>こんな感じです。この方法では最初のレスポンスが返ってきてから次のレスポンスを送るので、
+同期的に処理をする必要があるときには便利です。</p>
+
+<pre><code>rpc3.js:14param is 0 --- Server Time:14:41:48 client time:14:41:48
+rpc3.js:14param is 1 --- Server Time:14:41:50 client time:14:41:50
+rpc3.js:14param is 2 --- Server Time:14:41:51 client time:14:41:51
+rpc3.js:14param is 3 --- Server Time:14:41:52 client time:14:41:52
+rpc3.js:14param is 4 --- Server Time:14:41:53 client time:14:41:53
+rpc3.js:14param is 5 --- Server Time:14:41:54 client time:14:41:54
+rpc3.js:14param is 6 --- Server Time:14:41:55 client time:14:41:55
+rpc3.js:14param is 7 --- Server Time:14:41:56 client time:14:41:56
+rpc3.js:14param is 8 --- Server Time:14:41:57 client time:14:41:57
+rpc3.js:14param is 9 --- Server Time:14:41:58 client time:14:41:58
+</code></pre>
+
+<p>コンソールへの表示も、1秒ごとに更新され、順番に着実に処理されてゆく様子が見て取れます。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha Touch 2 で Ext Direct を使う (3)</title>
+		<link>/545</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 02 Apr 2012 03:21:53 +0000</pubDate>
+				<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Direct]]></category>
+		<guid isPermaLink="false">/?p=545</guid>
+
+					<description><![CDATA[Sencha Touch のすばらしいデータシステムであるStoreとExt Directを一緒に使う方法を説明します。 Direct Store (Proxy) Ext.data.proxy.Direct を使うと、  [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Sencha Touch のすばらしいデータシステムであるStoreとExt Directを一緒に使う方法を説明します。
+<span id="more-545"></span></p>
+
+<h2>Direct Store (Proxy)</h2>
+
+<p>Ext.data.proxy.Direct を使うと、
+ストアをDirectのサーバーサイド関数と関連づけられます。
+使い方はAjaxProxyと非常によく似ているので、AjaxProxyの使い方に慣れている方には、
+既知のことが書かれているかもしれません。</p>
+
+<p>ここで説明しているプロジェクトのサンプルも、
+<a href="https://github.com/sunvisor/touch">Githubのリポジトリ</a>
+に置いてあります。
+このサンプルは、サーバーサイドを<a href="http://www.xframeworkpx.com/">xFrameworkPX</a>
+を使って作っています。そのプロジェクトの中のwebappディレクトリとmodulesディレクトリだけを
+リポジトリに上げていますので、<a href="http://www.xframeworkpx.com/">xFrameworkPX</a>
+のプロジェクトを作り、各フォルダの内容を変えてください。</p>
+
+<p>まず、DirectProxyを設定してみましょう。
+directFnとかapiというコンフィグにサーバーサイドのメソッドをセットします。
+このProxyは、Storeに設定する事もできますし、Modelに設定する事もできます。</p>
+
+<div>[js]
+    proxy: {
+        type: &#8216;direct&#8217;,
+        directFn: &#8216;AM.users.getAll&#8217;,
+        reader: {
+            type: &#8216;json&#8217;,
+            rootProperty: &#8216;data&#8217;,
+            successProperty: &#8216;success&#8217;
+        }
+    }
+[/js]</div>
+
+<p>サーバーからのデータ読み出しだけの場合は、このようにdirectFnコンフィグを使います。
+directFnコンフィグに、サーバー側のデータを返すメソッドをセットします。</p>
+
+<div>[js]
+    proxy: {
+        type: &#8216;direct&#8217;,
+        api: {
+            create: &#8216;AM.users.addRec&#8217;,
+            read: &#8216;AM.users.getAll&#8217;,
+            update: &#8216;AM.users.updateRec&#8217;,
+            destroy: &#8216;AM.users.removeRec&#8217;
+        },
+        reader: {
+            type: &#8216;json&#8217;,
+            rootProperty: &#8216;data&#8217;,
+            successProperty: &#8216;success&#8217;
+        }
+    }
+[/js]</div>
+
+<p>読み書きできるようにして、CRUDの4つのメソッドを指定する場合は、このようにapiコンフィグを使います。
+apiコンフィグには、create, read, update, destroy の4つのメンバーのオブジェクトを渡します。
+それぞれのメソッドは、サーバーサイドでそれぞれの処理の時に呼び出されます。</p>
+
+<p>Storeの各種のメソッドを使って、レコードの追加、更新、削除などの複数の処理を行い、
+Store.sync() を呼び出すと、それをCRUDの処理に分解して、それぞれのメソッドを実行します。</p>
+
+<h2>CRUDのサーバーサイド</h2>
+
+<p>Storeと関連づけるサーバーサイドのメソッドはどういう仕様にしなければならないのか、
+という点について説明します。</p>
+
+<p>ここでは、データの読み書き処理には、ReaderとWriterが使われます。
+ReaderとWriterはデータの形式によって違う物が用意されています。
+ここでは、DirectProxy, JsonReader, JsonWriter という組み合わせの場合の話をします。</p>
+
+<h3>Readアクション</h3>
+
+<p>directFnコンフィグや、api.readに設定する、データ読み出し用のサーバーサイドメソッドはどのように実装するのでしょう。
+簡単に言うと、クライアントからのパラメーターを受け取って、
+その結果のデータレコードを返すということになります。</p>
+
+<p>クライアントはサーバーにはどのようにパラメーターを渡すのでしょうか。
+パラメーターの渡し方の基本を設定するのが、paramByHashコンフィグです。
+これをtrueにすると、パラメーターは1つのオブジェクトとしてサーバーに渡されます。デフォルトはtrueです。
+このコンフィグをfalseにした場合は、paramOrderなどでパラメーターの順序を決めたりしなければなりません。
+このコンフィグはよほど必要の無い限り、trueのまま使います。
+サーバー側で受け取る引数は1つだけなので、パラメーターの数が増えるなどの変更にも柔軟に対応できます。</p>
+
+<p>Proxyのパラメータ名</p>
+
+<ul>
+<li>filterParam: &#8216;filter’</li>
+<li>sortParam: &#8216;sort’</li>
+<li>enablePagingParams: true</li>
+<li>startParam: &#8216;start’</li>
+<li>limitParam: &#8216;limit’</li>
+</ul>
+
+<p>上記の表の、値部分がパラメータ名です。
+Storeのfilter, sort のようなコンフィグが指定された場合とか、
+PagingToolbarを使ってグリッドをページングするような場合には、
+これらのパラメーターがサーバー側に渡されます。</p>
+
+<p>これらのパラメーター名は上記のコンフィグを使って変更することができますが、
+既存のサーバーサイドを利用するのでもない限り変更する必要は無いでしょう。</p>
+
+<p>では、これ以外のパラメータ、アプリケーション独自のパラメーターを渡す必要がある場合は、
+Store.loda()メソッドの引数に params: {hoge: fuga} というオブジェクトを渡すか、
+extraParamsコンフィグに設定します。</p>
+
+<p>load()メソッドでパラメーターを渡す方法では、自分のアプリケーションがloadする時にはパラメーターを
+渡すことができますが、Ext JS のフレームワークがデータのロードをする際には自前のパラメーターは
+渡されません。
+例えば、最初のloadの時に条件をパラメーターで渡したとしても、
+PageingToolbarなどによりページングしていて、ページが切り替えられたときには、
+フレームワークがパラメーターを作成するので、独自のパラメーターを渡す余地がありません。
+そんな場合はextraParamsにセットします。
+extraParamsにセットされたパラメーターはreadリクエストを送る度にパラメーターとして送信されます。
+extraParamsはコンフィグですので、その値を動的に変更するには、setExtraParams()メソッドを使います。</p>
+
+<p>サーバー側では、これらのパラメーターを受け取ることになりますが、
+paramByHash: true の場合は、1つのオブジェクトでやってきます。</p>
+
+<div>[php]
+    public function getAll($param)
+    {
+        $limit = $param-&gt;limit;
+        $page = $param-&gt;page;
+        $start = $param-&gt;start;
+        &#8230;
+[/php]</div>
+
+<p>PHPの場合は受け取ったパラメーターをルーターが処理をして、StdClassオブジェクトでやってきますので、
+上記のようにその中から値を取り出せます。</p>
+
+<p>サーバーのメソッドの中では、そのパラメーターを使って適切な処理をし、
+必要なデータを返します。</p>
+
+<p>返す値は次のようなオブジェクトを返します。</p>
+
+<div>[php]
+        return array(
+            &#8216;total&#8217; =&gt; $total,
+            &#8216;data&#8217; =&gt; $r,
+            &#8216;success&#8217; =&gt; true
+        );
+    }
+[/php]</div>
+
+<p>$rには、DBから取り出したレコードの配列が入っていて、$totalにはデータの総件数が入っている、
+と思ってください。
+Ext.data.reader.JSONのコンフィグ設定で次のような物があります。</p>
+
+<ul>
+<li>rootProperty: &#8216;’
+
+<ul>
+<li>データを格納するプロパティ名</li>
+</ul></li>
+<li>successProperty: &#8216;success’
+
+<ul>
+<li>成功フラグを格納するプロパティ名</li>
+</ul></li>
+<li>totalProperty: &#8216;total’
+
+<ul>
+<li>データの全件数を格納するプロパティ名
+ページングの時に必要</li>
+</ul></li>
+</ul>
+
+<p>上記の値の部分はデフォルト値です。
+先ほどの例では、rootProperty: &#8216;data&#8217; と設定してあるという場合のコードです。
+totalプロパティはページングをするとき以外は指定しなくても大丈夫なようです。</p>
+
+<h3>Create / Update アクション</h3>
+
+<p>Createは追加、Updateは更新ですが、
+いずれも処理対象のRecord(Model)のデータがサーバーに送られます。
+1つの更新で、複数件の更新や追加があった場合には、複数のレコードが配列で渡されます。</p>
+
+<p>Ext.data.writer.JSONのコンフィグに allowSingle というのがあり、これがfalseの場合は、
+更新されるレコードが1件の場合でも配列で渡され、
+trueの場合にはレコードが1件だけの場合には配列ではなく単独のオブジェクトとして渡されます。</p>
+
+<p>サーバー側では、受け取ったデータをDBに追加／更新します。
+そして結果を返すのですが、何を返すのでしょうか。
+それは、追加／更新した結果レコードです。
+それをReaderが読める形式で返します。
+Storeは、ここで返された結果通りにStoreのレコードを更新します。
+Readerが読める形式で追加／更新した結果レコードを返します。
+Readerが読める形式というのは、さきほどの、</p>
+
+<div>[php]
+    return array(
+        &#8216;total&#8217; =&gt; $total,
+        &#8216;data&#8217; =&gt; $r,
+        &#8216;success&#8217; =&gt; true
+    );
+[/php]</div>
+
+<p>という形式です。ここで返すレコードは、追加・更新されたものだけです。
+Storeはここで返された結果通りにStoreのレコードを更新します。
+Createの場合は、クライアントからはIDのない(fantom)データが送られますので、
+サーバー側ではそれをDBに登録して、IDをつけたレコードを返してやる必要があります。</p>
+
+<h4>Delete アクション</h4>
+
+<p>Deleteアクションでは、削除されたレコードのidだけがサーバーに送られます。
+Create / Update と同様に複数ある場合は配列で送られます。
+サーバー側では受け取ったデータのidを見て、該当するレコードを削除します。
+リザルトには削除したidだけを返します。</p>
+
+<h3>with MVC</h3>
+
+<p>サンプルでは、directFnなどに、サーバーサイドのメソッドをそのまま指定している場合がほとんどです。</p>
+
+<div>[js]
+    directFn: Hoge.fooFunc
+[/js]</div>
+
+<p>でもこれだと、MVCのローディングシステムと一緒に使うとうまく行きません。</p>
+
+<p>ローディングシステムで
+Ext.DefineでStoreなりModelなりのクラス定義がされる時点では、
+まだ、addProviderされていないので、関数オブジェクトができていません。
+だから、生で指定するとエラーが起きます。
+ですので、</p>
+
+<div>[js]
+    directFn: &#8216;Hoge.fooFunc&#8217;
+[/js]</div>
+
+<p>というように文字列で指定します。
+こうするとExt.Defineの時点で、関数オブジェクトがまだ存在しなくてもエラーはでません。
+実際にModelやStoreのオブジェクトがインスタンス化されるまでにaddProviderすればいいのです。</p>
+
+<p>もう一点、MVCでaddProviderをどこに置くか、という問題があります。</p>
+
+<p>普通にApplication.launchに置いても、うまくいきません。
+launchが実行される時には、関連するオブジェクトのインスタンス化が終わっています。
+とうぜん、その時にProxyのインスタンスも作られてしまいます。
+だから、launchでaddProviderしても遅いのです。
+Proxyのインスタンスが作られる前にaddProviderする必要があります。</p>
+
+<p>Ext.onReadyの中に書くと、ApplicationがProxyをインスタンス化する前に
+addProviderできます。</p>
+
+<div>[js]
+    Ext.require(&#8216;Ext.direct.*&#8217;);
+
+    Ext.onReady(function() {
+        Ext.direct.Manager.addProvider(Ext.REMOTING_API);
+    });
+
+    Ext.application({
+        name: &#8216;AM&#8217;,
+
+        controllers: [&#8216;Users&#8217;],
+        models: [&#8216;User&#8217;],
+        stores: [&#8216;Users&#8217;],
+        views: [&#8216;Main&#8217;, &#8216;List&#8217;, &#8216;Edit&#8217;],
+
+        launch: function() {
+            Ext.create(&#8216;AM.view.Main&#8217;);
+        }
+    });
+[/js]</div>
+
+<p>これでダイナミックローディングシステムを使ったMVCの場合でもエラーが出ずに実行することができます。
+たぶんこれでビルドしたときにも動作すると思いますが、その点については未検証です。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha Touch 2 で Ext Direct を使う (2)</title>
+		<link>/540</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 02 Apr 2012 02:30:16 +0000</pubDate>
+				<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Direct]]></category>
+		<guid isPermaLink="false">/?p=540</guid>
+
+					<description><![CDATA[さて、Sencha Touchです。これまでExt JSでしか使えなかったExt Directが Sencha Touch 2 の RC から使えるようになりました。 ダウンロードしたSencha Touchのexamp [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>さて、Sencha Touchです。これまでExt JSでしか使えなかったExt Directが
+Sencha Touch 2 の RC から使えるようになりました。
+<span id="more-540"></span></p>
+
+<p>ダウンロードしたSencha Touchのexamples/direct にサンプルがありますが、RCの頃は動いたのに
+製品版ではそのままでは動かない罠がかけられています。
+一部のファイルを修正すれば動作するようになります。</p>
+
+<p>取りあえず動くようにしたものを
+<a href="https://github.com/sunvisor/touch2">Githubに載せておきました。</a></p>
+
+<p>リモートプロシージャコールの例として、
+そのSencha Touch 2 のサンプルを検証してみます。</p>
+
+<p>examples/direct/direct.htmlに次の記述があります。</p>
+
+<div>[html]
+    &lt;script type=&quot;text/javascript&quot; src=&quot;php/api.php&quot;&gt;&lt;/script&gt;
+[/html]</div>
+
+<p>これは、前回説明したようにapiを読み込んでいるのですね。
+そして、スクリプトタグで読み込まれるその内容は次のようになります。</p>
+
+<div>[js]
+    Ext.ns(&quot;Ext.app&quot;);
+    Ext.app.REMOTING_API = {
+        &quot;url&quot;: &quot;php/router.php&quot;,
+        &quot;type&quot;: &quot;remoting&quot;,
+        &quot;actions&quot;: {
+            &quot;TestAction&quot;: [
+                {
+                    &quot;name&quot;: &quot;doEcho&quot;,
+                    &quot;len&quot;: 1
+                },
+[/js]</div>
+
+<p>こんな感じです。
+実際にサンプルを動かせるのであれば、ブラウザで、php/api.php にアクセスしてみると内容を確認できます。</p>
+
+<dl>
+<dt>url</dt>
+<dd>Routerのurl</dd>
+
+<dt>type</dt>
+<dd>Providerのタイプ</dd>
+
+<dt>actions</dt>
+<dd>クラス名がキーで、値がメソッド定義の配列のオブジェクト</dd>
+</dl>
+
+<p>メソッド定義は、name: メソッド名, len: 引数の数 となります。
+名前付き引数の場合は、lenのかわりにparamsを指定して、params: に引数名の配列を指定できるようです。
+（len: 1 としてオブジェクトを渡しても同じだと思うのですが、その違いがいまのところ僕にはわかりません）</p>
+
+<p>では、APIをプロバイダーに追加しているところを見てみます。</p>
+
+<p>examples/direct/direct.js: 42行目</p>
+
+<div>[js]
+    Ext.direct.Manager.addProvider(Ext.app.REMOTING_API, {
+        type:&#8217;polling&#8217;,
+        url: &#8216;php/poll.php&#8217;,
+        listeners: {
+            data: function(provider, event) {
+                updateMain(&#8216;&lt;i&gt;&#8217; + event.getData() + &#8216;&lt;/i&gt;&#8217;);
+            }
+        }
+    });
+[/js]</div>
+
+<p>ここでは2つのプロバイダーを追加しています。
+ひとつは、APIから読み込んだオブジェクト Ext.app.REMOTING_API を渡しています。
+これはRemotingProvider。
+二つ目は インラインでオブジェクトを書いています。type: &#8216;polling&#8217; なので
+PollingProvider
+になります。
+このようにaddProviderメソッドには複数のAPIオブジェクトを渡すことができるようになっています。</p>
+
+<p>このサンプルでは、ポーリングをしながら、RPCも実行するというような仕様になっています。</p>
+
+<h2>PollingProvider</h2>
+
+<p>では、最初にPollingProviderを見てみましょう。
+PollingProviderとは、一定の間隔でポーリングを繰り返すプロバイダーです。</p>
+
+<ul>
+<li>APIでは、type: &#8216;polling&#8217; とします。</li>
+<li>url: にサーバー側で実行するurlを指定します。</li>
+</ul>
+
+<p>ポーリングが実行されデータを受信するとdataイベントが発火します。
+ですので、サンプルではのように、listnersコンフィグでdataイベントのリスナーを設定しています。</p>
+
+<p>ここには指定はありませんが、ポーリングの間隔は interval コンフィグで設定します。
+intervalを指定しない場合のデフォルトの実行間隔は、3000ミリ秒＝3秒です。
+30秒間隔にする場合は次のようにします。</p>
+
+<div>[js]
+    Ext.direct.Manager.addProvider(Ext.app.REMOTING_API, {
+        type:&#8217;polling&#8217;,
+        url: &#8216;php/poll.php&#8217;,
+        interval: 30000,  // 間隔を30秒に設定
+        listeners: {
+            data: function(provider, event) {
+                updateMain(&#8216;&lt;i&gt;&#8217; + event.getData() + &#8216;&lt;/i&gt;&#8217;);
+            }
+        }
+    });
+[/js]</div>
+
+<h2>RPC &#8211; RemotingProvider</h2>
+
+<p>RPCはいわばExt Directの本命です。
+直接サーバーサイドのメソッドをコールします。
+これまで述べたようにExt.data.Manager.addProvider に
+サーバー側のAPIで吐き出されたオブジェクトを渡すことでプロバイダを追加します。
+するとサーバーサイドの関数が使えるようになります。</p>
+
+<p>プロバイダを追加するとサーバーサイドのメソッドがグローバルネームスペースに追加されます。
+プロバイダに渡すコンフィグの中でnamespaceを指定するとそのネームスペースに追加されます。
+サンプルではグローバルネームスペースに置いていますが、
+これはサンプルを単純にするためですので、
+現実世界のコードではnamespace指定した方がいいと思います。
+僕の場合はアプリケーション名のネームスペース下に置くようにしています。</p>
+
+<p>このサンプルでは2つのリモートプロシージャコールがあります。Echo と Multiply です。</p>
+
+<ul>
+<li>Echo の方は、入力した値をそのまま返してきます。</li>
+<li>Multiplyの方は、入力した数値を8倍して返してきます。
+数値以外を入れるとエラーメッセージを返します。</li>
+</ul>
+
+<p>Echoの方を見てみます。
+話を単純にするために、短く書き換えています。</p>
+
+<div>[js]
+    function doEcho(field) {
+        TestAction.doEcho(field.getValue(), function(result) {
+            updateMain(result);
+            field.reset();
+        });
+    }
+[/js]</div>
+
+<p>このようにサーバーサイドからの値を受け取る場合は、
+サーバーに渡す引数の後にコールバック関数を渡してやります。
+すると、サーバーからレスポンスが帰ってきたら、そのコールバックが呼ばれます。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha Touch 2 で Ext Direct を使う (1)</title>
+		<link>/532</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 02 Apr 2012 02:06:24 +0000</pubDate>
+				<category><![CDATA[Sencha Touch]]></category>
+		<category><![CDATA[Direct]]></category>
+		<guid isPermaLink="false">/?p=532</guid>
+
+					<description><![CDATA[去る3月31日に、新宿で Ext JS / Sencha Touch Perfectday #008 が開催されました。 その時に、私が発表する予定だった内容を、小堤さん(@kotsutsumi)が発表してくださいました [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>去る3月31日に、新宿で Ext JS / Sencha Touch Perfectday #008 が開催されました。
+その時に、私が発表する予定だった内容を、小堤さん(@kotsutsumi)が発表してくださいました。
+発表されている中で、まとまったことはきっと中村がブログに残すでしょう、なんてことを
+仰っていたので、ある程度資料としてまとめて、ブログにしておくことにします。
+この記事を最初に4回ぐらいの連載になりそうです。</p>
+
+<p>不明な点や、誤っている点がありましたら、是非、Twitterやこのブログのコメントでお知らせください。
+<span id="more-532"></span></p>
+
+<h2>Ext Direct とは</h2>
+
+<p>SenchaのExt JS 4のページにこんな記述があります。</p>
+
+<p>Ext Directは、クライアントサイドからリモートサーバサイドメソッドを呼び出す、
+プラットフォームや言語にとわられない技術です。Ext Directは、クライアントサイドのExt JSアプリケーションと、ポピュラーなサーバプラットフォームの間でシームレスな通信を可能にします。</p>
+
+<p>まるで夢のようです。(<em>´-｀</em>)</p>
+
+<p>Ext Directには、次のような機能があります。</p>
+
+<ul>
+<li>サーバー上の関数を直接コールできる</li>
+<li>StoreやModelと連係できる。DirectProxy</li>
+<li>短時間に複数のリクエストがあった場合にそれをまとめて（コンバイン）してくれる</li>
+</ul>
+
+<h2>Sencha.comの第一資料</h2>
+
+<p>Ext JS でのことになりますが、Sencha.comの
+<a href="http://www.sencha.com/products/extjs/extdirect">Ext Directのページ</a>
+が参考になります。
+ここには、サーバーサイドの実装についての解説が書いてあります。
+また、クライアントについてはAPIドキュメントの、Ext.direct以下とか、
+Ext.data.proxy.Directあたりの解説が参考になります。
+これまたExt JSのことですが、
+<a href="http://docs.xenophy.com/ext-js/4-0/">Ext JS 4の日本語版API</a>
+でもDirectの部分はほとんど翻訳されています。</p>
+
+<p>ただし、Ext JS 4 と Senca Touch 2 は非常によく似たアーキテクチャですが、
+Sencha Touch 2 とは微妙な違いがあることがあるので、
+実装の段階では、Sencha Touch 2 のAPIを参照することが必要です。</p>
+
+<p>まずは、ここら辺を嫁ということになるのですが、
+実際には覚えることが多く、その順番もどうしたらいいか最初はわからないと思うので、ポイントをかいつまんで話します。</p>
+
+<h2>サーバーサイド</h2>
+
+<p>Ext Directでは、サーバーのメソッドを直接呼び出せるっていうことになるのですが、
+それはサーバーサイドの助けがあってこそ可能になるのはおわかりのことと思います。
+ここでは、サーバーサイドでどのようなことをするのかを説明します。</p>
+
+<p>サーバーサイドでは、APIとRouterという2つの要素で、
+クライアントサイドからメソッドを実行できるようにします。</p>
+
+<h3>API</h3>
+
+<p>APIというのは、サーバー側でどんなメソッドが公開されているのかを開示するものです。
+クライアント側のExt Directは、APIが返す情報を見て利用できる関数がわかる仕組みです。</p>
+
+<p>APIは次のように、htmlファイルの中でscriptタグで読み込まれます。</p>
+
+<div>[html]
+    &lt;script src=&quot;Api.php&quot;&gt;&lt;/script&gt;
+[/html]</div>
+
+<p>APIのサーバー側の処理では、こんな感じのJavaScriptコードを返すようにします。</p>
+
+<div>[js]
+    Ext.app.REMOTING_API = {
+        &quot;url&quot;:&quot;remote/router.php&quot;,
+        &quot;type&quot;:&quot;remoting&quot;,
+        &quot;actions&quot;:{
+            &quot;AlbumList&quot;:[{
+                &quot;name&quot;:&quot;getAll&quot;,
+                &quot;len&quot;:0
+            },{
+                &quot;name&quot;:&quot;add&quot;,
+                &quot;len&quot;:1
+            }]
+        }
+    };
+[/js]</div>
+
+<p>1つのオブジェクト変数を返しています。内容は次のとおり。</p>
+
+<dl>
+<dt>url</dt>
+<dd>Routerのurl</dd>
+
+<dt>type</dt>
+<dd>プロバイダのタイプ remoting or polling</dd>
+
+<dt>actions</dt>
+<dd>サーバーサイドのメソッドの仕様</dd>
+</dl>
+
+<p>クライアント側では、このオブジェクトを
+Ext.direct.Manager.addProvider に渡してプロバイダーを追加します。</p>
+
+<div>[js]
+    Ext.direct.Manager.addProvider(Ext.app.REMOTING_API);
+[/js]</div>
+
+<p>APIを用意しなくても、addProviderにオブジェクトリテラルを渡してやれば、動くっちゃ動きます。
+実際、Senchaのサンプルの中でもpollingプロバイダのサンプルはその手を使っています。
+ですが、サーバー側でメソッドを公開する以上、APIをサーバー側が用意するのが筋というものですよね。</p>
+
+<h2>Router</h2>
+
+<p>ルーターはクライアントがサーバーサイドのメソッドをコールしたときに、
+リクエストの中身を解析して、実際のメソッドをコールします。</p>
+
+<p>Provider, API, Router に関しては、初出の Ext Dirctのページおよび
+API. Ext.direct.Manager のドキュメントに説明があります。
+routerを実装するつもりはないので、ここでは細かな解説はしません。(ひとまかせｗ)</p>
+
+<h2>サーバーサイドの実装</h2>
+
+<p>Senchaが用意しているサーバーサイドの実装には、Ext.Direct Pack というのがあります。
+Ext JS 3の時はあったのに、<a href="http://www.sencha.com/products/extjs/extdirect">Ext Directのページ</a>
+からのリンクがないので、
+なくなってしまったのかとおもったらちゃんと今でもありました。</p>
+
+<ul>
+<li><a href="http://www.sencha.com/products/extjs/download">Senchaのダウンロードページ</a></li>
+</ul>
+
+<p>Related Download の所からダウンロードできます。</p>
+
+<p>ただ、動作が少し怪しいという<a href="http://www.slideshare.net/naotori/extdirect">指摘</a>もあります。
+（僕は使ったことないのでわからんけど）</p>
+
+<p>Sencha.com の<a href="http://www.sencha.com/products/extjs/extdirect">Ext Directのページ</a>には</p>
+
+<blockquote>
+  <p>Ext Direct has been integrated with many server-side environments including:<br />
+  PHP Java .NET ColdFusion Ruby Perl</p>
+</blockquote>
+
+<p>なんて書いてあります。
+Symphonyとか、いろいろなフレームワークなどで用意されているみたいです。
+<a href="http://www.sencha.com/forum/showthread.php?67992-Ext.Direct-Server-side-Stacks">Ext.Direct &#8211; Server-side Stacks</a>
+のブログ記事(英文)にいろいろ書いてあります。</p>
+
+<p>僕は、サーバーサイドには、<a href="http://www.xframeworkpx.com/">xFrameworkPX</a> を使っています。
+Xenophyさんのフレームワークで、Ext Directに標準で対応していて、Ext Directを使うのが非常に簡単になっています。
+僕が思うに、一番簡単にExt Directを利用できるソリューションです。
+xFrameworkPXとDirectを組み合わせて使うあたりについては、
+このブログや、
+<a href="http://www.suvnsir.net/">本館</a>
+に情報がころがっています。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

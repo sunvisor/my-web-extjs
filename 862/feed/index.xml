@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	オシャレなユニバーサル アプリの作り方 &#8211; その１ へのコメント	</title>
+	<atom:link href="/862/feed" rel="self" type="application/rss+xml" />
+	<link>/862</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Wed, 15 Jun 2016 03:32:09 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>
+		Destry より		</title>
+		<link>/862#comment-198166</link>
+
+		<dc:creator><![CDATA[Destry]]></dc:creator>
+		<pubDate>Wed, 15 Jun 2016 03:32:09 +0000</pubDate>
+		<guid isPermaLink="false">/?p=862#comment-198166</guid>
+
+					<description><![CDATA[&lt;p&gt;Thanks for this &#8211; great video and very well presented. I&#8217;ve been aware of the sodium / potassium balance issue for ages. I&#8217;ve used this asï»¿ an embed over at my own sikhnTea.ts again&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>Thanks for this &#8211; great video and very well presented. I&#8217;ve been aware of the sodium / potassium balance issue for ages. I&#8217;ve used this asï»¿ an embed over at my own sikhnTea.ts again</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

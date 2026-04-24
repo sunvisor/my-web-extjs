@@ -1,0 +1,733 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>NextJS &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/category/nextjs/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Thu, 22 Sep 2011 00:37:05 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Ext JS / Sencha Perfectday #007 講義メモ</title>
+		<link>/380</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sun, 18 Sep 2011 00:12:41 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[NextJS]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=380</guid>
+
+					<description><![CDATA[Ext JS / Sencha Pefectday #007 に参加してきました。 以下そのレポートです。 Ext JS 4 実践開発ガイド 配布と紹介 ついに出ました。やっとでました。書籍、Ext JS 4 実践開発ガ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext JS / Sencha Pefectday #007 に参加してきました。
+以下そのレポートです。
+<span id="more-380"></span></p>
+
+<h2>Ext JS 4 実践開発ガイド 配布と紹介</h2>
+
+<p>ついに出ました。やっとでました。書籍、Ext JS 4 実践開発ガイド。
+この本の出版にはレビュワーとして少々関わっていたので、
+実際にできあがった本を見ると感慨深いものがありました。
+さっそく著者のサインももらっておきました。</p>
+
+<p>購入はゼノフィのサイトで買うのが安くなりますが、アマゾンでも買えます。
+（サイドバーの広告をみてね）</p>
+
+<h2>発表</h2>
+
+<p>@kotsutsumiさんから三つの発表がありました。</p>
+
+<h3>発表１</h3>
+
+<p>Ext JS 4 のAPIドキュメントの日本語版についての発表がありました。</p>
+
+<p><a href="http://docs.xenophy.com/ext-js/4-0/">http://docs.xenophy.com/ext-js/4-0/</a></p>
+
+<p>まだ全部を翻訳できているわけではなくて、現在の進捗は60%ぐらいです。
+僕はこれにも少し関わっています。ドキュメントの中にひどい和訳があれば、
+それはきっと僕の仕事です。ｗ</p>
+
+<h3>発表２</h3>
+
+<p>NextJS 0.8.x</p>
+
+<p>現在NextJSは0.8.2が出ています。MySQLにも繋がるし、Ext.Directも使えます。
+僕もいろいろと試してみたいのですが、まだまだです。</p>
+
+<p><a href="http://nextjs.net/">http://nextjs.net/</a></p>
+
+<h3>発表３</h3>
+
+<p>Ext JS 4 実践開発ガイド２ についての発表です。
+@kotsutsumi さん、続編を書いてくれるという発表でした。</p>
+
+<ul>
+<li>第01章 ドラッグアンドドロップ</li>
+<li>第02章 Ext.fxによるアニメーション制御</li>
+<li>第03章 チャート</li>
+<li>第04章 Ext Direct</li>
+<li>第05章 キーボード制御とアクセシビリティ</li>
+<li>第06章 アプリケーション設計</li>
+<li>第07章 コンポーネントテスト指向開発</li>
+<li>第08章 リリースビルド</li>
+<li>第09章 デバッグ術</li>
+<li>第10章 サイクルテスト</li>
+<li>第11章 パフォーマンスチューニング</li>
+<li>第12章 Next JS と Ext DirectによるRPC</li>
+<li>第13章 実践！Twitterクライアント作成</li>
+<li>第14章 実践！ユーザー管理システム構築 </li>
+</ul>
+
+<p>すごい内容になりそうな本です。
+(こんなのここに書いていいのかな、だめだったら言ってください。消しますので）
+僕としては5〜11あたりの、まさに「実践」的な内容に心惹かれます。
+ただ、この本は今回出版した「一冊目の売り上げ次第で中止する」そうです。
+2冊目出て欲しいんで、みんな、本買ってください。</p>
+
+<h2>Review</h2>
+
+<p>ここからExt JS 4 の基本のおさらいをしました。
+ものすごいスピードでの講義でした。
+突然、当てられて、アセりました。(´･ω･`)</p>
+
+<h2>LT：Ext JS 4 におけるExt.Direct (@martini3oz 氏)</h2>
+
+<p>LTということで Ext.Direct を MVC アーキテクチャで使う、
+というのを発表しました。
+内容は、</p>
+
+<p><a href="/using-direct-with-mvc/">/using-direct-with-mvc/</a></p>
+
+<p>です。是非ご覧ください。</p>
+
+<h2>Ext.Direct for Ext JS 4 </h2>
+
+<p>その後、@kotsutsumi さんが Ext.Direct について講義。以下、そのメモ。</p>
+
+<h3>PollingProvider</h3>
+
+<ul>
+<li>一定時間定期的にリクエストを投げ続ける</li>
+<li>サーバーサイドの状態を取得させる</li>
+<li>時までsetIntervalを使いリクエストを投げる処理を記述しなくても良い。</li>
+<li>Ext.Directのリクエストが他に重なっても1リクエストで処理してくれる。</li>
+</ul>
+
+<div>[js]
+{
+    &quot;type&quot;: &quot;event&quot;,
+    &quot;name&quot;: &quot;hogehoge&quot;,
+    &quot;data&quot;:{
+        &quot;foo&quot;: &quot;bar&quot;
+    }
+}
+[/js]</div>
+
+<ul>
+<li>サーバーサイドで返す場合Json形式で typeキーに対してeventを指定すること。</li>
+</ul>
+
+<h3>RemotingProvider</h3>
+
+<ul>
+<li>サーバーサイドのAPIを公開し、APIを直接クライアントサイドのExtJSから呼び出すことができるプロバイダー</li>
+<li>ある期間の間のDirectが呼ばれたらまとめて送信する。</li>
+<li>サーバーサイドではまとめて処理していっぺんに返す。</li>
+<li>クライアントではtidをもとにイベントを起こしてコールバックを呼び出す。</li>
+<li>ファイルのアップロードにも対応している。</li>
+<li>$_POSTでリクエストデータが取得できない。</li>
+<li>file_get_contents(&#8216;php://input&#8217;)で取得します。</li>
+</ul>
+
+<h3>LT：Ext.core.Elementの活用 ( @asano_yuki氏)</h3>
+
+<p>Xenophyの @asano_yuki さんのLT。Ext.core.Element には地味に便利な静的メソッドがいっぱいあるのね。</p>
+
+<ul>
+<li>Ext JS 4で増えたメソッドについて</li>
+<li>35個増えている。Ext.Fxだったものがあるのでそれを覗くと24</li>
+<li>追加された静的メソッド11個</li>
+<li>Ext.core.Element.***出呼び出す</li>
+</ul>
+
+<dl>
+<dt>fromPointメソッド</dt>
+<dd>指定した位置にある要素を取得しExt.core.Elementを返す。</dd>
+
+<dt>getDocumentHeight / getDocumentWidth</dt>
+<dd>Ext.core.Element.getDocumentHeight();</dd>
+
+<dd>ブラウザのウィンドウサイズを返す</dd>
+
+<dt>getOrientation</dt>
+<dd>windowの向きを返す portrait landscape を返す。</dd>
+
+<dt>serializeForm</dt>
+<dd>フォームの内容をエンコードもしてクエリ文字列にして返してくれる</dd>
+
+<dt>unitizeBox</dt>
+<dd>unitizeBox(5, &#8220;px&#8221;)</dd>
+
+<dd>->&#8221;5px 5px 5px 5px&#8221;</dd>
+</dl>
+
+<p>など、全部はメモできませんでした。</p>
+
+<h2>Next JS概論</h2>
+
+<ul>
+<li>node製のアプリケーションサーバーを作っている。</li>
+<li>iconvモジュールは使えるが、iso2002jpに変換できない。</li>
+<li>iconvへの日本語パッチを当てる必要がある。</li>
+<li>iconvjpを使ってそれをNextJSに組み込んだ。</li>
+</ul>
+
+<p>0.8 から 1.0へ、現在の機能と今後。</p>
+
+<ul>
+<li>PDF, Excel, Word を出力したい。</li>
+<li>SVGデータ出力</li>
+<li>WebSocketに完全対応。</li>
+</ul>
+
+<p>Next JSとExt JS</p>
+
+<ul>
+<li>同じクラスシステムが使えること</li>
+<li>サーバーサイドにライブラリを一元管理する仕組みを考えている。</li>
+<li>Ext Directを簡単に利用できること</li>
+</ul>
+
+<h2>Ext.Drawの利用</h2>
+
+<ul>
+<li>Ext JS 4 から実装された。</li>
+<li>SVC/VMLを抽象レイヤーとして扱えるようにする</li>
+<li>SVCは標準、VMLはIE6対応。</li>
+<li>Ext.drawに実装されています。</li>
+<li>描画領域Ext.draw.Surface</li>
+<li>ベクターデータは、Ext.draw.Sprite</li>
+<li>SurfaceにaddでSpriteを追加してゆく</li>
+</ul>
+
+<p>SVGチャートクラス</p>
+
+<ul>
+<li>Ext.drawベースでのチャートです。</li>
+<li>Flashがなくても動く。</li>
+<li>Sencha touch chart</li>
+<li>Ext.chart.Chartコンポーネントを経由して利用する。</li>
+<li>データストアと連動して描画する。</li>
+<li>あるデータストアの表現の一つとしてチャートを表示する。</li>
+</ul>
+
+<h3>Sencha Touch Chart</h3>
+
+<p>Sencha Touch 2.0 が出る。</p>
+
+<h2>追記</h2>
+
+<p>awacioさんのブログで PerfectDay #007 のリポートを見つけました。
+<a href="http://d.hatena.ne.jp/awacio/20110918/1316295521">http://d.hatena.ne.jp/awacio/20110918/1316295521</a></p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>NextJSの勉強再開するぞ</title>
+		<link>/332</link>
+					<comments>/332#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 13 Aug 2011 23:47:40 +0000</pubDate>
+				<category><![CDATA[NextJS]]></category>
+		<guid isPermaLink="false">/?p=332</guid>
+
+					<description><![CDATA[NextJSの0.7系の開発がどんどん進んでいます。 ちょっとnodeやNextJSから離れていたので、node自体の環境も新たに作ることにしました。 nodejsのインストール しばらく触っていなかったので、npmとか [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>NextJSの0.7系の開発がどんどん進んでいます。
+ちょっとnodeやNextJSから離れていたので、node自体の環境も新たに作ることにしました。
+<span id="more-332"></span></p>
+
+<h2>nodejsのインストール</h2>
+
+<p>しばらく触っていなかったので、npmとかの仕様がずいぶん変わっています。
+以前のようにやっていたら、うまくインストールできなくて困りました。</p>
+
+<p>開発環境ですので、
+Macのユーザーhomeディレクトリにインストールする方法をとります。
+なかなかうまく動きませんでしたが、次のようにするとうまく行きました。
+キモは、nodeのコンパイルの時にconfigureでprefixを指定することです。</p>
+
+<p>nodejsはGitHubから取得します。</p>
+
+<div>[bash]
+    git clone https://github.com/joyent/node.git
+    cd node
+    git checkout v0.4.9
+    ./configure &#8211;prefix=~/local
+    make
+    make install
+[/bash]</div>
+
+<p>これでユーザーhomeのlocalディレクトリ以下にnodeをインストールできました。
+.bashrcでパスを追加しておきます。</p>
+
+<div>[bash]
+    export PATH=~/local/bin:$PATH
+[/bash]</div>
+
+<p>次にnpmをインストールします。</p>
+
+<div>[bash]
+    curl http://npmjs.org/install.sh | sh
+[/bash]</div>
+
+<p>さきほどのコンパイルでprefixを指定していないと、
+これがどうしてもうまく行かないので注意です。</p>
+
+<h2>NextJSを入れる</h2>
+
+<p>これで取りあえずnodejsとnpmが動くようになりました。
+やっとNextJSのテストに入れます。</p>
+
+<div>[bash]
+    npm install NX
+[/bash]</div>
+
+<p>おー！簡単。そこからはcode:xの記事を順にやってみましょう。</p>
+
+<ul>
+<li><a href="http://code.xenophy.com/?p=1463" >Next JS 0.7.2 リリースとマニュアルの下書き用に。 &#8211; code:x</a></li>
+<li><a href="http://code.xenophy.com/?p=1476" >アクション(1) – Next JS 0.7.2 &#8211; code:x</a></li>
+<li><a href="http://code.xenophy.com/?p=1491" >アクション(2) – Next JS 0.7.2 &#8211; code:x</a></li>
+<li><a href="http://code.xenophy.com/?p=1516" >アクション(3) – Next JS 0.7.2 &#8211; code:x</a></li>
+</ul>
+
+<p>さあ、やるぞ！</p>
+
+<p>ここで、@kotsutsumi さんからリプライをもらいました。</p>
+
+<blockquote>
+  <p>@martini3oz １点、npm install NX から　npm install nxに変わってるので、
+  ご注意をｗ 多分だ丈夫なのかな、あとでNXのほうけせたら消してみますけど。</p>
+</blockquote>
+
+<p>ということで、</p>
+
+<div>[bash]
+    npm uninstall NX
+    npm install nx
+[/bash]</div>
+
+<p>とやりましたら、</p>
+
+<pre><code>└─┬ nx@0.7.3 
+  └── nx-core@0.1.5 
+</code></pre>
+
+<p>となってくれました。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/332/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>ExtJS PerfectDay #006 講義メモ</title>
+		<link>/318</link>
+					<comments>/318#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Thu, 04 Aug 2011 05:46:41 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[NextJS]]></category>
+		<guid isPermaLink="false">/?p=318</guid>
+
+					<description><![CDATA[ExtJS PerfectDay #006 &#8211; 20100/05/21 の受講ノートです。 この件について@kotsutsumi さんに質問しないでください。 アジェンダ Jasmin入門 PhantomJS [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>ExtJS PerfectDay #006  &#8211; 20100/05/21 の受講ノートです。
+この件について@kotsutsumi さんに質問しないでください。
+<span id="more-318"></span></p>
+
+<h2>アジェンダ</h2>
+
+<ul>
+<li>Jasmin入門</li>
+<li>PhantomJSとJasmin連携</li>
+<li>Ext.Loaderによる本格スタブ開発</li>
+<li>クラスシステム ｰ uses・requires</li>
+<li>MVCアプリケーションｰアプリケーションデザイン（クラス設計）</li>
+<li>Windowベースアプリケーション ｰ アプリケーションデザイン（クラス設計）</li>
+<li>タスクバー作成</li>
+<li>ウィンドウモジュール機構作成</li>
+<li>（調整枠）</li>
+<li>Ext JS 4によるプラグイン開発</li>
+<li>SASS入門</li>
+</ul>
+
+<h2>Jasmin入門</h2>
+
+<p>JSで作られているテストフレームワーク。
+次のファイルを読み込め。</p>
+
+<div>[html]
+lib/jasmine-1.0.2/jasmine.css
+lib/jasmine-1.0.2/jasmine.js
+lib/jasmine-1.0.2/jasmine.html.js
+[/html]</div>
+
+<p>Spec定義（テストケース）
+ExtJSコンポーネントのテストをしてみる。</p>
+
+<h3>Spec定義</h3>
+
+<div>[js]
+describe(&quot;Ext.Button&quot;, function () {
+    var proto = Ext.Button
+}
+[/js]</div>
+
+<p>前準備，後始末</p>
+
+<h3>describe</h3>
+
+<p>に指定した関数内に前準備後始末
+beforeEach
+テストケースが実行される直前に呼び出される関数オブジェクトを指定
+afterEach</p>
+
+<h3>it</h3>
+
+<p>テストケースを書くときにはitを使う。</p>
+
+<div>[js]
+it(&quot;Ext.Button.prototype.isButton is true.&quot;.funcion() {
+    expect(proto.isButton).toBeTruthy();
+});
+[/js]</div>
+
+<h3>expect</h3>
+
+<p>最終的に値を評価する。</p>
+
+<div>[js]
+describe(&quot;Ext.button&quot;, function () {
+    beforeEach( function () {
+});
+
+afterEach(functon() {
+[/js]</div>
+
+<h2>PhantomJSとJasmin連携</h2>
+
+<p>コマンドラインでのテストを実現する。
+APIはほとんどない。画面のないブラウザ。
+PhantomJSはQtで作られています。</p>
+
+<p>QtはクロスプラットフォームのUI開発フレームワーク
+内部的にWebKitをサポートした。ブラウザコンポーネントを貼り付けられる。
+WebViewの昨日を利用してJSを動作させる。</p>
+
+<p>WebViewをC++から行うことができる。
+JavaScriptからイベントを起こしてC++を呼べるし，逆も可能。</p>
+
+<p>閑話休題</p>
+
+<p>コマンドラインでJasmineのテストケースを実行し，実行結果のDOMを解析する。
+Jasmineドライバーは動かない。</p>
+
+<p>phantomjs test.js SpecRunner.html</p>
+
+<p>test.js はgistにある。
+コマンドラインにテスト結果を出力する。
+書き換えれば好きな出力形式にできる。</p>
+
+<p>クリックイベントを起こすことができる。</p>
+
+<p>Extもテストフレームワーク。を作っているというアナウンスがあるが，まだ出てきていない。
+イオンプロジェクトも同様。＞ExtDesignerを作っているもの。
+titaniumとかairは中身のjsファイルは丸見えですよ。
+flashを使って暗号化することができるので，そこにjavascriptをいれると勘合化できるがflushプレイヤー必要。</p>
+
+<h2>Ext.Loaderによる本格スタブ開発</h2>
+
+<p>Ext.LoaderによるCTOP開発</p>
+
+<p>JavaScript を動的にロードできる。Scriptタグを動的に作る。
+でも実際は中々むずかしい。Ext.Loaderがそれをやっていた。が使うなといっていた。
+サーバーに負荷もかかるしパフォーマンスは悪い。
+使うのなら最初から固めて読み込むほうが速い。</p>
+
+<p>では，なぜLoaderなの？</p>
+
+<p>Ext4のコアクラスとLoaderは切り離せない。</p>
+
+<ul>
+<li>ext.js を読み込み，Exx Core システムのみ読み込む。</li>
+<li>クラスの依存関係は，requiresとusesを利用して解決させる。</li>
+<li>コンポーネント単位で開発を行う。</li>
+<li>常に，コンポーネント別と結合テストを行えるようにする。</li>
+<li>Component Test Oriented Programing &#8211;> CTOP</li>
+</ul>
+
+<div>[js]
+Ext.Loader.setConfig({
+    enabled: true,
+    paths: {
+        &#8216;Ext&#8217;: &#8216;../ext/src&#8217;,
+        &#8216;PD&#8217; : &#8216;../windows&#8217;
+    }
+};
+Ext.onReady(function () {
+
+});
+[/js]</div>
+
+<p>上記のコードを入れることが重要。実はいらないかもしれない。</p>
+
+<div>[js]
+Ext.define(&#8216;PD.view.window.Window&#8217;, {
+    extend: &#8216;Ext.window.Window&#8217;,
+
+    initComponent: function () {
+        var me = this;
+
+        Ext.
+    }
+}
+[/js]</div>
+
+<p>Ext.reg は廃止されている。</p>
+
+<h2>クラスシステム ｰ uses・requires</h2>
+
+<p>Loader での依存関係を記述するもの。
+自分のクラスでも，これが書かれていないと Loader が働かない。
+これを使うのは必須。
+結合時は無関係になるが</p>
+
+<ul>
+<li>requires はクラスが生成される前に必ず使われる。</li>
+<li>uses は，クラスファイルの読み込み時にすべて読み込まれる訳ではなく，インスタンス時に読み込まれる。</li>
+<li>絶対使うばあいはrequire</li>
+<li>configオプションで使うか使わないか選べる場合はuses</li>
+</ul>
+
+<h2>MVCアプリケーションｰアプリケーションデザイン（クラス設計）</h2>
+
+<h3>app.jp</h3>
+
+<div>[js]
+Ext.Loader.setConfig({
+    enabled: true,
+    paths: {
+        &#8216;Ext&#8217;: &#8216;../../ext/src&#8217;,
+        &#8216;Ext.ux&#8217;: &#8216;./src/ux/&#8217;
+    }
+});
+
+Ext.application({
+    name: &#8216;PD&#8217;,
+    appFolder: Ext.Loader.getPath(&#8216;PD&#8217;) + &#8216;/app&#8217;,
+    controllers: [&#8216;Index&#8217;]
+});
+[/js]</div>
+
+<h3>app/controller/controler.js</h3>
+
+<p>複数のコントローラーができあがると思うので，
+その基本となるアプリケーションの基底コントローラークラスを用意した方がいい。
+次のコントローラークラスでは，アプリケーションとビューポートを
+アプリケーションのネームスペースのプロパティに保存している。</p>
+
+<div>[js]
+Ext.define(&#8216;PD.controller.Controller&#8217;, {
+
+    extend: &#8216;Ext.controller.Controller&#8217;,
+
+    init: function() {
+
+    },
+
+    onLaunch: function(app) {
+
+        PD.Application = app;
+        PD.Viewport = Ext.getCmp(&#8216;PD.Viewport&#8217;);
+
+    }
+
+});
+[/js]</div>
+
+<p>実際のコントローラーは，このクラスを継承する。</p>
+
+<h3>app/controller/index.js</h3>
+
+<div>[js]
+Ext.define(&#8216;PD.controller.Index&#8217;, {
+
+    extend: &#8216;PD.controller.Controller&#8217;,
+
+    init: function() {
+
+        var me = this;
+
+        // スーパークラスメソッドコール
+        me.callParent(arguments);
+    },
+
+    onLaunch: function(app) {
+
+        var me = this;
+
+        // スーパークラスメソッドコール
+        me.callParent(arguments);
+
+    }
+});
+[/js]</div>
+
+<h3>app/view/viewport.js</h3>
+
+<p>ビューポート</p>
+
+<div>[js]
+Ext.define(&#8216;PD.view.Viewport&#8217;, {
+
+    requires: [],
+
+    uses: [],
+
+    extend: &#8216;Ext.container.Viewport&#8217;,
+
+    alias: &#8216;widget.PD.viewport&#8217;,
+
+    initComponent: function() {
+
+        var me = this
+
+        // 設定適用
+        Ext.apply(me, {
+            id: &#8216;PD.Viewport&#8217;,
+            layout: &#8216;border&#8217;,
+            items: [{
+                region: &#8216;west&#8217;,
+                width: 250,
+                xtype: &#8216;PD.west&#8217;
+            },{
+                region: &#8216;center&#8217;,
+                xtype: &#8216;PD.center&#8217;
+            }]
+        });
+
+        // スーパークラスメソッドコール
+        me.callParent(arguments);
+
+    },
+
+    initEvents: function() {
+
+        var me = this;
+
+        // スーパークラスメソッドコール
+        me.callParent(arguments);
+
+    }
+
+});
+[/js]</div>
+
+<p>オススメなalias の名前の付け方，widget の次にアプリケーションの名前空間をつける。</p>
+
+<div>[js]
+alias: &#8216;widget.PD.viewport&#8217;;
+[/js]</div>
+
+<p>おすすめなidのつけかた。プリフィックスにアプリケーションの名前空間をつける。</p>
+
+<div>[js]
+id: &#8216;PD.viewport&#8217;,
+[/js]</div>
+
+<h2>Windowベースアプリケーション ｰ アプリケーションデザイン（クラス設計）</h2>
+
+<div>[js]
+Ext.ux.container.Desktop
+[/js]</div>
+
+<p>この書き方おぼえとけ。アイテムを設定するメソッドを別に用意する。</p>
+
+<div>[js]
+items: me.genarateItems()
+[/js]</div>
+
+<p>このメソッドおぼえとけ。initEvent はExt.Panelを継承したコントロールで使用できるよ。
+継承して，</p>
+
+<div>[js]
+initEvetns
+[/js]</div>
+
+<p>次のコンフィグおぼえとけ</p>
+
+<div>[js]
+Window.constrain
+constrainHeader
+[/js]</div>
+
+<p>画面からはみ出さないようにする。ただExt4では，バグってますよ。</p>
+
+<h2>Ext JS 4によるプラグイン開発</h2>
+
+<p>コンポーネントにオプションをつけるようなものを作るときにプラグインがある。
+Ext4では次のように書け</p>
+
+<div>[js]
+Ext.define(&#8216;PD.plugins.test&#8217;), {
+
+    alias: &#8216;plugin.test&#8217;.
+
+    init: funciton () {
+
+},
+[/js]</div>
+
+<p>Ext3ではつぎのように</p>
+
+<div>[js]
+var tes = function() {
+
+    var me = this;
+
+    meinit=function(cmp){
+
+    };
+
+}
+[/js]</div>
+
+<h2>SASS入門</h2>
+
+<p>パス。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/318/feed</wfw:commentRss>
+			<slash:comments>5</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>

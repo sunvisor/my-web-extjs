@@ -1,0 +1,1894 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Tue, 24 Mar 2020 23:14:16 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 4/6) &#8211; 柔軟なメソッドを使う</title>
+		<link>/999</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Tue, 24 Mar 2020 23:13:47 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<guid isPermaLink="false">/?p=999</guid>
+
+					<description><![CDATA[この記事は Sencha 公式ブログ How to Quickly Customize Ext JS Data Grid (Part 3/6)) &#8211; Using Flexible Methods を翻訳したも [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+
+<blockquote class="wp-block-quote"><p>この記事は Sencha 公式ブログ<br>
+  <a href="https://www.sencha.com/blog/customize-ext-js-grid-part-4-of-6/">How to Quickly Customize Ext JS Data Grid (Part 3/6)) &#8211; Using Flexible Methods</a><br>
+  を翻訳したものです</p></blockquote>
+
+
+
+<p><span id="more-999"></span></p>
+
+
+
+<p>6部構成のブログシリーズ「Ext JS グリッドのカスタマイズ」の第4回目の記事では、グリッドデータをカスタマイズするために柔軟なメソッドを使うことに焦点を当てています。 前回の記事を読み逃した方は、こちらをご覧ください。</p>
+
+
+
+
+
+<p><a href="/blog/customize-ext-js-grid-part-1-of-6/">組み込みのグリッドとカラムのプロパティを使ってカスタマイズ</a>  <br>
+<a href="/blog/customize-ext-js-grid-part-2-of-6/">グループ化方法を使ったカスタマイズ</a>  <br>
+<a href="/blog/customize-ext-js-grid-part-3-of-6/">行の編集方法を利用したカスタマイズ</a></p>
+
+
+
+
+
+<p>Ext JSには、データをカスタマイズするための柔軟なメソッドが用意されています。ここでの例では、NBAの2020年の選手レーティングデータのサンプルをグリッドで表示しています。</p>
+
+
+
+
+
+<p>例えば、選手の身長を正しいフォーマット (フィートとインチ) で表示したり、サラリーを正しい数千の区切り文字でフォーマットしたりしたい場合は、Renderer メソッド内でこれを行うか、formatter プロパティを使用します。</p>
+
+
+
+
+
+<p>初期データの設定はこのようになっています。</p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">    data: [{
+                player: 'Kemba Walker',
+                team: 'Boston Celtics',
+                rating: 88,
+                dunkRating: 30,
+                threePointRating: 83,
+                position: 'PG',
+                ht: 60,
+                salary : 32742000
+            }, {
+                player: 'Jayson Tatum',
+                team: 'Boston Celtics',
+                rating: 86,
+                dunkRating: 83,
+                threePointRating: 90,
+                position: 'SF',
+                ht: 68,
+                salary:7830000
+            }, {
+                player: 'Jaylen Brown',
+                team: 'Boston Celtics',
+                rating: 85,
+                dunkRating: 82,
+                threePointRating: 85,
+                position: 'SG',
+                ht: 66,
+                salary:6534829
+            }, {
+                player: 'Gordon Hayward ',
+                team: 'Boston Celtics',
+                rating: 82,
+                dunkRating: 81,
+                threePointRating: 75,
+                position: 'PG',
+                ht: 67,
+                salary: 32700690
+            }, {
+                player: 'Marcus Smart',
+                team: 'Boston Celtics',
+                rating: 82,
+                dunkRating: 74,
+                threePointRating: 50,
+                position: 'SG',
+                ht: 63,
+                salary: 12553471
+            }]</pre>
+
+
+
+
+
+<p>選手の身長と給料をフォーマットしたい。カスタマイズ後の予想はこんな感じです。</p>
+
+
+
+<p>
+<figure class="wp-block-image"><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2020/03/Grouped-grid-1.png" alt=""/></figure>
+</p>
+
+
+
+<h4><strong>選手の身長のフォーマットを変更するには？</strong></h4>
+
+
+
+
+
+<p>データをレンダリングする前にデータを変換するために &#8220;Renderer&#8221; メソッドを使います。<br>
+<strong>カラム設定で &#8220;renderer &#8220;メソッドをオーバーライドします。</strong></p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">        {
+            dataIndex: 'ht',
+            text: 'Height',
+            flex: 1,
+            renderer: function(value) {
+                let height = value.toString();
+                return height.substring(0, 1) + '\'' + height.substring(1, 2) + '"';
+            }
+        }</pre>
+
+
+
+
+
+<h4><strong>給与額の書式を変更するには？</strong></h4>
+
+
+
+
+
+<p>設定でExt.util.Formatメソッドを直接使うことができます。  <br>
+<strong>カラム設定の &#8220;formatter&#8221; プロパティを使います</strong></p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">      {
+            dataIndex: 'salary',
+            formatter: 'usMoney',
+            text: 'Salary',
+            flex: 1
+      }</pre>
+
+
+
+
+
+<p><strong><a href="https://fiddle.sencha.com/#fiddle/33kr">Sencha Fiddle:</a></strong></p>
+
+
+
+
+
+<h3><strong>データの処理とレンダリングのカスタマイズ</strong></h3>
+
+
+
+
+
+<p>Ext.TemplateまたはXTemplateを使用してグリッドデータを処理し、レンダリング結果をカスタマイズすることができます。</p>
+
+
+
+
+
+<p><strong>専用のカラムタイプ</strong>  <br>
+特定のデータ型を表示するために専用のカラムを使用することができます。</p>
+
+
+
+
+
+<ul><li><a href="https://docs.sencha.com/extjs/7.1.0/modern/Ext.grid.column.Boolean.html">Ext.grid.column.Boolean</a><br>
+論理値用</li><li><a href="https://docs.sencha.com/extjs/7.1.0/modern/Ext.grid.column.Date.html">Ext.grid.column.Date</a><br>
+日付時刻用</li><li><a href="https://docs.sencha.com/extjs/7.1.0/modern/Ext.grid.column.Number.html">Ext.grid.column.Number</a><br>
+数値用</li></ul>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">    {
+            xtype: 'numbercolumn',
+            dataIndex: 'salary',
+            text: 'Salary',
+            flex: 1
+    },  {
+            xtype: 'booleancolumn',
+            dataIndex: 'lastYearContract',
+            text: 'Is last year contract',
+            trueText: 'Yes',
+            falseText: 'No',
+            flex: 1
+        }</pre>
+
+
+
+
+
+<p><strong><a href="https://fiddle.sencha.com/#fiddle/33mf">Sencha Fiddle:</a></strong>  </p>
+
+
+
+
+
+<p><strong><em>次回の記事では、「グリッドをカスタマイズするためのウィジェットカラムメソッドの使い方」をご紹介します。</em></strong></p>
+
+
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 3/6)</title>
+		<link>/996</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Tue, 24 Mar 2020 12:30:01 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<guid isPermaLink="false">/?p=996</guid>
+
+					<description><![CDATA[この記事は Sencha 公式ブログ How to Quickly Customize Ext JS Data Grid (Part 3/6) –Row Editing Methods を翻訳したものです 6回シリーズ「 [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+
+<blockquote class="wp-block-quote"><p>この記事は Sencha 公式ブログ<br>
+  <a href="https://www.sencha.com/blog/customize-ext-js-grid-part-3-of-6/">How to Quickly Customize Ext JS Data Grid (Part 3/6) –Row Editing Methods</a><br>
+  を翻訳したものです</p></blockquote>
+
+
+
+<p><span id="more-996"></span></p>
+
+
+
+<p>6回シリーズ「Ext JSグリッドのカスタマイズ」の3回目の記事では、行の編集方法を使ってデータグリッドをカスタマイズすることに焦点を当てます。  シリーズの第1部と第2部を読み逃した場合は、こちらをご覧ください。</p>
+
+
+
+
+
+<ul><li><a href="/979">ビルトインのGridとColumnのプロパティを使ってカスタマイズする</a></li><li> <a href="/989">グループ化メソッドを使ったカスタマイズする</a></li></ul>
+
+
+
+
+
+<p>ここで紹介するグリッドの例は、NBA 2020年の選手レーティングデータのサンプルです。</p>
+
+
+
+
+
+<h3><strong>セル編集/ 行編集</strong></h3>
+
+
+
+<p>
+<figure class="wp-block-image"><img decoding="async" src="/wp-content/uploads/2020/03/03_grid_cell_editing.gif" alt=""/></figure>
+</p>
+
+
+
+<p><strong>1. グリッド設定でプラグインを有効にする</strong></p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">plugins: {
+    cellediting: {
+        clicksToEdit: 1
+    }
+}</pre>
+
+
+
+
+
+<p><strong>2. カラム設定でエディタを定義する（エディタはテキストフィールド、データフィールド、数値フィールドのいずれかにすることができます。</strong></p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">{
+    dataIndex: 'position',
+    text: 'Position',
+    flex: 1,
+    editor: {
+        xtype: 'combo',
+        typeAhead: true,
+        triggerAction: 'all',
+        selectOnFocus: false,
+        store: [
+            'SG', 'PG','SF', 'C','PF'
+        ]
+    }
+}</pre>
+
+
+
+
+
+<p><strong>Sencha Fiddle:</strong></p>
+
+
+
+
+
+<h3><strong>RowExpander</strong></h3>
+
+
+
+
+
+<p>ネストされている行は、いくつかの簡単なステップでグリッド行の下に追加することができます。</p>
+
+
+
+<p>
+<figure class="wp-block-image"><img decoding="async" src="/wp-content/uploads/2020/03/04_grid_row_expander.gif" alt=""/></figure>
+</p>
+
+
+
+<p><strong>:プラグインを有効にし、グリッド設定でテンプレートを定義する</strong></p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">plugins: {
+    rowexpander: {
+        rowBodyTpl: new Ext.XTemplate(
+            '&lt;p>&lt;b>Team:&lt;/b> {team}&lt;/p>',
+            '&lt;p>&lt;b>Overall rating:&lt;/b> {rating:this.formatRating}&lt;/p>',
+            {
+                formatRating: function(v) {
+                    var color = v >= 85 ? 'red' : 'blue';
+                    return '&lt;span style="color: ' + color + '">' + v + '&lt;/span>';
+                }
+            })
+    }
+}</pre>
+
+
+
+
+
+<p><strong>Sencha Fiddle:</strong></p>
+
+
+
+
+
+<h3><strong>RowWidgets [classic]</strong></h3>
+
+
+
+
+
+<p>追加のウィジェット（パネルやグリッドなど）は、ネストされたグリッド行で追加することができます。その方法をご紹介します。</p>
+
+
+
+<p>
+<figure class="wp-block-image"><img decoding="async" src="/wp-content/uploads/2020/03/05_grid_row_widget.gif" alt=""/></figure>
+</p>
+
+
+
+<p><strong>グリッド設定でrowwidgetプラグインを有効にする:</strong></p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">plugins: {
+    rowwidget: {
+        widget: {
+            xtype: 'panel',
+            title: 'Panel in rowwidget',
+            bind: {
+                html : '{record.bio}'
+            }
+        }
+    }
+}</pre>
+
+
+
+
+
+<p><strong>Sencha Fiddle :</strong></p>
+
+
+
+
+
+<h4><strong><em>次回の記事では、「グリッド表示データ」の方法について説明します。</em></strong></h4>
+
+
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 2/6)</title>
+		<link>/989</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Tue, 10 Mar 2020 02:22:52 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<guid isPermaLink="false">/?p=989</guid>
+
+					<description><![CDATA[この記事は Sencha 公式ブログ How to Quickly Customize Ext JS Data Grid (Part 2/6) を翻訳したものです この「Ext JS グリッドカスタマイズ」ブログ連載の初 [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+
+<blockquote class="wp-block-quote"><p>この記事は Sencha 公式ブログ<br>
+  <a href="https://www.sencha.com/blog/customize-ext-js-grid-part-2-of-6/">How to Quickly Customize Ext JS Data Grid (Part 2/6)</a> <br>
+  を翻訳したものです</p></blockquote>
+
+
+
+<p><span id="more-989"></span></p>
+
+
+
+<p>この「Ext JS グリッドカスタマイズ」ブログ連載の<a href="/979">初回の記事</a>では、データグリッドをカスタマイズするためにグリッドやカラムのビルトインのプロパティを使ういくつかの方法を紹介しました。<br>
+この記事では、ビルトインのデータ表示メソッドを使って、データグリッドを素早くカスタマイズする方法を紹介します。<br>
+ここで使用するグリッドのサンプルには、NBA 2020プレーヤーの評価が表示されます。</p>
+
+
+
+
+
+<h4><strong>このブログでは、「グループ化メソッド」を使用したグリッドのカスタマイズについて説明します。</strong></h4>
+
+
+
+
+
+<h3><strong>グリッドのグループ化</strong></h3>
+
+
+
+
+
+<p>グループ化グリッドは、グループへデータを集約し、行・列データの便利なビューを提供します。</p>
+
+
+
+<p>
+<figure class="wp-block-image"><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2020/03/02_grid_grouping_feature-1.gif" alt=""/></figure>
+</p>
+
+
+
+<p>  <br>
+以下はこの機能を有効にするコードです。</p>
+
+
+
+
+
+<p>**1. グリッドのコンフィグで feature を有効にします</p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">    features: [{
+        ftype: 'grouping'
+    }],</pre>
+
+
+
+
+
+<p>**2. store のコンフィグでグループフィールドを定義します</p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">    store: {
+         model: 'Player',
+         // Define group field
+         groupField: 'team',
+         data: [/* ... */]
+    },</pre>
+
+
+
+
+
+<p>**3. グリッドをカスタマイズします (ヘッダーをカスタマイズしたり合計行を追加します)</p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">    features: [{
+        ftype: 'grouping',
+        //Customize group header
+        groupHeaderTpl: 'Team: {name}',
+        //Show summary row
+        showSummaryRow: true
+    }],
+         
+    columns: [{
+        dataIndex: 'player',
+        flex: 1,
+        text: 'Name',
+        // Add a summary row
+        summaryType: 'count',
+        // Customize summary display
+        summaryRenderer: function (value) {
+            return Ext.String.format('{0} player{1}', value, value !== 1 ? 's' : '');
+        }
+    }, {
+        dataIndex: 'rating',
+        text: 'Rating',
+        //Add a summary row
+        summaryType: 'average',
+        flex: 1
+    }]</pre>
+
+
+
+
+
+<p><a href="https://fiddle.sencha.com/#fiddle/33kk">Sencha Fiddle を開く</a></p>
+
+
+
+
+
+<h3><strong>グリッドヘッダーのグループ化</strong></h3>
+
+
+
+
+
+<p>グリッドヘッダーをグループ化してヘッダーの表示をカスタマイズできます。</p>
+
+
+
+<p>
+<figure class="wp-block-image"><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2020/03/Grouped-grid.png" alt=""/></figure>
+</p>
+
+
+
+<p>以下はカラムヘッダーの表示をグループ化するコードです。</p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">    columns: [{
+        dataIndex: 'player',
+        flex: 1,
+        text: 'Name',
+    },{
+        text: 'Rating',
+        columns: [{
+            dataIndex: 'rating',
+            text: 'Overall rating',
+            flex: 1
+        },{
+            dataIndex: 'threePointRating',
+            text: '3PT rating',
+            flex: 1
+        },{
+            dataIndex: 'dunkRating',
+            text: 'Dunk rating',
+            flex: 1
+        }]
+    }, {
+        dataIndex: 'position',
+        text: 'Position',
+        flex: 1
+    },{
+        dataIndex: 'ht',
+        text: 'Height',
+        flex: 1
+    }]</pre>
+
+
+
+
+
+<p><a href="https://fiddle.sencha.com/#fiddle/33kn">Sencha Fiddle を開く</a></p>
+
+
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 1/6)</title>
+		<link>/979</link>
+					<comments>/979#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sun, 08 Mar 2020 05:49:48 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<guid isPermaLink="false">/?p=979</guid>
+
+					<description><![CDATA[この記事は、Sencha 公式ブログ How to Quickly Customize Ext JS Data Grid (Part 1/6) を翻訳したものです。 Ext JS のデータグリッドは、高速でパワフルでフレ [&#8230;]]]></description>
+										<content:encoded><![CDATA[
+
+<blockquote class="wp-block-quote"><p>この記事は、Sencha 公式ブログ<br> <a href="https://www.sencha.com/blog/customize-ext-js-grid-part-1-of-6">How to Quickly Customize Ext JS Data Grid (Part 1/6)</a><br> を翻訳したものです。</p></blockquote>
+
+
+
+<p><span id="more-979"></span></p>
+
+
+
+<p>Ext JS のデータグリッドは、高速でパワフルでフレキシブルです。<br> Ext JS を使えば、アプリケーションに合わせてグリッドのルック・アンド・フィールをカスタマイズできます。<br>これから6回の連載記事で、Ext JS のデータグリッドを素早くカスタマイズするいろいろな方法をご紹介しましょう。</p>
+
+
+
+
+
+<p>NBA の 2020 年のプレイヤーレーティングを表示する簡単なグリッドをセットアップしましょう。</p>
+
+
+
+
+
+<p><strong>この最初の記事はビルトインのグリッドとカラムのプロパティを使ってカスタマイズする方法を紹介します</strong></p>
+
+
+
+
+
+<h3><strong>Ext JS のグリッドをセットアップする</strong></h3>
+
+
+
+
+
+<p>まず、Ext.data.Model を定義します。これは、基本的にはデータのタイプを表すフィールドのコレクションです。<br>
+ここでは &#8216;player&#8217; &#8216;team&#8217; &#8216;rating&#8217; のフィールドを定義します。</p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">Ext.define('Player', {
+    extend: 'Ext.data.Model',
+    fields: ['player', 'team', {
+        name: 'rating',
+        type: 'int'
+    }]
+});</pre>
+
+
+
+
+
+<p>次に、Model のインスタンスを保持する Ext.data.Store をセットアップします。<br> このサンプルには個々のデータがありますが、実際のアプリケーションでは、サーバーからデータをロードされることもあるでしょう。<a href="https://docs.sencha.com/extjs/7.1.0/classic/Ext.data.proxy.Proxy.html">Ext.data.proxy.Proxy</a> を使えば簡単に実現できます。</p>
+
+
+
+
+
+<p>ここでは、&#8217;player&#8217; &#8216;team&#8217; &#8216;rating&#8217; に関するデータを格納しています。</p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code"> var store = Ext.create('Ext.data.Store', {
+    model: 'Player',
+    data: [{
+        player: 'Kemba Walker',
+        team: 'Boston Celtics',
+        rating: 88
+    }, {
+        player: 'Josh Richardson',
+        team: 'Philadelphia 76ers',
+        rating: 79
+    }]
+});</pre>
+
+
+
+
+
+<p>データを表示するために、Ext.grid.Panel を使い、それをカスタマイズします。</p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">Ext.create('Ext.grid.Panel', {
+    renderTo: document.body,
+    title: 'NBA 2K20 player rating',
+    //Define store
+    store: store,
+    columns: [{
+        dataIndex: 'player',
+        text: 'Name',
+    }, {
+        dataIndex: 'rating',
+        text: 'Rating',
+    }, {
+        dataIndex: 'team',
+        text: 'Team',
+    }]
+});</pre>
+
+
+
+
+
+<h3><strong>グリッドとカラムのプロパティをカスタマイズする</strong></h3>
+
+
+
+
+
+<p>上記で作成されたカスタマイズなしのグリッドは無味乾燥な状態です。より機能に寄り添ったグリッドを作ることができる、よく使われるプロパティがいくつかあります。</p>
+
+
+
+
+
+<p><em>グリッドのプロパティ</em></p>
+
+
+
+
+
+<ul><li><strong>collapsible</strong>: 折りたたんだり展開したりするツールをヘッダーに追加します</li><li><strong>headerBorders</strong> [classic]: グリッドのボーダーの表示を切り替えます</li><li><strong>selModel</strong> [classic]: 選択モデルの設定</li><li><strong>hideHeaders</strong> : カラムのヘッダーを非表示にします</li><li><strong>title</strong> : グリッドのタイトルを設定します</li><li><strong>width</strong>, <strong>height:</strong>: グリッドの幅と高さを指定します</li><li><strong>store</strong>: 表示するデータを格納したものです</li></ul>
+
+
+
+
+
+<p><em>カラムのプロパティ</em></p>
+
+
+
+
+
+<ul><li><strong>dataIndex</strong> : モデルのフィールド名</li><li><strong>text</strong>: カラムのヘッダーのテキスト</li><li><strong>locked</strong>: 特定のカラムをロックします</li><li><strong>sortable</strong>: カラムのソートを許可します</li><li><strong>width:</strong> カラムの幅をピクセルで指定します</li><li><strong>flex:</strong> カラム幅を flex で指定します</li><li><strong>align:</strong> カラムの整列を指定します</li></ul>
+
+
+
+<p>
+<figure class="wp-block-image"><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2020/02/01_simple_grid.gif" alt="simple-grid"/></figure>
+</p>
+
+
+
+<p>\<br>
+&nbsp;</p>
+
+
+
+
+
+<pre class="wp-block-syntaxhighlighter-code">Ext.create('Ext.grid.Panel', {
+    renderTo: document.body,
+    title: 'NBA 2K20 player rating',
+    //Turn on collapsible
+    collapsible: true,
+    //Display borders
+    headerBorders: true,
+    //Define store
+    store: store,
+    columns: [{
+        dataIndex: 'player',
+        text: 'Name',
+        //Lock column
+        locked: true,
+        width: 150,
+        //Deactivate sort
+        sortable: false
+    }, {
+        dataIndex: 'rating',
+        text: 'Rating',
+        flex: 1
+    }, {
+        dataIndex: 'team',
+        text: 'Team',
+        flex: 1,
+        //Deactivate sort
+        sortable: false
+    }]
+});</pre>
+
+
+
+
+
+<p>このコードをFiddleツールで確認しましょう。</p>
+
+
+
+<p>
+<a href="https://fiddle.sencha.com/#fiddle/33md&amp;view/editor">Sencha Fiddle を開く</a></p>
+</p>
+
+
+
+<p>コンフィグプロパティについて詳しくは<br> <a href="https://docs.sencha.com/extjs/7.1.0/modern/Ext.grid.Grid.html">Ext JS Grid</a> や<a href="https://docs.sencha.com/extjs/7.1.0/classic/Ext.grid.Panel.html"> Panel</a> のドキュメントをご覧ください。</p>
+
+
+
+
+
+<hr class="wp-block-separator"/>
+
+
+
+
+
+<p>このブログシリーズの続きが出たら、翻訳するつもりです。</p>
+
+
+]]></content:encoded>
+					
+					<wfw:commentRss>/979/feed</wfw:commentRss>
+			<slash:comments>2</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>LogicoolのCRAFTキーボードを買いました</title>
+		<link>/957</link>
+					<comments>/957#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 23 Sep 2017 08:56:02 +0000</pubDate>
+				<category><![CDATA[未分類]]></category>
+		<category><![CDATA[CRAFT]]></category>
+		<guid isPermaLink="false">/?p=957</guid>
+
+					<description><![CDATA[Logicool CRAFT KX1000sというキーボードを購入しました。 Logicoolのフラグシップモデルです。今回はその使用レポートをしたいと思います。CRAFT使ってみたいなぁとか思っている方の参考になればと [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Logicool CRAFT KX1000sというキーボードを購入しました。
+Logicoolのフラグシップモデルです。今回はその使用レポートをしたいと思います。CRAFT使ってみたいなぁとか思っている方の参考になればと思います。</p>
+
+<p><a href="http://www.logicool.co.jp/ja-jp/product/craft">CRAFT製品ページ</a></p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/craft.jpg" alt="" /></p>
+
+<p><span id="more-957"></span></p>
+
+<h3>困っていたこと</h3>
+
+<p>僕は仕事上 2台の Mac を使っていて、日によって使う Mac が違います。二三日同じマシンを使うこともありますが、日替わりで変わることもあります。使っているのは どちらも 13インチのMacBook PRO ですが、ディスプレイにつなぎ、Apple の Magic Keyboard 2 と Magic Trackpad 2 で入力しています。</p>
+
+<p>この 2つの Bluetooth デバイスは、1台の Mac としかペアリングできません。つまり使用する Mac が変わるたびにペアリングをする必要があるのです。これが、とても面倒くさい。その上、その2台とは別に Windows のノートも使っています。こちらは主に検証用なのですが、時には MS Access などの案件の仕事をガッツリすることもあります。</p>
+
+<p>このキーボードは 3台のデバイスに接続してそれをワンタッチで切り替えられます。
+これだ！と思いましたね。Logicool には別に 3台切替可能でもう少し安価なキーボード K780 がありますが、話題性も含めて CRAFT を購入しました。</p>
+
+<h3>キータッチ</h3>
+
+<p>2万円超えの買い物ですので、現物も触らずに Amazon で注文というのはできなかったので、梅田のヨドバシカメラに行って現物を確認しました。</p>
+
+<p>見た目、触った感じ、キーのタッチ、「すばらしい！」</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/keyboard.jpg" alt="" /></p>
+
+<p>K780 と比較するのも忘れてすぐにレジに走ってしまいました。それぐらいキータッチは素晴らしいです。筐体を含めた安定感、高級感はさすがでして、非常に打ちやすい。</p>
+
+<p>Apple の Magic Keyboard 2 も Magic Keyboard から比べてとても打ちやすくなっていますが、このキーボードはさらに上を行きます。Magic Keyboard 2 ではたまに1回しか打ってない（つもり）なのに2回キーが入力されるということが結構ありました。これはキーが少し軽く、ちょっと触れた感じでも入力されちゃうことがあったからです。しかし CRAFT ではそれがありません。木の押しはじめのところでやや抵抗がある感じで、「押す」と「押してない」の差がくっきりしている感じです。</p>
+
+<h3>切り替え</h3>
+
+<p>マシンの切り替えには、専用の3つのキーが配置されています。切り替えは本当に簡単。
+キーの配列は、WindowsでもMacでも違和感がないように配置されています。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/optionkeys.jpg" alt="" /></p>
+
+<p>各種の動作設定をするにはLogicool Optionsというサポートソフトウェアをインストールします。Windows用もMac用もあります。これで、キーボードやコントロールホイールの動作をカスタマイズすることができます。
+Logicool Optionsは、Logicool製の他のデバイスも設定できます。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/fig0.png" alt="" /></p>
+
+<p>キーボードのカスタマイズは、最上段に並ぶファンクションキーの役割を変更することができます。コントロールホイールの動作については、この記事の後ろの方で取り上げることにします。</p>
+
+<p>僕のマウスはMX Anyware 2なんですが、これをMX Master 2Sにすると、Logicool Flowに対応するので、なんかすごい便利そうなんですが、しばらくは我慢します。</p>
+
+<h3>Mac での使用</h3>
+
+<p>Mac に接続すると、キー配列がUSモードになります。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/uskeytop.jpg" alt="" /></p>
+
+<p>キートップには写真のように、US配列での刻印もされていますので、使うことはできます。世間にはUSキー配列のMacをかっこよく使いこなしている方もいますので、これを機にUS配列になれようか&#8230;とも思いましたが、新しいキー配列を体に叩き込むのはツライのでJIS配列で使う方法を模索します。</p>
+
+<p>前述のLogicool Optionsでは、キーボードレイアウトを変更する部分はありませんでした。Mac自体の設定でもCRAFTのキーボードレイアウトを変更できません。</p>
+
+<p>ちょうど良いことに、Karabiner-Elements のstableバージョン11.0がリリースされたところでしたので、それで対策してみます。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/fig1.png" alt="" /></p>
+
+<p>Karabiner-Elements の設定画面のTarget Deviceの一覧にはちゃんとCRAFTが表示されています。まずは &#8220;Virtual Keyboard&#8221; タブでKeyboard Typeを&#8221;JIS&#8221;に変更します。これでJIS対応のキーボードになりました。簡単です。ただCRAFTは左ctrlキーとcaps lockキーの場所がUS配列のMacとおなじになっています。JISのMacキーボードでは、この2つが逆転しているので、これを入れ替えてあげましょう。Target Device をCRAFTにしてから登録しないと、本体キーボードでも入れ替わってしまうので注意が必要です。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/fig2.png" alt="" /></p>
+
+<p>Karabiner-Elements で気になるのが、Log のページです。なんかずっとエラーが出続けています。大丈夫なんでしょうか。今のところ困ったことは起きていませんが&#8230;</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/fig2.png" alt="" /></p>
+
+<p>ここまででMacで利用ができるようになりました。コードを書いてみたり文章を書いてみたりしていますが、非常に快適です。ミスタッチも減りました。すばらしい。</p>
+
+<h3>Windows での使用</h3>
+
+<p>WindowsにもLogicool Optionsをインストールします。さっきMacを繋いだのとは別のチャンネルにしてWindowsとリンクします。
+こちらにもLogicool Optionsをインストールして設定します。
+Windowsの場合はJISキーボードとして認識され、そのままJIS配列で使えます。</p>
+
+<h3>コントロールホイール</h3>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/wheel.jpg" alt="" /></p>
+
+<p>このキーボードの目玉機能？であるコントロールホイールについてです。Logicool Optionsを入れることで、いろいろな用途に使えるってことです。OS自体の操作の場合は、音量・輝度・進む／戻る・アプリ間をナビゲートなどプリセットされた機能から選択できます。
+ホイールの操作には、回転・押す・押して回転の3つの操作があり、それぞれに機能を割り当てられます。
+僕はMacの方では次のように割り当てています。</p>
+
+<ul>
+<li>回転: 水平スクロール</li>
+<li>押す: Mission Control</li>
+<li>押して回転: デスクトップ間を切り替え</li>
+</ul>
+
+<p>注意が必要なのはキーのカスタマイズとの併用です。
+上記の機能は対応するキーを押されたことにして実現しているようです。
+ですからキーのカスタマイズをした場合などにおいては、その機能が実行できない場合があります。
+例えば、「システム環境設定 > キーボード > ショートカットで、「左の操作スペースに移動」「右の操作スペースに移動」は標準では ^← と ^→ になっていますが、これを ⌥← と ⌥→ に変更している状態で、コントロールホイールの機能に「デスクトップ間を切り替え」を割り当ててみると、ホイールを回転しても期待した動作は得られません。</p>
+
+<p>対応しているソフトの場合は、そのソフトに応じた機能が利用できるようになっています。MacではAdobeのPhotoshop, Illustrator, InDesign, Premire Proでホイールが使えます。ホイールを軽くタッチするとどの機能でホイールを使うのかが選択できます。Illustratorとかで軽く使ってみましたが、なんとなく微妙です。使うか？といわれると「使わないかも」って感じですね。</p>
+
+<p>僕としては、Lightroomのいろんなものの調整にこのホイールが使えたら嬉しかったんですが&#8230;</p>
+
+<p>WindowsではMS-Officeでもホイールが使えます。（MacのOfficeは対応してません）
+Windowsについてはあまり使わないので、レポートはしないことにします。</p>
+
+<p>Edge、ChromeやFirefoxを使うときにはホイールでタブを切り替え出来ます。各アプリケーションでの動作はシステム標準での動作よりも優先しますので、システムで回転に水平スクロールを割り当てていても、Chrome上ではタブ切り替えになります。</p>
+
+<p>僕は最初、「デスクトップ間を切り替え」の機能を回転に割り当てていたのですが、最大化したChromeの上ではデスクトップ間の切り替えができなくなるため、「押して回転」の方に割り当てることにしました。</p>
+
+<h3>まとめ</h3>
+
+<p>高いけど良い買い物だったと思います。キーを打つストレスが本当に少なくなりました。コントロールホイールについては、各アプリケーションでの動作はなんか微妙です。便利かなぁ？って感じ。でもデスクトップの操作などは確実に便利なので、結構使うと思います。この大きなフルキーボードを机に置くとトラックパッド置く場所がないので、3本の指でデスクトップを切り替えることができません。それの代わりになってくれるかなぁというのが期待するところですね。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/withhp.jpg" alt="" /></p>
+
+<p>さっき僕の部屋に入ってきた息子が、「お、なんやこれ！」といって新しいCRAFTキーボードに注目し、すぐにホイールをくるくる回しましたｗ。やっぱさわってみたくなるんやぁ〜ｗｗ</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/957/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Ext JS のクラスシステムを最新式にする</title>
+		<link>/943</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Tue, 01 Nov 2016 13:13:56 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<guid isPermaLink="false">/?p=943</guid>
+
+					<description><![CDATA[この記事は、Sencha 公式ブログの Don Griffin の記事 Ext JS and ES2015/6/7 &#8211; Modernizing the Ext JS Class System を翻訳したもので [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>この記事は、Sencha 公式ブログの
+Don Griffin
+の記事
+<a href="https://www.sencha.com/blog/ext-js-and-es201567-modernizing-the-ext-js-class-system/">Ext JS and ES2015/6/7 &#8211; Modernizing the Ext JS Class System</a>
+を翻訳したものです。</p>
+
+<p>Sencha は、2013/08/02 に、<a href="https://www.sencha.com/blog/toward-modern-web-apps-with-ecmascript-6-2/">Toward Modern Web Apps with ECMAScript 6</a> というブログを公開していまして、そこでは ECMAScript 6 の解説がされていました。
+その最後の一文が、</p>
+
+<blockquote>
+  <p>We are excited to see where ECMAScript 6 is heading and we are evaluating the ways we may be able to use the changes in our frameworks!</p>
+</blockquote>
+
+<p>で、日本では、</p>
+
+<blockquote>
+  <p>我々はECMAScript 6の方向性を見てわくわくしていますので、その変更を我々のフレームワークでどう利用できるか調査しています！</p>
+</blockquote>
+
+<p>というものでした。</p>
+
+<p>Sencha がそのフレームワークの中にどのように ECMAScript を取り込むのか？という疑問に答えてくれたブログが、今回のこのブログではないかと思います。</p>
+
+<p>実際に Don が、SenchaCon で発表する前のいわば「予告」のブログですから、細かな部分は分かりませんが、肝心なクラスシステムの部分がどうなるかを教えてくれています。
+<span id="more-943"></span></p>
+
+<p>以下翻訳。</p>
+
+<hr />
+
+<p>現在の JavaScript 言語は、ほんの数年前の JavaScript と較べると大きく違います。
+変更の範囲は、構文の小さな違い（ループ、変数、関数）から、一貫した機能単位を作るためのクラスのレベルやモジュールによってこれらの部品をアプリケーションに接続する全ての方法の拡張にいたるまであります。</p>
+
+<p>今日、
+Babel、Traceur、webpack などのツールが普及し、多くの開発者が、これらの新しい言語機能を採用し、自分のコードを「これらの」ブラウザーで実行できます。</p>
+
+<p>Sencha Con 2016 の私のセッション
+(<a href="https://www.senchacon.com/sessions/#session_57b77ab44ab51">Ext JS and ES2015/6/7 – Modernizing the Ext JS Class System</a>)
+では、これらの言語やツールの進化は、Ext JS で書いたアプリケーションにどんな影響を及ぼすのか、という点についてお話しします。
+<code>class</code> キーワードと <code>Ext.define</code> の比較する方法、
+クラス名をモジュールに構成する方法について見ていきます。
+また、アップグレードされたアプリケーションの二つの最終形態を比較します。
+一つは、既存のコードを最小限に変更したもの、もう一つは新しい言語機能のすべてを全面的に採用したものです。</p>
+
+<p>SenchaCon 2016 のチケット持ってますか？
+<a href="https://www.senchacon.com/">登録しましょう。</a></p>
+
+<h3>覗いてみる</h3>
+
+<h4>クラス定義</h4>
+
+<p>現在のとある Ext JS アプリケーションにある簡単なユーティリティクラスを取り上げて、どんな感じでアップグレードされるか見てみましょう。</p>
+
+<div>[js]
+Ext.define(&#8216;App.util.Foo&#8217;, {
+    extend: &#8216;App.some.Base&#8217;,
+    mixins: &#8216;Ext.mixin.Observable&#8217;,
+ 
+    config: {
+        value: null
+    }
+ 
+    constructor: function (config) {
+        this.mixins.observable.constructor.call(this, config);
+    },
+ 
+    updateValue: function (value, oldValue) {
+        this.fireEvent(&#8216;valuechange&#8217;, value, oldValue);
+    }
+});
+[/js]</div>
+
+<p>次の図は、上記のコードによって生成される重要な部分を示しています。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2016/11/es2015-senchacon16-img1-1024x588.png" alt="es2015-senchacon16-img1-1024x588" width="100%" class="alignright size-full wp-image-944" srcset="/wp-content/uploads/2016/11/es2015-senchacon16-img1-1024x588.png 1024w, /wp-content/uploads/2016/11/es2015-senchacon16-img1-1024x588-300x172.png 300w, /wp-content/uploads/2016/11/es2015-senchacon16-img1-1024x588-768x441.png 768w" sizes="(max-width: 1024px) 100vw, 1024px" /></p>
+
+<p>プロトタイプのコンストラクターのプロパティを見ると、我々 は &#8216;Ext.define&#8217; に渡されるメソッドを指しているのがわかります。このアプローチには柔軟性がありますが、新しい &#8216;class&#8217; キーワードとの互換性がありません。&#8217;class&#8217; キーワードを使用して次のようにイミュータブルな関係を生成します。</p>
+
+<div>[js]
+    App.util.Foo === App.util.Foo.prototype.constructor
+[/js]</div>
+
+<h4>Minimal Upgrade</h4>
+
+<p>最小限のアップグレードでは、この競合を避けるために &#8220;conctructor&#8221; メソッドの名前を変更する必要があります。新しい名前は、単に &#8220;construct&#8221; です。</p>
+
+<div>[js]
+Ext.define(&#8216;App.util.Foo&#8217;, {
+    extend: &#8216;App.some.Base&#8217;,
+    mixins: &#8216;Ext.mixin.Observable&#8217;,
+ 
+    config: {
+        value: null
+    }
+ 
+    construct (config) {
+        this.mixins.observable.construct.call(this, config);
+    },
+ 
+    updateValue (value, oldValue) {
+        this.fireEvent(&#8216;valuechange&#8217;, value, oldValue);
+    }
+});
+[/js]</div>
+
+<p>必須ではありませんが、オブジェクト リテラルの新しい関数プロパティ構文の利点を採用し、メソッドから &#8220;<code>:function</code>&#8221; を取り去ってもいます。</p>
+
+<p>新しい <code>Ext.define</code> は内部的に標準の <code>class</code> を作り出すので、いくつかの利点を享受します。
+上記のアップグレード &#8216;Ext.define&#8217; の呼び出しによって、何が生成されるのかを示す次の図をご覧ください。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2016/11/es2015-senchacon16-img2-1024x595.png" alt="es2015-senchacon16-img2-1024x595" width="100%" class="alignright size-full wp-image-945" srcset="/wp-content/uploads/2016/11/es2015-senchacon16-img2-1024x595.png 1024w, /wp-content/uploads/2016/11/es2015-senchacon16-img2-1024x595-300x174.png 300w, /wp-content/uploads/2016/11/es2015-senchacon16-img2-1024x595-768x446.png 768w" sizes="(max-width: 1024px) 100vw, 1024px" /></p>
+
+<p>クラスのコンストラクターは、スーパークラスのコンストラクターに対して、プロ路タイプ チェーンで繋がれているので、
+実際には、全ての静的メンバーは
+<a href="http://docs.sencha.com/extjs/6.2.0/modern/Ext.Class.html#cfg-inheritableStatics">inheritableStatics</a>
+になります。</p>
+
+<h4>最大のアップグレード</h4>
+
+<p>アップグレードの反対側の端はすべての言語の新機能とオプションへの完全なアップグレードです。上記のクラスが完全にアップグレードされたバージョンがどのようになるかを見てみましょう。</p>
+
+<div>[js]
+import { define }     from &#8216;extjs-kernel&#8217;; // module names not final
+import { Observable } from &#8216;extjs-core&#8217;;
+ 
+import { Base }       from &#8216;app-some&#8217;;
+ 
+@define({
+    mixins: Observable,
+    config: {
+        value: null
+    }
+})
+export default class Foo extends Base {
+    updateValue (value, oldValue) {
+        this.fireEvent(&#8216;valuechange&#8217;, value, oldValue);
+    }
+}
+[/js]</div>
+
+<p>このバージョンでは、いくつかの新しいクラスシステム機能とともに、これからの JavaScript 機能の利点を採用しています。</p>
+
+<p>前記の <code>@define</code> 構文を見たことありますか？
+これは、
+<a href="https://github.com/tc39/proposal-decorators">decorator</a>
+と呼ばれる、現在、標準化プロセスで作業中のエキサイティングな言語機能です。
+現在は、トランスパイラのマジックによって利用できます。
+トランスパイラは JavaScript から JavaScript へ、
+より正確にいうと、先端の JavaScript から ブラウザが理解できる JavaScript へ、
+コンパイルをするツールです。
+<code>@define</code> デコレータを通して、Ext JS クラスシステムが追加する力を、標準クラスに適用できるのです。</p>
+
+<p>また、このサンプルで <code>constuct/constructor</code> メソッドも削除しています。
+なぜかというと、<code>Ext.Base</code> の <code>construct</code> メソッドは、<em>Common Object Lifecycle</em> を提供するようになったからです。
+一つのオブジェクトをパラメータとして呼びだすか、コンフィグ システムを使うと、初期化に必要なステップが自動的に処理されます。</p>
+
+<p>最後に、新しい標準である <code>import</code> と <code>export</code> キーワードを使っています。
+これらをサポートするのは、トランスパイラのおかげです (どのブラウザーもこれらをサポートしませんから) 。
+詳しくは、Ross Gerbasi の
+<a href="https://www.senchacon.com/sessions/#session_57ec0b3ceecce">The Modern Toolchain</a>
+にアテンドしてください。</p>
+
+<h3>選択肢</h3>
+
+<p>万能なアプローチはありませんから、このアップグレードの総括的なゴールは、既存のコードへの変更を最小限にすると同時に、開発者がモダンな JavaScript の技術や実践を利用できるようにすることです。</p>
+
+<hr />
+
+<p>以上、翻訳</p>
+
+<h3>SenchaCon 2016 Roadshow TOKYO</h3>
+
+<p>このブログの翻訳をしている最中に、Sencha から贈り物のようなメールが届きました。
+2016/12/15 に SenchaCon 2016 Roadshow TOKYO が開催されるというのです。</p>
+
+<blockquote>
+  <p>You&#8217;ll learn about:</p>
+  
+  <ul>
+  <li>Plans to include ES6 in the Ext JS language specifications</li>
+  <li>Advancements in application theming and tooling</li>
+  <li>How to add advanced data visualization to your Ext JS applications</li>
+  <li>Integration with Angular 2 enabling you to use Ext JS components, layouts, and themes in your Angular apps</li>
+  </ul>
+</blockquote>
+
+<p>先頭に、まさにこのことが載っているではありませんか。
+いかなくちゃ！</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Ext JS と Electron でインストール可能なデスクトップ アプリケーションを作る</title>
+		<link>/933</link>
+					<comments>/933#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 17 Sep 2016 01:17:37 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[Electron]]></category>
+		<category><![CDATA[ExtJS6]]></category>
+		<guid isPermaLink="false">/?p=933</guid>
+
+					<description><![CDATA[この記事は、Sencha の公式ブログ記事 Creating Installable Desktop Applications with Ext JS and Electron を翻訳したものです。 ベテランの Ext  [&#8230;]]]></description>
+										<content:encoded><![CDATA[<blockquote>
+  <p>この記事は、Sencha の公式ブログ記事
+  <a href="https://www.sencha.com/blog/creating-installable-desktop-applications-with-ext-js-and-electron/">Creating Installable Desktop Applications with Ext JS and Electron</a>
+  を翻訳したものです。</p>
+</blockquote>
+
+<p><img decoding="async" loading="lazy" src="/wp-content/uploads/2016/09/extjs-electron-img1-300x100.png" alt="extjs-electron-img1" width="300" height="100" class="alignright size-medium wp-image-935" srcset="/wp-content/uploads/2016/09/extjs-electron-img1-300x100.png 300w, /wp-content/uploads/2016/09/extjs-electron-img1.png 765w" sizes="(max-width: 300px) 100vw, 300px" /></p>
+
+<p>ベテランの Ext JS 開発者であっても、Ext JS を使って (Windows、MacOS、Linuxで動作する) .exe とか .app ファイルの実行可能なデスクトップ アプリケーションを作る事ができると聞くと、驚くでしょう。
+実際に
+<a href="http://pages.sencha.com/themer">Sencha Themer</a>、
+<a href="https://www.sencha.com/products/architect/">Sencha Architect</a>、
+<a href="https://www.sencha.com/products/inspector/">Sencha Inspector</a>、
+<a href="https://www.sencha.com/products/test/#overview">Sencha Test</a>
+は、Ext JS でビルドし、Electron でパッケージした実行可能なデスクトップ アプリケーションです。
+Ext JS で作って Electron でパッケージしたアプリケーションは、
+<a href="https://en.wikipedia.org/wiki/Windows_Store">Windows Store</a> や
+<a href="https://en.wikipedia.org/wiki/Mac_App_Store">Mac App Store</a>
+にアップロードして販売することもできます。
+この記事では、Ext JS 6 のスターター アプリケーションをビルドしてパッケージするプロセスについてご案内します。
+<span id="more-933"></span></p>
+
+<p>Ext JS アプリケーションを実行可能にする為には、
+アプリケーションを Sencha Cmd でビルドした後、
+Electron でパッケージします。
+デスクトップの HTML5 アプリケーションをパッケージする考え方は、Apache Cordova や Adobe PhoneGap を使って HTML5 モバイル アプリをパッケージする考え方ととてもよく似ています。
+今のところ、二つのデスクトップ パッケージング フレームワークが支持を得ています。
+Github が作った <a href="http://electron.atom.io/">Electron</a> と
+Intel と GnorTech が作った
+<a href="http://nwjs.io/">NW.js</a>
+です。
+どちらの技術もオープンソースで MIT ライセンスの元で利用可能なので、無料で使うことができます。
+どちらにもそれぞれの利点がありますが、
+ここの記事では Electron と Ext JS にのみ焦点を当てます。
+Electron は現在の所、より新しいにもかかわらず NW.js より普及しています</p>
+
+<h3>Electron を見てみる</h3>
+
+<p>簡単に言うと、Electron はデスクトップの HTML5 アプリケーションを作るのに使われるランタイムです。
+内部では、
+<a href="https://www.chromium.org/developers/content-module">Chromium Content Module</a>
+と Node.js のランタイムが動作しています。
+Chromium (Google Chrome のオープンソース バージョン)
+で動作する Ext JS ウェブアプリなら、Electron でも動作します。
+Chromium で Ext JS ウェブアプリが動作することの効果は、
+モダンな HTML5 機能の一部が欠落している IE の古いバージョンでアプリのテストをする必要がなくなることです。
+Electron のウェブサイトには、いくつかの有名なデスクトップ アプリケーションが
+<a href="http://electron.atom.io/apps/">リストアップ</a>
+されていますが、みなさんは多分それらが実は HTML5 アプリケーションだと気付かずに使っていたのではないでしょうか。
+Electron の JavaScript API を使うと、クリップボード、ネイティブのアプリケーション メニュー、コンテクスト メニュー、通知、ファイルシステムなどといった、
+OS のネイティブ API にアクセスできます。</p>
+
+<h3>Electron の基礎</h3>
+
+<p>Electron はメイン プロセスを起動することで動作し、メイン プロセスは一つ以上の描画プロセスを起動します。
+メイン プロセスはアプリケーションのライフサイクル イベントを取り扱います。
+ライフサイクル イベントには、開始、終了、OS ネイティブのシステム API とのやり取りを含みます。
+描画プロセスは、メイン プロセスが生成し、Web ページをロードするために使われます。
+それぞれのプロセスは独自のスレッドで動作します。</p>
+
+<div id="attachment_12766" class="wp-caption alignnone"
+style="width: 310px">
+<img decoding="async" loading="lazy" src="/wp-content/uploads/2016/09/extjs-electron-img2-300x239.png" alt="extjs-electron-img2-300x239" width="300" height="239" class="alignright size-full wp-image-936" />
+図1: Electron はメイン プロセスを起動します。
+メイン プロセスは複数の描画プロレスを生成できます。
+
+</div>
+
+<p>Node.js を使うため、package.json というマニフェスト ファイルを作る必要があります。
+このファイルは Node.js が、パッケージ処理で取り込む、多くの依存関係を理解するのに役立ちます。</p>
+
+<h3>Ext JS 6 スターター アプリケーションをパッケージしましょう</h3>
+
+<p>Sencha Cmd を使うと、一つのコマンドでシンプルなスターター アプリケーションをビルドすることができます。
+このセクションでは、まず Sencha Cmd でスターター アプリケーションを生成し、次に Electron でスターター アプリケーションを実行可能にパッケージします。</p>
+
+<p>前提として、
+<a href="https://www.sencha.com/products/extjs/cmd-download/">Sencha Cmd</a>
+をダウンロードしてインストールし、
+Ext JS 6 フレームワークを使って
+<a href="https://docs.sencha.com/cmd/guides/workspaces.html">Sencha Cmd のワークスペース</a>
+を生成する必要があります。
+Sencha Cmd でワークスペースを作るために、インストール方法をご覧ください。
+また、
+<a href="http://nodejs.org/">Node.js</a>
+もインストールする必要があります。</p>
+
+<p>最初に、スターター アプリケーションを生成します。
+Sencha Cmd のワークスペース内でコマンドを一つ実行すると生成できます。</p>
+
+<div>[bash]
+sencha -sdk /path/to/ExtSDK generate app -classic StarterApp ./starterapp
+[/bash]</div>
+
+<p>スターター アプリケーションが生成されたら、
+スターター アプリケーションのディレクトリ内で次のコマンドを実行して、
+開発用にアプリケーションをビルドします。</p>
+
+<div>[bash]
+sencha app watch
+[/bash]</div>
+
+<p>上記のコマンドにより、次のリンクにブラウザーでアクセスすると、スターター アプリケーションを表示することができます。<br />
+<a href="http://locahost:1841/starterapp">http://locahost:1841/starterapp</a></p>
+
+<p>ブラウザーでスターター アプリケーションが表示できたら、
+ウェブアプリが動作するという確認ができました。
+別なターミナル ウィンドウを開いてスターター アプリケーションのディレクトリに移動します。</p>
+
+<p>次に、スターター アプリケーションのディレクトリで Sencha Cmd を使って、アプリケーションをビルドします。
+次のコマンドで electron/app サブディレクトリが作られ、Ext JS コードがミニファイされたて electron/app サブディレクトリに配置されます。</p>
+
+<div>[bash]
+sencha app build -des electron/app
+[/bash]</div>
+
+<p>-des フラグで、app.json の
+<a href="https://docs.sencha.com/cmd/guides/microloader.html#microloader_-_output">“output”プロパティ</a>
+を変更せずにアプリケーションを electron/app ディレクトリにビルドできます。</p>
+
+<p>この時点で、ディレクトリ構造は図2 のようになっているはずです。</p>
+
+<div id="attachment_12767" class="wp-caption alignnone"
+style="width: 219px">
+<img decoding="async" loading="lazy" src="/wp-content/uploads/2016/09/extjs-electron-img3.jpg" alt="extjs-electron-img3" width="209" height="498" class="alignright size-full wp-image-937" srcset="/wp-content/uploads/2016/09/extjs-electron-img3.jpg 209w, /wp-content/uploads/2016/09/extjs-electron-img3-126x300.jpg 126w" sizes="(max-width: 209px) 100vw, 209px" />
+図2: electron/app サブディレクトリは sencha app build コマンドで生成されます。
+</div>
+
+<p>次に、starterapp/electron サブディレクトリに package.json というマニフェスト ファイルを作る必要があります。</p>
+
+<p><a href="https://gist.github.com/shikhirsingh/ae86d4b8c1735cf9cd19e23130612044">サンプルの package.json ファイル</a>
+を作っておきました。サポートするすべてのOS用の実行可能バイナリを生成するように設定してあります。
+MacOS を使ってて MacOS 用にパッケージするだけで良いのでしたら、
+次の
+<a href="https://gist.github.com/shikhirsingh/a2bd9116b0c2418d065f3519592692a6">sample package.json
+ファイル</a>
+を代わりに使って下さい。
+ファイルをダウンロードして、starterapp/electron サブディレクトリに配置します。</p>
+
+<p>次にメイン プロセスを書いたファイルを作ります。
+main.js という名前にして、starterapp/electron/app サブディレクトリに配置します。
+こちらも
+<a href="https://gist.github.com/shikhirsingh/c690c39a690f63b69ab70a8b1f95bd78">基本的なメイン プロセス ファイル</a>
+を用意してありますので、ダウンロードして
+starterapp/electron/app サブディレクトリに配置します。</p>
+
+<p>次に、Electron と
+<a href="https://github.com/electron-userland/electron-packager">Electron Packager</a>
+をプロジェクトにインストールします。
+次の二つのコマンドを starterapp ディレクトリで実行します。</p>
+
+<div>[bash]
+npm install electron-prebuilt -save
+npm install electron-packager &#8211;save-dev
+[/bash]</div>
+
+<p>上記のコマンドを実行したら、node&#95;modules というサブディレクトリが、
+starterapp/electron
+サブディレクトリに配置されます。</p>
+
+<p>Electron アプリケーションを実行するには次のようにタイプします。</p>
+
+<div>[bash]
+npm start
+[/bash]</div>
+
+<p>これで、独自の Ext JS 6 コードを書く準備ができました。
+Ext JS アプリケーションを変更する毎に、Sencha Cmd でリビルドして、npm start コマンドを再実行します。
+Chrome のインスペクターにアクセスしたい場合は、
+starterapp/electron/app/main.js
+ファイルの14行目のコメントを外します。</p>
+
+<p>アプリケーションのコーディングが済んだら、実行可能バイナリを生成するために、アプリケーションをパッケージします。
+MacOS や Linux 上でパッケージしていて、Windows の実行ファイルを生成したい場合は、
+アプリケーションをパッケージする前に、
+<a href="https://www.winehq.org/download">Wine</a>
+をインストールする必要があります。
+Wine は MacOS や Linux 上で Windows アプリをパッケージするのをアシストします。
+注: MacOS 上に Wine をインストールするには 30分ほどかかります。
+MacOS を使っていて Windows 用にパッケージして .exe バイナリを作るつもりがない場合は、この前に説明した適切な package.json ファイルを使いましょう。</p>
+
+<p><a href="https://www.macports.org/">MacPorts</a>
+がすでにインストールされていたら、次のコマンドでワンステップで Wine をインストールできます。</p>
+
+<div>[bash]
+sudo port install wine
+[/bash]</div>
+
+<p>次に、アプリケーションをパッケージします。
+次のコマンドを実行してください。</p>
+
+<div>[bash]
+npm run-script package
+[/bash]</div>
+
+<p>上記のコマンドを実行すると
+starterapp/electron/dist
+サブディレクトリに、アプリケーションのバイナリが新たに配置されます。
+このサブディレクトリには、生成された Linux、Windows そして MacOS 用のバイナリがあるはずです。</p>
+
+<h3>次のステップ</h3>
+
+<p>Ext JS は、美しいアプリケーションを作るための全てのコンポーネントを提供しますし、Electron は Ext JS アプリケーションをパッケージし、ネイティブ機能へのアクセスを提供しますから、Ext JS と Electron は一緒に使うととても便利です。</p>
+
+<p>これでExt JS のスターター アプリケーションをパッケージできましたので、
+Electron のネイティブ機能にアクセスする方法を学びましょう。
+<a href="http://electron.atom.io/docs/">Electron docs</a>
+を確認して下さい。
+また、2冊の本が Manning からまもなく発行されます。
+それらは、
+<a href="https://www.manning.com/">Manning のウェブサイト</a>
+で、早期アクセスで読むことができます。
+さらに、
+<a href="https://www.senchacon.com/">SenchaCon</a>
+において、
+Electron と Ext JS のセッションがあり、これらのフレームワークを統合して、デスクトップ アプリケーションを作成する方法について詳細を検討します。</p>
+
+<h5>Written by <span class="entry-author" itemprop="author" itemscope="itemscope" itemtype="http://schema.org/Person"><span class="entry-author-name" itemprop="name">Shikhir Singh</span></span></h5>
+
+<p>Shikhir is a Sr. Developer Relations Manager at Sencha. He specializes
+in enterprise mobility, cryptography and JavaScript technologies. Prior
+to joining Sencha, he worked at BlackBerry, Lockheed Martin, Sun
+Microsystems and a couple of startups.</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/933/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+		<item>
+		<title>Sencha FontAwesome パッケージをリバースエンジニアリングしてアイコンの概要を知る</title>
+		<link>/919</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Mon, 18 Jul 2016 07:29:41 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[ExtJS6]]></category>
+		<category><![CDATA[SASS]]></category>
+		<category><![CDATA[Theme]]></category>
+		<guid isPermaLink="false">/?p=919</guid>
+
+					<description><![CDATA[何度か、このブログでも翻訳させて貰った、Lee Boonstra のブログ記事 Reverse Engineer the Sencha FontAwesome package to get an overview of  [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>何度か、このブログでも翻訳させて貰った、Lee Boonstra のブログ記事
+<a href="https://www.ladysign-apps.com/developer/reverse-engineer-the-sencha-fontawesome-package-to-get-an-overview-of-icons/#.V4tD3JOLSRt">Reverse Engineer the Sencha FontAwesome package to get an overview of icons. | Dev Tricks</a>
+を翻訳しました。</p>
+
+<p>Sencha に同梱されている FontAwesome フォントパッケージについて解説された記事です。どうぞご覧ください。</p>
+
+<hr />
+
+<p><span id="more-919"></span></p>
+
+<p>Ext JS 6 には font-awesome アイコンフォントが同梱されています。<br />
+昔あった Windowngs フォント(&#42;) を覚えてますか？
+アイコンフォントはなんかそんな感じのフォントです。
+アイコンフォントのそれぞれのキャラクター (unicode) にはアイコンがマップされています。
+アイコンフォントの素晴らしいところは、ベクターデータであるという点です。
+そのため、簡単に色や大きさが変更でき、常に最高の品質を保ちます。
+Retina ディスプレイでは完璧です。
+もうPhotoShop を開いてアイコンを変更する必要はありません。
+なぜなら、それはテキストであり、影をつけたり色や背景や大きさをを変えたりするのは全部 CSS でできるからです。
+<em>(ただ、3D やフルカラーのアイコンは作れません、だってテキストなんですもん)</em>
+また、アイコンフォントは、スクリーンリーダーに影響しません。</p>
+
+<p><img decoding="async" src="https://www.ladysign-apps.com/developer/wp-content/uploads/2016/07/Screen-Shot-2016-07-01-at-09.24.08.png" style="width:100%;" alt="FontAwesome"/></p>
+
+<p>Ext JS 6 では font-awesome アイコンフォントは SDK に組み込まれたコードパッケージで、自由に使えます。バージョン 4.4 には 585 ものベクターアイコンがあります。</p>
+
+<p>フォントパッケージを使うには、font-awsome を <strong>app.json</strong> ファイルで有効にします。<br />
+(Sencha Cmd を使ってアプリケーションを生成した場合は、すでに記述されています)</p>
+
+<div>[code language=&#8221;js&#8221;]
+    &quot;requires&quot;: [
+        &quot;font-awesome&quot;
+    ],
+[/code]</div>
+
+<p>これでコンポーネントの <code>iconCls</code> プロパティでフォントを使うことができるようになります。
+次のように&#8230;</p>
+
+<div>[code language=&#8221;js&#8221;]
+    {
+       xtype: ‘button’,
+       iconCls: ‘x-fa fa-globe’
+    }
+[/code]</div>
+
+<p><code>iconCls</code> はボタン、パネルのタイトル、メニュー、ツリーのノード、グリッドのアクション、セパレーターやステータスバーでサポートされています。
+(おそらくアイコンを配置したいと思うような所のほとんどを網羅していますが、テンプレートなどでアイコンを使いたければ、手動で後で説明するトリックを使うこともできます)</p>
+
+<p>大きな問題は、どんなアイコンが同梱されているか？を知る方法です。
+簡単な答えは、font-awesome チートシート
+<a href="http://fontawesome.io/cheatsheet/">http://fontawesome.io/cheatsheet/</a>
+を使うということです。</p>
+
+<p>しかし、最善の答えは、パッケージをリバースエンジニアリングすることです。<br />
+<strong>myapp/ext/packages/font-awesome/sass/etc/</strong> を見てみましょう。</p>
+
+<p><img decoding="async" src="https://www.ladysign-apps.com/developer/wp-content/uploads/2016/07/Screen-Shot-2016-07-01-at-09.25.12.png" style="width:100%" alt="Location" /></p>
+
+<p>Let’s first dive into: <strong>&#95;variables.scss</strong>. This Sass file, shows the
+font version number, and the CSS prefix. For Ext JS 6.2 this is:</p>
+
+<p>では最初に <strong>&#95;variables.scss</strong> を見てみます。
+この SASS ファイルはフォントのバージョンと CSS プリフィクスが記述されています。
+Ext JS 6.2 用のものは次のようになっています。</p>
+
+<pre><code>$fa-version: "4.4.0" !default;
+$fa-css-prefix: fa !default;
+</code></pre>
+
+<p><strong>&#95;variables.scss</strong>
+ファイルには、それぞれのアイコンの変数名があります。
+しかし探しているのがどのアイコンなのかはまだわかりません。
+ですから、ブラウザーを開いて Icomoon フォントアプリを使いましょう。</p>
+
+<p><a href="https://icomoon.io/app/#/select">https://icomoon.io/app/#/select</a></p>
+
+<p><em>Import Icons</em> ボタンをクリックします。
+<strong>myapp/ext/packages/font-awesome/resources/fonts/</strong> に移動して、
+<strong>fontawesome-webfont.svg</strong>
+を選択します。</p>
+
+<p>これで Ext JS の font-awesome アイコンがインポートされました。
+Icomoon アプリの中で、すべての font-awesome アイコンを選択します。
+(最初を選択肢、シフトキーを押したまま最後を選択します)
+(訳注: この方法だと選択しにくいので、画面右上のハンバーガーメニューから Select All を選択します)
+次に 画面の下にある <em>Generate Font</em> ボタンを押します。
+画面にはすべてのアイコンとその unicode が表示されます。</p>
+
+<p>はいこれでフォントがどこにあってその文字コードが何かがわかるようになりました。
+リストを見て、好きなアイコンを選ぶことができます。
+文字コードをコピーして、<strong>&#95;variables.scss</strong> の変数名を参照します。
+例えば、二つの音符のアイコンのタイトルは uniF001 ですので、
+&#42;&#92;f001&#42; というコードに一致する SASS 変数は <code>$fa-var-music</code> です。</p>
+
+<p><strong>&#95;icons.scss</strong>
+を開きます。
+変数名をこのファイルの中で探します。
+<code>$fa-var-music</code> のある部分は次のようなものです。</p>
+
+<div>[code language=&#8221;css&#8221;]
+    .#{$fa-css-prefix}-music:before { content: $fa-var-music !important; }
+[/code]</div>
+
+<p>これは、次のような CSS にコンパイルされます。</p>
+
+<div>[css]
+    .fa-music:before { content: $fa-var-music !important; }
+[/css]</div>
+
+<p>みての通り、fa-music という CSS クラスでは、HTML DOM 内のこの CSS クラスを持つエレメントの前に中身が音符のアイコンになっている別のノードが生成されます。
+<code>iconCls</code> は DOM ツリーにこのノードを追加します。</p>
+
+<p>では、アイコンをスタイリングする方法はどうなっているのでしょうか。
+(例えば、色とかフォントサイズとか)
+それは、<code>x-fa</code> クラスです。</p>
+
+<p>注:
+<em>x-fa</em> クラスは Ext JS アプリケーションで font-awesome.com からフォントパッケージをダウンロードする <em>fa</em> の代わりに使います。
+<em>fa</em> クラスのいくつかのプロパティは
+Sencha のテーマのプロパティと衝突します。
+一方、<em>x-fa</em> フォントファミリーだけを設定しています。</p>
+
+<div>[code language=&#8221;css&#8221;]
+    .#{$prefix}fa:before {
+        font-family: FontAwesome !important;
+    }
+[/code]</div>
+
+<p>The default font-size and colors are set in <strong>&#95;variables.scss</strong>:</p>
+
+<p>デフォルトのフォントサイズや色は <strong>&#95;variables.scss</strong> で設定されています。</p>
+
+<div>[code language=&#8221;css&#8221;]
+    $fa-font-path:        &quot;../fonts&quot; !default;
+    $fa-font-size-base:   14px !default;
+    $fa-line-height-base: 1 !default;
+    $fa-version:          &quot;4.4.0&quot; !default;
+    $fa-border-color:     #eee !default;
+    $fa-inverse:          #fff !default;
+    $fa-li-width:         (30em / 14) !default;
+[/code]</div>
+
+<p>&#42; Wingdings フォントは 1990 年に Microsoft によって提供された、実際にはまぬけな
+(プリンターキャラクターが植字に使われている)
+フォントです。
+以前はユニコードにマッピングされておらず、(古い) Microsoft プラットフォームでのみ有効ですから、Windings を Web で使ってはいけません。</p>
+
+<p><img decoding="async" src="https://www.ladysign-apps.com/developer/wp-content/uploads/2016/07/funny-icons-500x500.jpg" alt="Cartoon" /></p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>非同期のJavaScript: Promise</title>
+		<link>/914</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Wed, 23 Mar 2016 07:17:07 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<guid isPermaLink="false">/?p=914</guid>
+
+					<description><![CDATA[以前このブログでは、Promise について書きました。 （約束の地） その時には、 wilk/Ext.ux.Deferred: Promises for ExtJS 4 and Sencha Touch というライブラ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>以前このブログでは、Promise について書きました。
+（<a href="/707">約束の地</a>）
+その時には、
+<a href="https://github.com/wilk/Ext.ux.Deferred">wilk/Ext.ux.Deferred: Promises for ExtJS 4 and Sencha Touch</a> 
+というライブラリを紹介しました。</p>
+
+<p>そのPromiseですが、Ext JS 6 ではサポートされるようになったのはご存じでしょうか？
+<a href="http://docs.sencha.com/extjs/6.0/6.0.1-modern/#!/api/Ext.Promise">Ext.Promise &#8211; Ext JS &#8211; Sencha Docs</a></p>
+
+<p>そのPromiseについて、SenchaのLee Boonstraがブログ記事
+(<a href="https://www.sencha.com/blog/asynchronous-javascript-promises/">Asynchronous JavaScript: Promises</a>)
+を書いてくれたので翻訳しました。ご覧ください。</p>
+
+<p><span id="more-914"></span></p>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2016/03/asynch-javascript-promises-img1.png" title="Asynchronous JavaScript: Promises" width="250" class="alignright rounded"></p>
+
+<p>JavaScript はシングルスレッドです。
+上から下に順番にコードを実行します。
+ですから、同時に二つのコードを走らせることはできません。
+例えば、JSON ファイルを（外部の）サーバーからダウンロードする時には、そのファイルを取得するまで待たなければなりません。
+非同期のJavaScriptを使って、スレッドを止めずに、効率的にコードを実行する方法があります。</p>
+
+<p>皆さんは恐らく非同期のJavaScriptのことをよくご存じのことと思います。
+イベント（Observerパターン）とコールバックは非同期コードの一例です。
+例えば、Ext.Ajax リクエストを送ったり、ユーザーがボタンを押した際には、アクションがイベントループと呼ばれるキューにプッシュされます。
+JavaScriptエンジンは、（上から順に）ある非同期の関数の実行が終了するまでは、
+イベントループの処理を開始しません。
+このせいで、JavaScriptはマルチスレッドではないのに、そのように見えることになります。</p>
+
+<p><img decoding="async" loading="lazy" src="https://www.sencha.com/wp-content/uploads/2016/03/asynch-javascript-promises-img2-300x210.png" alt="Event Loop" width="300" height="210" class="alignnone size-medium wp-image-13319"></p>
+
+<p>コールバックは、非同期操作をする
+（例えば、データベースからデータをロードするなど）
+際に、その完了をユーザーに通知しなければならない時によく使われます。</p>
+
+<p>そういった関数を呼び出すときに、引数として動作を確認するためのもう一つの関数を渡します。
+コールバックをコールバックの中に入れることはすばらしい解決案ですし、私はそれがJavaScriptの強力な特徴の1つであると思います。
+しかし、最初のコードにさらに非同期処理が必要となったときに、コードが汚くなってしまうかもしれません。</p>
+
+<p>たとえば、ローカルストレージから、ユーザー設定を読み込みました。（それはコールバックです！）
+それらの設定に基づいて、データベースに接続した外部サーバーにリクエストします。（コールバック &#35;2）
+画面に情報を描画する前に、何らかのものをデータベースから取り出します。
+（コールバック&#35;3）</p>
+
+<p>大規模な企業アプリを構築する際には、これらのステップは非常に一般的です。
+コールバック関数の中にコールバック関数が書かれ、それは別のコールバック関数の中にあります。
+こういった関数が複数のファイルに散らばってしまった時に、
+1ヵ月後に、このコードを読むのにどれほど苦労するかは想像に難くありません。</p>
+
+<p>ここがJavaScriptのPromiseの使いどころです。
+それは、より読みやすく分かりやすいやり方でコードを書く新しい方法です。
+Promiseとはタスクの結果を意味します。そして、その結果は完了している場合もあるし、していない場合もあります。
+Promiseがつくられるときにはどうなっているかわからない値に契約するようなものです。
+それは <strong>then</strong> メソッドを持ったオブジェクトまたは関数です。
+&#8220;then&#8221; メソッドのおかげで、アクションをエンドレスに繋げることができます。素晴らしい！</p>
+
+<p>Promise には4つの状態があります。</p>
+
+<ul>
+<li>fulfilled – Promise が成功した時</li>
+<li>rejected – Promise が失敗した時</li>
+<li>pending – 処理中。まだ filfilledにもrjectedにもなっていない</li>
+<li>settled – すでに fulfilled または rejected になっている</li>
+</ul>
+
+<p><img decoding="async" src="https://www.sencha.com/wp-content/uploads/2016/03/asynch-javascript-promises-img3-1024x454.png" alt="JavaScript Promises" width="100%" class="alignnone size-large wp-image-13320"></p>
+
+<p>Promise は ECMAScript6 の一部でモダンブラウザーの一部や Node.js の最新版で利用できます。
+次のブラウザーでは、まだ JavaScript Promise はサポートされません。
+IE11、Android 4.4 以前、iOS Safari 7.1 以前</p>
+
+<p>Ext JS 6 は、Promise をサポートし、Promise A+ スペックに準拠します。
+Classic / Modern の両方のツールキットに含まれます。
+ネイティブJavaScriptのラッパーである Sencha Promise クラスを呼び出すことができます。
+レガシーブラウザーでは、Sencha が提供する機能が使われ、モダンブラウザーではネイティブの機能が使われます。</p>
+
+<p>次は、Sencha Promise オブジェクトを返す関数の例です。</p>
+
+<div>[js]
+requestUserSettings: function(){
+    return new Ext.Promise(function (resolve, reject) {
+        //something asynchronous, like loading a store
+        Ext.getStore(‘Settings’).load({
+            callback: function(records, operation, success) {
+                if(success){
+                    if(records.length &gt; 0){
+                        //when it’s ok
+                        resolve(records);
+                    } else {
+                        //still ok, but no results
+                        resolve(false);
+                    }
+                } else{
+                    //something bad happened
+                    reject(operation);
+                }
+            }
+        });
+    });
+}
+[/js]</div>
+
+<p><code>Ext.Promise</code> コンストラクターは、引数を一つ取ります。
+それはresolveとrejectの2つの引数を持つコールバックです。
+コールバック内で
+ローカルストレージからユーザー設定を取り出すなどのような
+非同期処理が実行され、
+結果が返されると
+&#8220;<strong>resolve</strong>&#8220;が呼び出され、
+そうでなければ
+&#8220;<strong>reject</strong>&#8220;が呼び出されます。
+ます。</p>
+
+<p>次が、このPromiseの使い方です。</p>
+
+<div>[js]
+this.requestUserSettings().then(function(records) {
+    //It’s ok. do something with the records
+}, function(err) {
+    //oh no, something went wrong, display a nice error
+});
+[/js]</div>
+
+<p>&#8220;<strong>then</strong>&#8221;
+は２つの引数を取ります。成功した場合と失敗した場合のコールバックです。
+両方とも必須ではありませんので、成功か失敗のどちらかのコールバックだけをセットすることもできます。
+沢山の <strong>then</strong>メソッドをチェーンして次々に非同期処理を繋げることができます。</p>
+
+<p><code>“then()”</code>インスタンスメソッドだけでなく、Promise チェーンを終わらせたり(<code>“done()”</code>)、キャンセルしたり(<code>“cancel()”</code>)する方法もあります。また、チェーンに<strong>onCompleted</strong>コールバックをアタッチする方法もあります。(<code>“always()”</code>)例えば、結果にかかわらずクリーンナップロジックを実行する時などに使います。チェーン内のアクションがリジェクトされた時に<strong>onRejected</strong>コールバックをアタッチすることもできます。(<code>“otherwise()”</code>)</p>
+
+<p>Sencha には
+<code>Ext.Promise</code>
+に加えて、
+Ext JS 6 内でPromiseを生成するために使う
+<code>Ext.Deferred</code>
+も搭載されています。
+これらの2つのコンストラクターの違いは、Deferredコンストラクターでは、コンストラクターが、進捗状況の更新のような、「舞台裏」に直接アクセスするという点です</p>
+
+<p>最後になりましたが、Sencha は <code>Ext.Ajax</code> でPromiseのサポートを統合しました。</p>
+
+<p><code>Ext.Ajax.request()</code>は、
+<strong>then</strong> メソッドを使うことができる
+<code>Ext.data.request.Base</code>
+から派生したクラスのインスタンスです。
+これにより次のように記述することができます。</p>
+
+<div>[js]
+Ext.Ajax.request({
+    url: &#8216;feed.json&#8217;,
+}).then(function(response) {
+    // use response
+}).always(function() {
+   // clean-up logic, regardless the outcome
+}).otherwise(function(reason){
+   // handle failure
+});
+[/js]</div>
+
+<h4>参考文献</h4>
+
+<p>JavaScriptやExt JS Promise の使い方を説明した情報が沢山あります。
+次の資料をご覧になって勉強して下さい。</p>
+
+<ul>
+<li><a href="https://speakerdeck.com/savelee/deferreds">Dealing with Asynchronous JavaScript: Events, Callbacks &amp;
+Promises/Deferreds</a> (presentation)</li>
+<li>Ext JS API docs
+
+<ul>
+<li><a href="http://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.Promise">Ext.Promise</a></li>
+<li><a href="http://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.promise.Promise-method-then">Ext.promise.Promise-method-then</a></li>
+<li><a href="http://docs.sencha.com/extjs/6.0/6.0.0-classic/#!/api/Ext.Deferred">Ext.Deferred</a></li>
+</ul></li>
+<li><a href="https://github.com/promises-aplus/promises-spec">Promises spec</a></li>
+<li><a href="https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise">Mozilla Promise
+spec</a></li>
+</ul>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>Sencha Roadshow 2016 に行ってきました</title>
+		<link>/907</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Tue, 15 Mar 2016 23:26:11 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<guid isPermaLink="false">/?p=907</guid>
+
+					<description><![CDATA[3月11日に開催された Sencha Roadshow 2016 に参加してきました。 今回は、アメリカからドン・グリフィンが来日されました。 僕のあこがれのエンジニアでしたのでテンションMAXでした。 イベントの主な内 [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>3月11日に開催された Sencha Roadshow 2016 に参加してきました。</p>
+
+<p>今回は、アメリカからドン・グリフィンが来日されました。
+僕のあこがれのエンジニアでしたのでテンションMAXでした。</p>
+
+<p><img decoding="async" loading="lazy" src="/wp-content/uploads/2016/03/IMG_2487-e1458084800159-1024x591.jpg" alt="IMG_2487" width="640" height="369" class="aligncenter size-large wp-image-909" srcset="/wp-content/uploads/2016/03/IMG_2487-e1458084800159-1024x591.jpg 1024w, /wp-content/uploads/2016/03/IMG_2487-e1458084800159-300x173.jpg 300w, /wp-content/uploads/2016/03/IMG_2487-e1458084800159-768x443.jpg 768w" sizes="(max-width: 640px) 100vw, 640px" /></p>
+
+<p><span id="more-907"></span>
+イベントの主な内容は、次のような物でした。</p>
+
+<ul>
+<li>Sencha Test の紹介</li>
+<li>Sencha でのデザイン（テーマ）について</li>
+<li>ロードマップ</li>
+<li>ユーザー事例</li>
+</ul>
+
+<p>僕が興味を持った話題は、Sencha Test のことと、ロードマップです。</p>
+
+<h3>Sencha Test</h3>
+
+<p>Sencha の新製品である Sencha Test については、ドンが一つのセッションをまるまる使って説明してくれました。
+Sencha テストのための実行環境と、API があります。
+API の使い方を実際に説明して貰いましたが、なかなか使いやすそうでした。
+コンポーネントを捕まえて、それをテスト用オブジェクトとしてラップし、そのテスト用オブジェクトのメソッドを、ドットノーテーションでチェーン呼び出しする感じで書いていけます。
+今は Siesta でテストを書いていますが、乗り換えてもイイかも。と思います。</p>
+
+<h3>Ext JS 6.1 の新機能</h3>
+
+<p>ロードマップでは、再びドンが壇上に立ち、Sencha のこれからについて発表してくれました。
+3年前にオーランドでの SenchaCon でドンが Ext.Next として発表してくれたときのことを思い出しました。
+あの時と同じようにワクワクするような内容が発表されました。
+Ext JS 6.1 の新機能として今回教えてくれたのは、次のことでした。</p>
+
+<ul>
+<li>フレームワーク
+
+<ul>
+<li>カレンダーコンポーネント</li>
+<li>modern ツールキットの新しいテーマ</li>
+<li>Pivot Grid の modern バージョン</li>
+</ul></li>
+</ul>
+
+<p>カレンダー。僕が Sencha での開発やお客様からの要望を聞いていて、一番困った部分がこのカレンダーでした。
+Ext JS のサンプルにカレンダーがあるばかりに、お客様はカレンダー機能は Sencha のコンポーネントの一つだと勘違いする方が多かったんですね。でもあれはあくまでもサンプルで、実際に使おうとするととてもバギーで製品レベルで使えるシロモノではありません。
+Ext Scheduler などを出している Bryntum もカレンダー形式の表示はサポートしていません。</p>
+
+<p>今回、Sencha が公式のカレンダーコンポーネントを出してくれるのはほんとうにありがたいです。
+しかも、classic / modern 両対応です。Ext JS 6.1 に搭載されます。</p>
+
+<h3>modern ツールキットの強化</h3>
+
+<p>さらに今後、modern ツールキットは、どんどん進化して、デスクトップをフルサポートすることになるそうです。
+ということは classic ツールキットはどうなるのでしょう？
+modern ツールキットのデスクトップフル対応が完成したときには、classic ツールキットの役割は、
+まさにその名の通りレガシーなブラウザをサポートするための物になる。ということです。
+modern ツールキットは HTML5 に特化して開発されていますので、classic ツールキットに較べて非常に軽量にできていますし、高速です。この方向性は間違っていないと思いますね。嬉しいことです。</p>
+
+<h3>おわりに</h3>
+
+<p>昨年の Sencha Con Roadshow 2015 以来の東京でした。
+日本オフィスに川野さんも加わり、こと日本での態勢もパワーアップした感じがあります。
+楽しい勉強会でした。</p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+	</channel>
+</rss>

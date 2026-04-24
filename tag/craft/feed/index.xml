@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>CRAFT &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/craft/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Sat, 23 Sep 2017 09:00:07 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>LogicoolのCRAFTキーボードを買いました</title>
+		<link>/957</link>
+					<comments>/957#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 23 Sep 2017 08:56:02 +0000</pubDate>
+				<category><![CDATA[未分類]]></category>
+		<category><![CDATA[CRAFT]]></category>
+		<guid isPermaLink="false">/?p=957</guid>
+
+					<description><![CDATA[Logicool CRAFT KX1000sというキーボードを購入しました。 Logicoolのフラグシップモデルです。今回はその使用レポートをしたいと思います。CRAFT使ってみたいなぁとか思っている方の参考になればと [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Logicool CRAFT KX1000sというキーボードを購入しました。
+Logicoolのフラグシップモデルです。今回はその使用レポートをしたいと思います。CRAFT使ってみたいなぁとか思っている方の参考になればと思います。</p>
+
+<p><a href="http://www.logicool.co.jp/ja-jp/product/craft">CRAFT製品ページ</a></p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/craft.jpg" alt="" /></p>
+
+<p><span id="more-957"></span></p>
+
+<h3>困っていたこと</h3>
+
+<p>僕は仕事上 2台の Mac を使っていて、日によって使う Mac が違います。二三日同じマシンを使うこともありますが、日替わりで変わることもあります。使っているのは どちらも 13インチのMacBook PRO ですが、ディスプレイにつなぎ、Apple の Magic Keyboard 2 と Magic Trackpad 2 で入力しています。</p>
+
+<p>この 2つの Bluetooth デバイスは、1台の Mac としかペアリングできません。つまり使用する Mac が変わるたびにペアリングをする必要があるのです。これが、とても面倒くさい。その上、その2台とは別に Windows のノートも使っています。こちらは主に検証用なのですが、時には MS Access などの案件の仕事をガッツリすることもあります。</p>
+
+<p>このキーボードは 3台のデバイスに接続してそれをワンタッチで切り替えられます。
+これだ！と思いましたね。Logicool には別に 3台切替可能でもう少し安価なキーボード K780 がありますが、話題性も含めて CRAFT を購入しました。</p>
+
+<h3>キータッチ</h3>
+
+<p>2万円超えの買い物ですので、現物も触らずに Amazon で注文というのはできなかったので、梅田のヨドバシカメラに行って現物を確認しました。</p>
+
+<p>見た目、触った感じ、キーのタッチ、「すばらしい！」</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/keyboard.jpg" alt="" /></p>
+
+<p>K780 と比較するのも忘れてすぐにレジに走ってしまいました。それぐらいキータッチは素晴らしいです。筐体を含めた安定感、高級感はさすがでして、非常に打ちやすい。</p>
+
+<p>Apple の Magic Keyboard 2 も Magic Keyboard から比べてとても打ちやすくなっていますが、このキーボードはさらに上を行きます。Magic Keyboard 2 ではたまに1回しか打ってない（つもり）なのに2回キーが入力されるということが結構ありました。これはキーが少し軽く、ちょっと触れた感じでも入力されちゃうことがあったからです。しかし CRAFT ではそれがありません。木の押しはじめのところでやや抵抗がある感じで、「押す」と「押してない」の差がくっきりしている感じです。</p>
+
+<h3>切り替え</h3>
+
+<p>マシンの切り替えには、専用の3つのキーが配置されています。切り替えは本当に簡単。
+キーの配列は、WindowsでもMacでも違和感がないように配置されています。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/optionkeys.jpg" alt="" /></p>
+
+<p>各種の動作設定をするにはLogicool Optionsというサポートソフトウェアをインストールします。Windows用もMac用もあります。これで、キーボードやコントロールホイールの動作をカスタマイズすることができます。
+Logicool Optionsは、Logicool製の他のデバイスも設定できます。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/fig0.png" alt="" /></p>
+
+<p>キーボードのカスタマイズは、最上段に並ぶファンクションキーの役割を変更することができます。コントロールホイールの動作については、この記事の後ろの方で取り上げることにします。</p>
+
+<p>僕のマウスはMX Anyware 2なんですが、これをMX Master 2Sにすると、Logicool Flowに対応するので、なんかすごい便利そうなんですが、しばらくは我慢します。</p>
+
+<h3>Mac での使用</h3>
+
+<p>Mac に接続すると、キー配列がUSモードになります。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/uskeytop.jpg" alt="" /></p>
+
+<p>キートップには写真のように、US配列での刻印もされていますので、使うことはできます。世間にはUSキー配列のMacをかっこよく使いこなしている方もいますので、これを機にUS配列になれようか&#8230;とも思いましたが、新しいキー配列を体に叩き込むのはツライのでJIS配列で使う方法を模索します。</p>
+
+<p>前述のLogicool Optionsでは、キーボードレイアウトを変更する部分はありませんでした。Mac自体の設定でもCRAFTのキーボードレイアウトを変更できません。</p>
+
+<p>ちょうど良いことに、Karabiner-Elements のstableバージョン11.0がリリースされたところでしたので、それで対策してみます。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/fig1.png" alt="" /></p>
+
+<p>Karabiner-Elements の設定画面のTarget Deviceの一覧にはちゃんとCRAFTが表示されています。まずは &#8220;Virtual Keyboard&#8221; タブでKeyboard Typeを&#8221;JIS&#8221;に変更します。これでJIS対応のキーボードになりました。簡単です。ただCRAFTは左ctrlキーとcaps lockキーの場所がUS配列のMacとおなじになっています。JISのMacキーボードでは、この2つが逆転しているので、これを入れ替えてあげましょう。Target Device をCRAFTにしてから登録しないと、本体キーボードでも入れ替わってしまうので注意が必要です。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/fig2.png" alt="" /></p>
+
+<p>Karabiner-Elements で気になるのが、Log のページです。なんかずっとエラーが出続けています。大丈夫なんでしょうか。今のところ困ったことは起きていませんが&#8230;</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/fig2.png" alt="" /></p>
+
+<p>ここまででMacで利用ができるようになりました。コードを書いてみたり文章を書いてみたりしていますが、非常に快適です。ミスタッチも減りました。すばらしい。</p>
+
+<h3>Windows での使用</h3>
+
+<p>WindowsにもLogicool Optionsをインストールします。さっきMacを繋いだのとは別のチャンネルにしてWindowsとリンクします。
+こちらにもLogicool Optionsをインストールして設定します。
+Windowsの場合はJISキーボードとして認識され、そのままJIS配列で使えます。</p>
+
+<h3>コントロールホイール</h3>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/wheel.jpg" alt="" /></p>
+
+<p>このキーボードの目玉機能？であるコントロールホイールについてです。Logicool Optionsを入れることで、いろいろな用途に使えるってことです。OS自体の操作の場合は、音量・輝度・進む／戻る・アプリ間をナビゲートなどプリセットされた機能から選択できます。
+ホイールの操作には、回転・押す・押して回転の3つの操作があり、それぞれに機能を割り当てられます。
+僕はMacの方では次のように割り当てています。</p>
+
+<ul>
+<li>回転: 水平スクロール</li>
+<li>押す: Mission Control</li>
+<li>押して回転: デスクトップ間を切り替え</li>
+</ul>
+
+<p>注意が必要なのはキーのカスタマイズとの併用です。
+上記の機能は対応するキーを押されたことにして実現しているようです。
+ですからキーのカスタマイズをした場合などにおいては、その機能が実行できない場合があります。
+例えば、「システム環境設定 > キーボード > ショートカットで、「左の操作スペースに移動」「右の操作スペースに移動」は標準では ^← と ^→ になっていますが、これを ⌥← と ⌥→ に変更している状態で、コントロールホイールの機能に「デスクトップ間を切り替え」を割り当ててみると、ホイールを回転しても期待した動作は得られません。</p>
+
+<p>対応しているソフトの場合は、そのソフトに応じた機能が利用できるようになっています。MacではAdobeのPhotoshop, Illustrator, InDesign, Premire Proでホイールが使えます。ホイールを軽くタッチするとどの機能でホイールを使うのかが選択できます。Illustratorとかで軽く使ってみましたが、なんとなく微妙です。使うか？といわれると「使わないかも」って感じですね。</p>
+
+<p>僕としては、Lightroomのいろんなものの調整にこのホイールが使えたら嬉しかったんですが&#8230;</p>
+
+<p>WindowsではMS-Officeでもホイールが使えます。（MacのOfficeは対応してません）
+Windowsについてはあまり使わないので、レポートはしないことにします。</p>
+
+<p>Edge、ChromeやFirefoxを使うときにはホイールでタブを切り替え出来ます。各アプリケーションでの動作はシステム標準での動作よりも優先しますので、システムで回転に水平スクロールを割り当てていても、Chrome上ではタブ切り替えになります。</p>
+
+<p>僕は最初、「デスクトップ間を切り替え」の機能を回転に割り当てていたのですが、最大化したChromeの上ではデスクトップ間の切り替えができなくなるため、「押して回転」の方に割り当てることにしました。</p>
+
+<h3>まとめ</h3>
+
+<p>高いけど良い買い物だったと思います。キーを打つストレスが本当に少なくなりました。コントロールホイールについては、各アプリケーションでの動作はなんか微妙です。便利かなぁ？って感じ。でもデスクトップの操作などは確実に便利なので、結構使うと思います。この大きなフルキーボードを机に置くとトラックパッド置く場所がないので、3本の指でデスクトップを切り替えることができません。それの代わりになってくれるかなぁというのが期待するところですね。</p>
+
+<p><img decoding="async" src="/wp-content/uploads/2017/09/withhp.jpg" alt="" /></p>
+
+<p>さっき僕の部屋に入ってきた息子が、「お、なんやこれ！」といって新しいCRAFTキーボードに注目し、すぐにホイールをくるくる回しましたｗ。やっぱさわってみたくなるんやぁ〜ｗｗ</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/957/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>

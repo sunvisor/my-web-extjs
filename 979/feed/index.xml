@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 1/6) へのコメント	</title>
+	<atom:link href="/979/feed" rel="self" type="application/rss+xml" />
+	<link>/979</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Tue, 24 Mar 2020 12:30:06 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>
+		Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 3/6) &#124; Sunvisor Lab. Ext JS 別館 より		</title>
+		<link>/979#comment-277636</link>
+
+		<dc:creator><![CDATA[Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 3/6) &#124; Sunvisor Lab. Ext JS 別館]]></dc:creator>
+		<pubDate>Tue, 24 Mar 2020 12:30:06 +0000</pubDate>
+		<guid isPermaLink="false">/?p=979#comment-277636</guid>
+
+					<description><![CDATA[&lt;p&gt;[&#8230;] ビルトインのGridとColumnのプロパティを使ってカスタマイズする [&#8230;]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] ビルトインのGridとColumnのプロパティを使ってカスタマイズする [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 2/6) &#124; Sunvisor Lab. Ext JS 別館 より		</title>
+		<link>/979#comment-274973</link>
+
+		<dc:creator><![CDATA[Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 2/6) &#124; Sunvisor Lab. Ext JS 別館]]></dc:creator>
+		<pubDate>Tue, 10 Mar 2020 02:22:58 +0000</pubDate>
+		<guid isPermaLink="false">/?p=979#comment-274973</guid>
+
+					<description><![CDATA[&lt;p&gt;[&#8230;] この「Ext JS グリッドカスタマイズ」ブログ連載の初回の記事では、データグリッドをカスタマイズするためにグリッドやカラムのビルトインのプロパティを使ういくつかの方法を紹介し [&#8230;]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] この「Ext JS グリッドカスタマイズ」ブログ連載の初回の記事では、データグリッドをカスタマイズするためにグリッドやカラムのビルトインのプロパティを使ういくつかの方法を紹介し [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

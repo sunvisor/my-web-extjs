@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	
+	>
+<channel>
+	<title>
+	MVCでExt.Directを使う へのコメント	</title>
+	<atom:link href="/329/feed" rel="self" type="application/rss+xml" />
+	<link>/329</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Wed, 15 Jun 2016 03:30:02 +0000</lastBuildDate>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>
+		Delphia より		</title>
+		<link>/329#comment-198165</link>
+
+		<dc:creator><![CDATA[Delphia]]></dc:creator>
+		<pubDate>Wed, 15 Jun 2016 03:30:02 +0000</pubDate>
+		<guid isPermaLink="false">/?p=329#comment-198165</guid>
+
+					<description><![CDATA[&lt;p&gt;Ich glaube, dass man als Atomkraftgegner ab sofort nur noch in unsreen NaledarcÃ¤nbhrn, insbesondere Frankreich, demonstrieren sollte. In Deutschland ist der Ausstieg ja lÃ¤ngst beschlossene Sache. Es ist nur eine Frage der Zeit. In Frankreich werden dagegen noch neue Kraftwerke gebaut &#8211; das ist doch eine ganz andere DImension. Die mÃ¼ssen ja dann noch 40-50 Jahre laufen, bis sie sich rentieren und man Ã¼ber eine Abschaltung nachdenken kann.&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>Ich glaube, dass man als Atomkraftgegner ab sofort nur noch in unsreen NaledarcÃ¤nbhrn, insbesondere Frankreich, demonstrieren sollte. In Deutschland ist der Ausstieg ja lÃ¤ngst beschlossene Sache. Es ist nur eine Frage der Zeit. In Frankreich werden dagegen noch neue Kraftwerke gebaut &#8211; das ist doch eine ganz andere DImension. Die mÃ¼ssen ja dann noch 40-50 Jahre laufen, bis sie sich rentieren und man Ã¼ber eine Abschaltung nachdenken kann.</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		addProvider呼び出しとデプロイ &#124; Sunvisor Lab. Ext JS 別館 より		</title>
+		<link>/329#comment-90</link>
+
+		<dc:creator><![CDATA[addProvider呼び出しとデプロイ &#124; Sunvisor Lab. Ext JS 別館]]></dc:creator>
+		<pubDate>Mon, 26 Dec 2011 05:05:18 +0000</pubDate>
+		<guid isPermaLink="false">/?p=329#comment-90</guid>
+
+					<description><![CDATA[&lt;p&gt;[...] MVC フレームワークにおいて、addProvider をどこで実行するかと言うことについては、 MVCでExt.Directを使う で記述しました。 その中ではApplicationのonLoadで実行するという風に結論づけたので [...]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] MVC フレームワークにおいて、addProvider をどこで実行するかと言うことについては、 MVCでExt.Directを使う で記述しました。 その中ではApplicationのonLoadで実行するという風に結論づけたので [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+		<item>
+		<title>
+		Ext JS / Sencha Perfectday #007 講義メモ &#124; Sunvisor Lab. Ext JS 別館 より		</title>
+		<link>/329#comment-30</link>
+
+		<dc:creator><![CDATA[Ext JS / Sencha Perfectday #007 講義メモ &#124; Sunvisor Lab. Ext JS 別館]]></dc:creator>
+		<pubDate>Sun, 18 Sep 2011 00:12:45 +0000</pubDate>
+		<guid isPermaLink="false">/?p=329#comment-30</guid>
+
+					<description><![CDATA[&lt;p&gt;[...] 発表しました。 内容は、 /using-direct-with-mvc/ です。是非ご覧ください。 [...]&lt;/p&gt;
+]]></description>
+			<content:encoded><![CDATA[<p>[&#8230;] 発表しました。 内容は、 <a href="/using-direct-with-mvc/" rel="nofollow ugc">/using-direct-with-mvc/</a> です。是非ご覧ください。 [&#8230;]</p>
+]]></content:encoded>
+		
+			</item>
+	</channel>
+</rss>

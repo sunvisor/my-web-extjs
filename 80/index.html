@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<!--[if IE 7]>
+<html class="ie ie7" lang="ja"
+ xmlns:og="http://opengraphprotocol.org/schema/"
+ xmlns:fb="http://www.facebook.com/2008/fbml">
+<![endif]--><!--[if IE 8]>
+<html class="ie ie8" lang="ja"
+ xmlns:og="http://opengraphprotocol.org/schema/"
+ xmlns:fb="http://www.facebook.com/2008/fbml">
+<![endif]--><!--[if !(IE 7) & !(IE 8)]><!--><html lang="ja" xmlns:og="http://opengraphprotocol.org/schema/" xmlns:fb="http://www.facebook.com/2008/fbml">
+<!--<![endif]-->
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<title>Ext JS 4 クラスシステム | Sunvisor Lab. Ext JS 別館</title>
+<link rel="profile" href="https://gmpg.org/xfn/11">
+<link rel="pingback" href="/xmlrpc.php">
+<!--[if lt IE 9]>
+<script src="https://extjs.sunvisor.net/wp-content/themes/twentytwelve/js/html5.js" type="text/javascript"></script>
+<![endif]-->
+<meta name="robots" content="max-image-preview:large">
+<link rel="alternate" type="application/rss+xml" title="Sunvisor Lab. Ext JS 別館 &raquo; フィード" href="/feed">
+<link rel="alternate" type="application/rss+xml" title="Sunvisor Lab. Ext JS 別館 &raquo; コメントフィード" href="/comments/feed">
+<script type="text/javascript">
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/14.0.0\/svg\/","svgExt":".svg","source":{"concatemoji":"httpsextjs.sunvisor.net\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.1"}};
+/*! This file is auto-generated */
+!function(e,a,t){var n,r,o,i=a.createElement("canvas"),p=i.getContext&&i.getContext("2d");function s(e,t){var a=String.fromCharCode,e=(p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,e),0,0),i.toDataURL());return p.clearRect(0,0,i.width,i.height),p.fillText(a.apply(this,t),0,0),e===i.toDataURL()}function c(e){var t=a.createElement("script");t.src=e,t.defer=t.type="text/javascript",a.getElementsByTagName("head")[0].appendChild(t)}for(o=Array("flag","emoji"),t.supports={everything:!0,everythingExceptFlag:!0},r=0;r<o.length;r++)t.supports[o[r]]=function(e){if(p&&p.fillText)switch(p.textBaseline="top",p.font="600 32px Arial",e){case"flag":return s([127987,65039,8205,9895,65039],[127987,65039,8203,9895,65039])?!1:!s([55356,56826,55356,56819],[55356,56826,8203,55356,56819])&&!s([55356,57332,56128,56423,56128,56418,56128,56421,56128,56430,56128,56423,56128,56447],[55356,57332,8203,56128,56423,8203,56128,56418,8203,56128,56421,8203,56128,56430,8203,56128,56423,8203,56128,56447]);case"emoji":return!s([129777,127995,8205,129778,127999],[129777,127995,8203,129778,127999])}return!1}(o[r]),t.supports.everything=t.supports.everything&&t.supports[o[r]],"flag"!==o[r]&&(t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&t.supports[o[r]]);t.supports.everythingExceptFlag=t.supports.everythingExceptFlag&&!t.supports.flag,t.DOMReady=!1,t.readyCallback=function(){t.DOMReady=!0},t.supports.everything||(n=function(){t.readyCallback()},a.addEventListener?(a.addEventListener("DOMContentLoaded",n,!1),e.addEventListener("load",n,!1)):(e.attachEvent("onload",n),a.attachEvent("onreadystatechange",function(){"complete"===a.readyState&&t.readyCallback()})),(e=t.source||{}).concatemoji?c(e.concatemoji):e.wpemoji&&e.twemoji&&(c(e.twemoji),c(e.wpemoji)))}(window,document,window._wpemojiSettings);
+</script>
+<style type="text/css">img.wp-smiley,
+img.emoji {
+	display: inline !important;
+	border: none !important;
+	box-shadow: none !important;
+	height: 1em !important;
+	width: 1em !important;
+	margin: 0 0.07em !important;
+	vertical-align: -0.1em !important;
+	background: none !important;
+	padding: 0 !important;
+}</style>
+	<link rel="stylesheet" id="wp-block-library-css" href="/wp-includes/css/dist/block-library/style.min.css?ver=6.1" type="text/css" media="all">
+<style id="wp-block-library-theme-inline-css" type="text/css">.wp-block-audio figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-audio figcaption{color:hsla(0,0%,100%,.65)}.wp-block-audio{margin:0 0 1em}.wp-block-code{border:1px solid #ccc;border-radius:4px;font-family:Menlo,Consolas,monaco,monospace;padding:.8em 1em}.wp-block-embed figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-embed figcaption{color:hsla(0,0%,100%,.65)}.wp-block-embed{margin:0 0 1em}.blocks-gallery-caption{color:#555;font-size:13px;text-align:center}.is-dark-theme .blocks-gallery-caption{color:hsla(0,0%,100%,.65)}.wp-block-image figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-image figcaption{color:hsla(0,0%,100%,.65)}.wp-block-image{margin:0 0 1em}.wp-block-pullquote{border-top:4px solid;border-bottom:4px solid;margin-bottom:1.75em;color:currentColor}.wp-block-pullquote__citation,.wp-block-pullquote cite,.wp-block-pullquote footer{color:currentColor;text-transform:uppercase;font-size:.8125em;font-style:normal}.wp-block-quote{border-left:.25em solid;margin:0 0 1.75em;padding-left:1em}.wp-block-quote cite,.wp-block-quote footer{color:currentColor;font-size:.8125em;position:relative;font-style:normal}.wp-block-quote.has-text-align-right{border-left:none;border-right:.25em solid;padding-left:0;padding-right:1em}.wp-block-quote.has-text-align-center{border:none;padding-left:0}.wp-block-quote.is-large,.wp-block-quote.is-style-large,.wp-block-quote.is-style-plain{border:none}.wp-block-search .wp-block-search__label{font-weight:700}.wp-block-search__button{border:1px solid #ccc;padding:.375em .625em}:where(.wp-block-group.has-background){padding:1.25em 2.375em}.wp-block-separator.has-css-opacity{opacity:.4}.wp-block-separator{border:none;border-bottom:2px solid;margin-left:auto;margin-right:auto}.wp-block-separator.has-alpha-channel-opacity{opacity:1}.wp-block-separator:not(.is-style-wide):not(.is-style-dots){width:100px}.wp-block-separator.has-background:not(.is-style-dots){border-bottom:none;height:1px}.wp-block-separator.has-background:not(.is-style-wide):not(.is-style-dots){height:2px}.wp-block-table{margin:"0 0 1em 0"}.wp-block-table thead{border-bottom:3px solid}.wp-block-table tfoot{border-top:3px solid}.wp-block-table td,.wp-block-table th{padding:.5em;border:1px solid;word-break:normal}.wp-block-table figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-table figcaption{color:hsla(0,0%,100%,.65)}.wp-block-video figcaption{color:#555;font-size:13px;text-align:center}.is-dark-theme .wp-block-video figcaption{color:hsla(0,0%,100%,.65)}.wp-block-video{margin:0 0 1em}.wp-block-template-part.has-background{padding:1.25em 2.375em;margin-top:0;margin-bottom:0}</style>
+<link rel="stylesheet" id="classic-theme-styles-css" href="/wp-includes/css/classic-themes.min.css?ver=1" type="text/css" media="all">
+<style id="global-styles-inline-css" type="text/css">body{--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #fff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--color--blue: #21759b;--wp--preset--color--dark-gray: #444;--wp--preset--color--medium-gray: #9f9f9f;--wp--preset--color--light-gray: #e6e6e6;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--duotone--dark-grayscale: url('#wp-duotone-dark-grayscale');--wp--preset--duotone--grayscale: url('#wp-duotone-grayscale');--wp--preset--duotone--purple-yellow: url('#wp-duotone-purple-yellow');--wp--preset--duotone--blue-red: url('#wp-duotone-blue-red');--wp--preset--duotone--midnight: url('#wp-duotone-midnight');--wp--preset--duotone--magenta-yellow: url('#wp-duotone-magenta-yellow');--wp--preset--duotone--purple-green: url('#wp-duotone-purple-green');--wp--preset--duotone--blue-orange: url('#wp-duotone-blue-orange');--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;}:where(.is-layout-flex){gap: 0.5em;}body .is-layout-flow > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-flow > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-flow > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignleft{float: left;margin-inline-start: 0;margin-inline-end: 2em;}body .is-layout-constrained > .alignright{float: right;margin-inline-start: 2em;margin-inline-end: 0;}body .is-layout-constrained > .aligncenter{margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > :where(:not(.alignleft):not(.alignright):not(.alignfull)){max-width: var(--wp--style--global--content-size);margin-left: auto !important;margin-right: auto !important;}body .is-layout-constrained > .alignwide{max-width: var(--wp--style--global--wide-size);}body .is-layout-flex{display: flex;}body .is-layout-flex{flex-wrap: wrap;align-items: center;}body .is-layout-flex > *{margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+.wp-block-navigation a:where(:not(.wp-element-button)){color: inherit;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}
+.wp-block-pullquote{font-size: 1.5em;line-height: 1.6;}</style>
+<link rel="stylesheet" id="twentytwelve-style-css" href="/wp-content/themes/twentytwelve/style.css?ver=6.1" type="text/css" media="all">
+<link rel="stylesheet" id="twentytwelve-block-style-css" href="/wp-content/themes/twentytwelve/css/blocks.css?ver=20181230" type="text/css" media="all">
+<!--[if lt IE 9]>
+<link rel='stylesheet' id='twentytwelve-ie-css' href='https://extjs.sunvisor.net/wp-content/themes/twentytwelve/css/ie.css?ver=20121010' type='text/css' media='all' />
+<![endif]-->
+<script type="text/javascript" src="/wp-includes/js/jquery/jquery.min.js?ver=3.6.1" id="jquery-core-js"></script>
+<script type="text/javascript" src="/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.3.2" id="jquery-migrate-js"></script>
+<link rel="https://api.w.org/" href="/wp-json/">
+<link rel="alternate" type="application/json" href="/wp-json/wp/v2/posts/80">
+<link rel="EditURI" type="application/rsd+xml" title="RSD" href="/xmlrpc.php?rsd">
+<link rel="wlwmanifest" type="application/wlwmanifest+xml" href="/wp-includes/wlwmanifest.xml">
+<meta name="generator" content="WordPress 6.1">
+<link rel="canonical" href="/80">
+<link rel="shortlink" href="/?p=80">
+<link rel="alternate" type="application/json+oembed" href="/wp-json/oembed/1.0/embed?url=https%3A%2F%2F%2F80">
+<link rel="alternate" type="text/xml+oembed" href="/wp-json/oembed/1.0/embed?url=https%3A%2F%2F%2F80&#038;format=xml">
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-21302113-2"></script>
+<script>window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-21302113-2');</script><meta property="og:site_name" content="Sunvisor Lab. Ext JS 別館">
+<meta property="og:title" content="Ext JS 4 クラスシステム">
+<meta property="og:url" content="/80">
+<meta property="og:description" content="SenchaのAPIドキュメンテーションにある Ext JS 4 Class System を読んでみました。 Ext JSは，その歴史の中で初めて，新しいクラスシステムへと大幅にリファクタリングされました。新しいアーキ [&amp;hellip;]">
+<meta property="og:type" content="article">
+<style data-context="foundation-flickity-css">/*! Flickity v2.0.2
+http://flickity.metafizzy.co
+---------------------------------------------- */.flickity-enabled{position:relative}.flickity-enabled:focus{outline:0}.flickity-viewport{overflow:hidden;position:relative;height:100%}.flickity-slider{position:absolute;width:100%;height:100%}.flickity-enabled.is-draggable{-webkit-tap-highlight-color:transparent;tap-highlight-color:transparent;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.flickity-enabled.is-draggable .flickity-viewport{cursor:move;cursor:-webkit-grab;cursor:grab}.flickity-enabled.is-draggable .flickity-viewport.is-pointer-down{cursor:-webkit-grabbing;cursor:grabbing}.flickity-prev-next-button{position:absolute;top:50%;width:44px;height:44px;border:none;border-radius:50%;background:#fff;background:hsla(0,0%,100%,.75);cursor:pointer;-webkit-transform:translateY(-50%);transform:translateY(-50%)}.flickity-prev-next-button:hover{background:#fff}.flickity-prev-next-button:focus{outline:0;box-shadow:0 0 0 5px #09f}.flickity-prev-next-button:active{opacity:.6}.flickity-prev-next-button.previous{left:10px}.flickity-prev-next-button.next{right:10px}.flickity-rtl .flickity-prev-next-button.previous{left:auto;right:10px}.flickity-rtl .flickity-prev-next-button.next{right:auto;left:10px}.flickity-prev-next-button:disabled{opacity:.3;cursor:auto}.flickity-prev-next-button svg{position:absolute;left:20%;top:20%;width:60%;height:60%}.flickity-prev-next-button .arrow{fill:#333}.flickity-page-dots{position:absolute;width:100%;bottom:-25px;padding:0;margin:0;list-style:none;text-align:center;line-height:1}.flickity-rtl .flickity-page-dots{direction:rtl}.flickity-page-dots .dot{display:inline-block;width:10px;height:10px;margin:0 8px;background:#333;border-radius:50%;opacity:.25;cursor:pointer}.flickity-page-dots .dot.is-selected{opacity:1}</style>
+<style data-context="foundation-slideout-css">.slideout-menu{position:fixed;left:0;top:0;bottom:0;right:auto;z-index:0;width:256px;overflow-y:auto;-webkit-overflow-scrolling:touch;display:none}.slideout-menu.pushit-right{left:auto;right:0}.slideout-panel{position:relative;z-index:1;will-change:transform}.slideout-open,.slideout-open .slideout-panel,.slideout-open body{overflow:hidden}.slideout-open .slideout-menu{display:block}.pushit{display:none}</style>
+<style>.ios7.web-app-mode.has-fixed header{ background-color: rgba(3,122,221,.88);}</style>
+</head>
+
+<body data-rsssl="1" class="post-template-default single single-post postid-80 single-format-standard wp-embed-responsive single-author">
+<svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-dark-grayscale"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 0.49803921568627"></fefuncr><fefuncg type="table" tablevalues="0 0.49803921568627"></fefuncg><fefuncb type="table" tablevalues="0 0.49803921568627"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-grayscale"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 1"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0 1"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-purple-yellow"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.54901960784314 0.98823529411765"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0.71764705882353 0.25490196078431"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-blue-red"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 1"></fefuncr><fefuncg type="table" tablevalues="0 0.27843137254902"></fefuncg><fefuncb type="table" tablevalues="0.5921568627451 0.27843137254902"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-midnight"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0 0"></fefuncr><fefuncg type="table" tablevalues="0 0.64705882352941"></fefuncg><fefuncb type="table" tablevalues="0 1"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-magenta-yellow"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.78039215686275 1"></fefuncr><fefuncg type="table" tablevalues="0 0.94901960784314"></fefuncg><fefuncb type="table" tablevalues="0.35294117647059 0.47058823529412"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-purple-green"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.65098039215686 0.40392156862745"></fefuncr><fefuncg type="table" tablevalues="0 1"></fefuncg><fefuncb type="table" tablevalues="0.44705882352941 0.4"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><svg xmlns="http://www.w3.org/2000/svg" viewbox="0 0 0 0" width="0" height="0" focusable="false" role="none" style="visibility: hidden; position: absolute; left: -9999px; overflow: hidden;"><defs><filter id="wp-duotone-blue-orange"><fecolormatrix color-interpolation-filters="sRGB" type="matrix" values=" .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 .299 .587 .114 0 0 "></fecolormatrix><fecomponenttransfer color-interpolation-filters="sRGB"><fefuncr type="table" tablevalues="0.098039215686275 1"></fefuncr><fefuncg type="table" tablevalues="0 0.66274509803922"></fefuncg><fefuncb type="table" tablevalues="0.84705882352941 0.41960784313725"></fefuncb><fefunca type="table" tablevalues="1 1"></fefunca></fecomponenttransfer><fecomposite in2="SourceGraphic" operator="in"></fecomposite></filter></defs></svg><div id="page" class="hfeed site">
+	<header id="masthead" class="site-header" role="banner">
+		<hgroup>
+			<h1 class="site-title"><a href="/" title="Sunvisor Lab. Ext JS 別館" rel="home">Sunvisor Lab. Ext JS 別館</a></h1>
+			<h2 class="site-description">Ext JS 関連の話題を取り上げます。</h2>
+		</hgroup>
+
+		<nav id="site-navigation" class="main-navigation" role="navigation">
+			<button class="menu-toggle">メニュー</button>
+			<a class="assistive-text" href="#content" title="コンテンツへスキップ">コンテンツへスキップ</a>
+			<div class="nav-menu"><ul>
+<li><a href="/">ホーム</a></li>
+</ul></div>
+		</nav><!-- #site-navigation -->
+
+			</header><!-- #masthead -->
+
+	<div id="main" class="wrapper">
+
+	<div id="primary" class="site-content">
+		<div id="content" role="main">
+
+			
+				
+	<article id="post-80" class="post-80 post type-post status-publish format-standard hentry category-extjs">
+				<header class="entry-header">
+			
+						<h1 class="entry-title">Ext JS 4 クラスシステム</h1>
+								</header><!-- .entry-header -->
+
+				<div class="entry-content">
+			<p>SenchaのAPIドキュメンテーションにある <a href="http://docs.sencha.com/ext-js/4-0/guide/class_system">Ext JS 4 Class System</a> を読んでみました。</p>
+
+<hr>
+
+<p><span id="more-80"></span></p>
+
+<p>Ext JSは，その歴史の中で初めて，新しいクラスシステムへと大幅にリファクタリングされました。新しいアーキテクチャは，Ext JS 4に書かれているほとんどのクラスの後ろ盾となっていますので，コーディングを始める前に，それをよく理解することが重要です。</p>
+
+<p>このマニュアルはExt JS 4を使って新しく作りたい，または既存のクラスを拡張したいという開発者を対象とします。このマニュアルは3つのメインセクションに分かれています。</p>
+
+<ul>
+    <li>Ⅰ．概要 &#8211; 堅牢なクラスシステムの必要性について説明します。</li>
+    <li>Ⅱ．ハンズオン &#8211; 詳細なステップバイステップのコード例を提供します</li>
+    <li>Ⅲ．エラーハンドリングとデバッギング &#8211; 例外を扱うために役に立つチップスとトリックを提供します</li>
+    <li>Ⅲ．中身を見る &#8211; 技術的コンセプトと実装について論じます。</li>
+</ul>
+
+<h2>I. 概要</h2>
+
+<p><span style="font-size: 13px; font-weight: normal;">Ext JS4には300以上のクラスがあります。 世界中には20万人以上の様々なプログラミングバックグラウンドを持つ開発者の巨大な共同体があります。このような規模の組織で，我々は共通のコードアーキテクチャを提供するという大きな難局に直面しています。</span></p>
+
+<ul>
+    <li>使いやすく学びやすい</li>
+    <li>迅速な開発，簡単なデバッグ，痛みを伴わないデプロイ</li>
+    <li>よく組織化され，拡張性があり，保守性がある</li>
+</ul>
+
+<p>JavaScriptはクラスレスのプロトタイプ指向言語です。したがって，本来この言語の最も強力な特徴の1つは柔軟性です。そのため同じ仕事を多くの方法で（コーディングスタイルやテクニックを使って）実装できます。しかし，そのことはコストの予測が困難にもしています。統一された構造がなければJavaScriptコードは理解したり，維持したり，再利用するのが本当に難しい場合があります。
+一方，クラスベースのプログラミングは，オブジェクト指向モデルの中で今でも最もポピュラーです。クラスベースの言語にはたいてい強固な型定義，カプセル化，標準的なコーディング規則があります。一般的に、開発者が膨大な規則に準拠して記述したコードは，時間が経っても予測可能で拡張性がありスケーラブルである傾向があります。しかしそれらの言語には，JavaScriptなどの言語で見られるような動的な機能はありません。
+どちらのアプローチも一長一短ですが，短所を隠しながら，両方の長所を同時に手にできないのでしょうか。いいえそんなことはありません。Ext JS 4はそれを解決します。</p>
+
+<h2>II. 名付け規則</h2>
+
+<h3>1) クラス</h3>
+
+<ul>
+    <li>クラス名は英数字のみで記述します。数字は許されていますが，テクニカルタームでない限り使わない方がいいです。アンダースコアやハイフンなどの英数字以外の文字は使ってはいけません。例：
+<ul>
+    <li>
+<code>MyCompany.useful_util.Debug_Toolbar</code> これはNGです。</li>
+    <li>
+<code>MyCompany.util.Base64</code> これはOKです。</li>
+</ul>
+</li>
+    <li>クラス名は，オブジェクトのプロパティのドット表記をうまく使って，パッケージごとにグループ化する必要があります。ユニークなトップレベルのネームスペースは一つだけにして，それにクラス名を続けます。例：
+<ul>
+    <li><code>MyCompany.data.CoolProxy</code></li>
+    <li><code>MyCompany.Application</code></li>
+</ul>
+</li>
+    <li>トップレベルのネームスペースと実際のクラス名はアッパーキャメルケース（CamelCase）で書き，それ以外は全て小文字で書きます。例：
+<ul>
+    <li><code>MyCompany.form.action.AutoLoad</code></li>
+</ul>
+</li>
+    <li>Senchaが配布するものでないクラスは，Extをトップレベル名前空間として使わないでください。</li>
+    <li>アクロニム（頭文字語）も同様にアッパーキャメルケースで表記してください。例：
+<ul>
+    <li><code>Ext.data.JSONProxyではなくExt.data.JsonProxy</code></li>
+    <li><code>MyCompary.parser.HTMLParserではなくMyCompany.util.HtmlParser</code></li>
+    <li><code>MyCompany.server.HTTPではなくMyCompany.server.Http</code></li>
+</ul>
+</li>
+</ul>
+
+<h3>2) ソースファイル</h3>
+
+<ul>
+    <li>クラスの名前は保存されているファイルパスにひもつけられます。結果として一つのファイルには一つのクラスだけが存在するということになります。例：
+<ul>
+    <li>
+<code>Ext.util.Observable</code> は <code>path/to/src/Ext/util/Observable.js に保存されます。</code>
+</li>
+    <li>
+<code>Ext.form.action.Submit</code> は <code>path/to/src/Ext/form/action/Submit.js に保存されます。</code>
+</li>
+    <li>
+<code>MyCompany.chart.axis.Numeric</code> は <code>path/to/src/MyCompany/chart/axis/Numeric.js に保存されます。</code>
+</li>
+    <li>/path/to/srcは，そのアプリケーションにおいてクラスが保存されるディレクトリです。すべてのクラスが一つのディレクトリ下にあって，適切なネームスペースに配置されていると，デプロイやメンテナンスのためになります。</li>
+</ul>
+</li>
+</ul>
+
+<h3>3) メソッドと変数</h3>
+
+<ul>
+    <li>クラス名と同様，メソッドや変数の名前も英数字のみで表記します。数字は許されていますが，テクニカルタームでない限り使わない方がいいです。アンダースコアやハイフンなどの英数字以外の文字は使ってはいけません。メソッドと変数の名前は常にキャメルケース（camelCase)で書きます。これはアクロニムにも適用されます。例：</li>
+    <li>
+<ul>
+    <li>許容できるメソッド名:
+<ul>
+    <li><code>encodeUsingMd5()</code></li>
+    <li><code>getHTML() ではなく getHtml()</code></li>
+    <li><code>getJSONResponse() ではなく getJsonResponse()</code></li>
+    <li><code>parseXMLContent() ではなく parseXmlContent()</code></li>
+</ul>
+</li>
+    <li>許容できる変数名:
+<ul>
+    <li><code>var isGoodName</code></li>
+    <li><code>var base64Encoder</code></li>
+    <li><code>var xmlReader</code></li>
+    <li><code>var httpServer</code></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+<h3>4) プロパティ</h3>
+
+<ul>
+    <li>クラスのプロパティ名は上記のメソッドや変数とほぼ同じ規則に従います。例外はそれが静的定数の場合です。</li>
+    <li>定数を格納する静的なクラスプロパティは，すべて大文字で記述します。例：
+<ul>
+    <li><code>Ext.MessageBox.YES = "Yes"</code></li>
+    <li><code>Ext.MessageBox.NO = "No"</code></li>
+    <li><code>MyCompany.alien.Math.PI = "4.13"</code></li>
+</ul>
+</li>
+</ul>
+
+<h2>II. ハンズオン</h2>
+
+<h3>1. 宣言</h3>
+
+<h4>1.1) 以前の方法</h4>
+
+<p>以前のバージョンのExt JSでは，Ext.extendでクラスを作成するのになれていたと思います。</p>
+
+<pre>var MyWindow = Ext.extend(Object, { ... });</pre>
+
+<p>このアプローチは他のクラスを継承して新しいクラスを生成するわかりやすい方法です。しかし直接継承するのではない場合，configrationとかstaticsとかmixinのような局面をうまく解決するAPIがありませんでした。</p>
+
+<p>もう一つの例を見てください。</p>
+
+<pre><code>My.cool.Window = Ext.extend(Ext.Window, { ... });</code></pre>
+
+<p>このサンプルでは，拡張した新しいネームスペースにExt.Windowクラスを定義してます。ここでは二つのことに注意する必要があります。</p>
+
+<ol>
+    <li><span style="font-family: monospace;">My.coolは，WindowプロパティにExt.Windowをアサインする前にすでに存在しているオブジェクトでなければなりません。
+</span></li>
+    <li><span style="font-family: monospace;">Ext.Windowsは，それが参照される前に存在し，ロードされている必要があります。
+</span></li>
+</ol>
+
+<p>最初の項目は，Ext.namespace（別名Ext.ns）で解決できます。このメソッドはオブジェクトやプロパティのツリーを再帰的に走査して，まだ存在していなければ作成します。Ext.extendにおいては常に，ネームスペースを追加することを忘れないようにしないといけないのが面倒です。</p>
+
+<pre><code>Ext.ns('My.cool');
+My.cool.Window = Ext.extend(Ext.Window, { ... });</code></pre>
+
+<p>しかし二つ目の項目は，そう簡単には解決しません。Ext.Windowは他の多くのクラスと直接，間接に継承していて依存関係があるでしょうし，そのクラスがまた他のクラスに依存するでしょう。そのため，Ext JS4以前のバージョン向けのアプリケーションでは，フレームワーク中の一部の機能を使うだけであってもext-all.jsというライブラリ全体を含んだファイルをインクルードしています。</p>
+
+<h3>1.2) 新しい方法</h3>
+
+<p>Ext JS4ではただ一つのメソッドExt.defineでそれらのすべての欠点を排除します。クラスを作成するのに覚えなければならないのはこれだけです。基本的な構文:</p>
+
+<pre><code>Ext.define({String} className, {Object} members, {Function} createdCallback);</code></pre>
+
+<ul>
+    <li><span style="font-family: monospace;">className: クラス名
+</span></li>
+    <li>
+<code>members</code> はキーと値のペアでクラスメンバのコレクションを表わすオブジェクトです。</li>
+    <li><code>createCallbackはオプション関数で，このクラスのすべての依存関係が解決され，クラス自身が完全に生成された時にコールバックされます。新しいクラス作成は非同期的な性質なので，このコールバックは多くの状況で役に立ちます。</code></li>
+</ul>
+
+<p><strong>例:</strong></p>
+
+<pre><code>Ext.define('My.sample.Person', {
+    name: 'Unknown',
+
+    constructor: function(name) {
+        if (name) {
+            this.name = name;
+        }
+
+        return this;
+    },
+
+    eat: function(foodType) {
+        alert(this.name + " is eating: " + foodType);
+
+        return this;
+    }
+});
+
+var aaron = new My.sample.Person("Aaron");
+    aaron.eat("Salad"); // alert("Aaron is eating: Salad");</code></pre>
+
+<h3>2. コンフィグレーション</h3>
+
+<h4>2.1) 以前の方法</h4>
+
+<p>これまではクラスプロパティとユーザー設定コンフィグの違いを見分けるしっかりした方法がありませんでした。コンフィグは@cfgアノテーションを使ってクラスの正常なプロパティとして定義され文書化されます。次のサンプルクラスを見てください。かなり長いのですが，この問題についてよくわかります。</p>
+
+<pre><code>Ext.ns('My.sample');
+My.own.Window = Ext.extend(Object, {
+   /** @readonly */
+    isWindow: true,
+
+   /** @cfg {String} title The default window's title */
+    title: 'Title Here',
+
+   /** @cfg {Object} bottomBar The default config for the bottom bar */
+    bottomBar: {
+        enabled: true,
+        height: 50,
+        resizable: false
+    },
+
+    constructor: function(config) {
+        Ext.apply(this, config || {});
+
+        this.setTitle(this.title);
+        this.setBottomBar(this.bottomBar);
+
+        return this;
+    },
+
+    setTitle: function(title) {
+        // Change title only if it's a non-empty string
+        if (!Ext.isString(title) || title.length === 0) {
+            alert('Error: Title must be a valid non-empty string');
+        }
+        else {
+            this.title = title;
+        }
+
+        return this;
+    },
+
+    getTitle: function() {
+        return this.title;
+    },
+
+    setBottomBar: function(bottomBar) {
+        // Create a new instance of My.own.WindowBottomBar if it doesn't exist
+        // Change the config of the existing instance otherwise
+        if (bottomBar &amp;&amp; bottomBar.enabled) {
+            if (!this.bottomBar) {
+                this.bottomBar = new My.own.WindowBottomBar(bottomBar);
+            }
+            else {
+                this.bottomBar.setConfig(bottomBar);
+            }
+        }
+
+        return this;
+    },
+
+    getBottomBar: function() {
+        return this.bottomBar;
+    }
+});</code></pre>
+
+<p>要するに，My.own.Windowは，</p>
+
+<ul>
+    <li>インスタンス化の時コンフィグオブジェクトを受け入れ，クラスのデフォルトプロパティとマージします。</li>
+    <li>titleとbotttomBarはセッターによって実行時に変更できます。</li>
+</ul>
+
+<p>このアプローチには一つの利点がありますが，同時にそれは欠点でもあります。インスタンス時に上書きされてはならないプライベートメソッドやプロパティを含めクラスインスタンスの全てのメンバーを上書きできます。このフレキシビリティを考えたカプセル化の妥協は，これまで多くのアプリケーションにおいて誤用のもとになっていました。誤用されるとデバッグしにくく保守性に問題のあるプアなデザインになってしまいます。</p>
+
+<p>さらに，他の制約もあります。</p>
+
+<ul>
+    <li><span style="font-family: monospace;">Ext.applyはオブジェクトのプロパティを再帰的にマージしません。したがって，この例ではbottomBarの他の既定のプロパティを指定せずに，例えばbottomBar.heightを60にオーバーライドするだけということはできません。
+</span></li>
+    <li>ゲッターとセッターは全てのコンフィグプロパティに自分で定義しなければなりません。どのプロパティがコンフィグであるかが明確ではないので，セッターやゲッターを自動的に生成することはできないのです。</li>
+</ul>
+
+<h4>2.2) 新しい方法</h4>
+
+<p>Ext JS 4では，クラスが生成される前に、強力なExt.Classプリプロセッサが処理する，専用のコンフィグプロパティがあります。上記の例をそれで書き直しましょう。</p>
+
+<pre><code>Ext.define('My.own.Window', {
+   /** @readonly */
+    isWindow: true,
+
+    config: {
+        title: 'Title Here',
+
+        bottomBar: {
+            enabled: true,
+            height: 50,
+            resizable: false
+        }
+    },
+
+    constructor: function(config) {
+        this.initConfig(config);
+
+        return this;
+    },
+
+    applyTitle: function(title) {
+        if (!Ext.isString(title) || title.length === 0) {
+            alert('Error: Title must be a valid non-empty string');
+        }
+        else {
+            return title;
+        }
+    },
+
+    applyBottomBar: function(bottomBar) {
+        if (bottomBar &amp;&amp; bottomBar.enabled) {
+            if (!this.bottomBar) {
+                return new My.own.WindowBottomBar(bottomBar);
+            }
+            else {
+                this.bottomBar.setConfig(bottomBar);
+            }
+        }
+    }
+});</code></pre>
+
+<p>And here&#8217;s an example of how it can be used:</p>
+
+<pre><code>var myWindow = new My.own.Window({
+    title: 'Hello World',
+    bottomBar: {
+        height: 60
+    }
+});
+
+alert(myWindow.getTitle()); // alerts "Hello World"
+
+myWindow.setTitle('Something New');
+
+alert(myWindow.getTitle()); // alerts "Something New"
+
+myWindow.setTitle(null); // alerts "Error: Title must be a valid non-empty string"
+
+myWindow.setBottomBar({ height: 100 }); // Bottom bar's height is changed to 100</code></pre>
+
+<p>これらの変更によって</p>
+
+<ul>
+    <li><span style="font-family: monospace;">My.own.Windowクラスのコード量が減り，機能的になりました。
+</span></li>
+    <li>コンフィグレーションは他のクラスのメンバーから完全にカプセル化されます。</li>
+    <li>すでに定義済みでなければクラスが生成されるときに，すべてのコンフィグプロパティに対するセッターとゲッター，それにapply*とrest*というメソッドが，クラスのプロトタイプの中に自動的に生成されます。</li>
+</ul>
+
+<hr>
+
+<p>これ以降は，2011/04/28現在まだ執筆されていないようです。</p>
+
+<!-- Facebook Like Button v1.9.6 BEGIN [http://blog.bottomlessinc.com] -->
+<iframe src="https://www.facebook.com/plugins/like.php?href=httpsextjs.sunvisor.net%2F80&amp;layout=standard&amp;show_faces=false&amp;width=450&amp;action=like&amp;colorscheme=light" scrolling="no" frameborder="0" allowtransparency="true" style="border:none; overflow:hidden; width:450px; height: 30px; align: left; margin: 2px 0px 2px 0px"></iframe>
+<!-- Facebook Like Button END -->
+					</div>
+<!-- .entry-content -->
+		
+		<footer class="entry-meta">
+			カテゴリー: <a href="/category/extjs" rel="category tag">Ext JS</a> | 投稿日: <a href="/80" title="11:24 PM" rel="bookmark"><time class="entry-date" datetime="2011-04-28T23:24:49+09:00">2011年4月28日</time></a> | <span class="by-author">投稿者: <span class="author vcard"><a class="url fn n" href="/author/sunvisor" title="sunvisor の投稿をすべて表示" rel="author">sunvisor</a></span></span>								</footer><!-- .entry-meta -->
+	</article><!-- #post -->
+
+				<nav class="nav-single">
+					<h3 class="assistive-text">投稿ナビゲーション</h3>
+					<span class="nav-previous"><a href="/127" rel="prev"><span class="meta-nav">&larr;</span> サーバーサイドでDirectStoreの更新処理を書く</a></span>
+					<span class="nav-next"><a href="/112" rel="next">MVC Application Architecture <span class="meta-nav">&rarr;</span></a></span>
+				</nav><!-- .nav-single -->
+
+				
+<div id="comments" class="comments-area">
+
+	
+	
+	
+</div>
+<!-- #comments .comments-area -->
+
+			
+		</div>
+<!-- #content -->
+	</div>
+<!-- #primary -->
+
+
+			<div id="secondary" class="widget-area" role="complementary">
+			
+		<aside id="recent-posts-4" class="widget widget_recent_entries">
+		<h3 class="widget-title">最近の投稿</h3>
+		<ul>
+											<li>
+					<a href="/999">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 4/6) &#8211; 柔軟なメソッドを使う</a>
+									</li>
+											<li>
+					<a href="/996">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 3/6)</a>
+									</li>
+											<li>
+					<a href="/989">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 2/6)</a>
+									</li>
+											<li>
+					<a href="/979">Ext JS のデータグリッドを素早くカスタマイズする方法 (Part 1/6)</a>
+									</li>
+											<li>
+					<a href="/957">LogicoolのCRAFTキーボードを買いました</a>
+									</li>
+					</ul>
+
+		</aside><aside id="tag_cloud-5" class="widget widget_tag_cloud"><h3 class="widget-title">タグ</h3>
+<div class="tagcloud">
+<ul class="wp-tag-cloud" role="list">
+	<li><a href="/tag/architect" class="tag-cloud-link tag-link-43 tag-link-position-1" style="font-size: 12.375pt;" aria-label="Architect (3個の項目)">Architect</a></li>
+	<li><a href="/tag/bryntum" class="tag-cloud-link tag-link-35 tag-link-position-2" style="font-size: 12.375pt;" aria-label="Bryntum (3個の項目)">Bryntum</a></li>
+	<li><a href="/tag/craft" class="tag-cloud-link tag-link-48 tag-link-position-3" style="font-size: 8pt;" aria-label="CRAFT (1個の項目)">CRAFT</a></li>
+	<li><a href="/tag/direct" class="tag-cloud-link tag-link-42 tag-link-position-4" style="font-size: 13.833333333333pt;" aria-label="Direct (4個の項目)">Direct</a></li>
+	<li><a href="/tag/directstore" class="tag-cloud-link tag-link-12 tag-link-position-5" style="font-size: 8pt;" aria-label="DirectStore (1個の項目)">DirectStore</a></li>
+	<li><a href="/tag/editorgridpanel" class="tag-cloud-link tag-link-14 tag-link-position-6" style="font-size: 8pt;" aria-label="EditorGridPanel (1個の項目)">EditorGridPanel</a></li>
+	<li><a href="/tag/electron" class="tag-cloud-link tag-link-47 tag-link-position-7" style="font-size: 8pt;" aria-label="Electron (1個の項目)">Electron</a></li>
+	<li><a href="/tag/ext-draw" class="tag-cloud-link tag-link-26 tag-link-position-8" style="font-size: 12.375pt;" aria-label="Ext.draw (3個の項目)">Ext.draw</a></li>
+	<li><a href="/tag/ext-loader" class="tag-cloud-link tag-link-15 tag-link-position-9" style="font-size: 8pt;" aria-label="Ext.Loader (1個の項目)">Ext.Loader</a></li>
+	<li><a href="/tag/ext3" class="tag-cloud-link tag-link-10 tag-link-position-10" style="font-size: 13.833333333333pt;" aria-label="Ext3 (4個の項目)">Ext3</a></li>
+	<li><a href="/tag/ext4" class="tag-cloud-link tag-link-11 tag-link-position-11" style="font-size: 22pt;" aria-label="Ext4 (17個の項目)">Ext4</a></li>
+	<li><a href="/tag/extjs" class="tag-cloud-link tag-link-4 tag-link-position-12" style="font-size: 8pt;" aria-label="Ext JS (1個の項目)">Ext JS</a></li>
+	<li><a href="/tag/extjs5" class="tag-cloud-link tag-link-37 tag-link-position-13" style="font-size: 10.625pt;" aria-label="ExtJS5 (2個の項目)">ExtJS5</a></li>
+	<li><a href="/tag/extjs6" class="tag-cloud-link tag-link-38 tag-link-position-14" style="font-size: 17.479166666667pt;" aria-label="ExtJS6 (8個の項目)">ExtJS6</a></li>
+	<li><a href="/tag/jasmine" class="tag-cloud-link tag-link-27 tag-link-position-15" style="font-size: 8pt;" aria-label="Jasmine (1個の項目)">Jasmine</a></li>
+	<li><a href="/tag/livereload" class="tag-cloud-link tag-link-34 tag-link-position-16" style="font-size: 8pt;" aria-label="LiveReload (1個の項目)">LiveReload</a></li>
+	<li><a href="/tag/nextjs" class="tag-cloud-link tag-link-17 tag-link-position-17" style="font-size: 10.625pt;" aria-label="NextJS (2個の項目)">NextJS</a></li>
+	<li><a href="/tag/oracle" class="tag-cloud-link tag-link-23 tag-link-position-18" style="font-size: 8pt;" aria-label="Oracle (1個の項目)">Oracle</a></li>
+	<li><a href="/tag/pdo" class="tag-cloud-link tag-link-24 tag-link-position-19" style="font-size: 8pt;" aria-label="PDO (1個の項目)">PDO</a></li>
+	<li><a href="/tag/sass" class="tag-cloud-link tag-link-46 tag-link-position-20" style="font-size: 8pt;" aria-label="SASS (1個の項目)">SASS</a></li>
+	<li><a href="/tag/sencha-touch" class="tag-cloud-link tag-link-29 tag-link-position-21" style="font-size: 17.479166666667pt;" aria-label="Sencha Touch (8個の項目)">Sencha Touch</a></li>
+	<li><a href="/tag/sencha-ug" class="tag-cloud-link tag-link-44 tag-link-position-22" style="font-size: 10.625pt;" aria-label="Sencha UG (2個の項目)">Sencha UG</a></li>
+	<li><a href="/tag/siesta" class="tag-cloud-link tag-link-33 tag-link-position-23" style="font-size: 10.625pt;" aria-label="Siesta (2個の項目)">Siesta</a></li>
+	<li><a href="/tag/theme" class="tag-cloud-link tag-link-45 tag-link-position-24" style="font-size: 8pt;" aria-label="Theme (1個の項目)">Theme</a></li>
+	<li><a href="/tag/universal-app" class="tag-cloud-link tag-link-39 tag-link-position-25" style="font-size: 10.625pt;" aria-label="Universal App (2個の項目)">Universal App</a></li>
+	<li><a href="/tag/vim" class="tag-cloud-link tag-link-16 tag-link-position-26" style="font-size: 13.833333333333pt;" aria-label="vim (4個の項目)">vim</a></li>
+	<li><a href="/tag/webstorm" class="tag-cloud-link tag-link-13 tag-link-position-27" style="font-size: 10.625pt;" aria-label="WebStorm (2個の項目)">WebStorm</a></li>
+	<li><a href="/tag/xframeworkpx" class="tag-cloud-link tag-link-5 tag-link-position-28" style="font-size: 10.625pt;" aria-label="xFrameworkPX (2個の項目)">xFrameworkPX</a></li>
+</ul>
+</div>
+</aside><aside id="archives-4" class="widget widget_archive"><h3 class="widget-title">アーカイブ</h3>
+			<ul>
+					<li><a href="/date/2020/03">2020年3月</a></li>
+	<li><a href="/date/2017/09">2017年9月</a></li>
+	<li><a href="/date/2016/11">2016年11月</a></li>
+	<li><a href="/date/2016/09">2016年9月</a></li>
+	<li><a href="/date/2016/07">2016年7月</a></li>
+	<li><a href="/date/2016/03">2016年3月</a></li>
+	<li><a href="/date/2016/02">2016年2月</a></li>
+	<li><a href="/date/2015/12">2015年12月</a></li>
+	<li><a href="/date/2015/10">2015年10月</a></li>
+	<li><a href="/date/2015/08">2015年8月</a></li>
+	<li><a href="/date/2015/05">2015年5月</a></li>
+	<li><a href="/date/2015/02">2015年2月</a></li>
+	<li><a href="/date/2014/12">2014年12月</a></li>
+	<li><a href="/date/2014/10">2014年10月</a></li>
+	<li><a href="/date/2014/06">2014年6月</a></li>
+	<li><a href="/date/2014/04">2014年4月</a></li>
+	<li><a href="/date/2014/03">2014年3月</a></li>
+	<li><a href="/date/2013/12">2013年12月</a></li>
+	<li><a href="/date/2013/09">2013年9月</a></li>
+	<li><a href="/date/2013/05">2013年5月</a></li>
+	<li><a href="/date/2013/04">2013年4月</a></li>
+	<li><a href="/date/2013/02">2013年2月</a></li>
+	<li><a href="/date/2012/12">2012年12月</a></li>
+	<li><a href="/date/2012/11">2012年11月</a></li>
+	<li><a href="/date/2012/10">2012年10月</a></li>
+	<li><a href="/date/2012/09">2012年9月</a></li>
+	<li><a href="/date/2012/05">2012年5月</a></li>
+	<li><a href="/date/2012/04">2012年4月</a></li>
+	<li><a href="/date/2012/03">2012年3月</a></li>
+	<li><a href="/date/2012/02">2012年2月</a></li>
+	<li><a href="/date/2012/01">2012年1月</a></li>
+	<li><a href="/date/2011/12">2011年12月</a></li>
+	<li><a href="/date/2011/10">2011年10月</a></li>
+	<li><a href="/date/2011/09">2011年9月</a></li>
+	<li><a href="/date/2011/08">2011年8月</a></li>
+	<li><a href="/date/2011/07">2011年7月</a></li>
+	<li><a href="/date/2011/06">2011年6月</a></li>
+	<li><a href="/date/2011/05">2011年5月</a></li>
+	<li><a href="/date/2011/04">2011年4月</a></li>
+	<li><a href="/date/2011/03">2011年3月</a></li>
+	<li><a href="/date/2011/01">2011年1月</a></li>
+			</ul>
+
+			</aside><aside id="text-5" class="widget widget_text">			<div class="textwidget">
+<script src="https://widgets.twimg.com/j/2/widget.js"></script>
+<script>new TWTR.Widget({
+  version: 2,
+  type: 'profile',
+  rpp: 4,
+  interval: 6000,
+  width: 220,
+  height: 300,
+  theme: {
+    shell: {
+      background: '#88bbff',
+      color: '#000000'
+    },
+    tweets: {
+      background: '#ebebeb',
+      color: '#050505',
+      links: '#3300ee'
+    }
+  },
+  features: {
+    scrollbar: false,
+    loop: false,
+    live: false,
+    hashtags: true,
+    timestamp: true,
+    avatars: false,
+    behavior: 'all'
+  }
+}).render().setUser('martini3oz').start();</script>
+</div>
+		</aside>		</div>
+<!-- #secondary -->
+		</div>
+<!-- #main .wrapper -->
+	<footer id="colophon" role="contentinfo">
+		<div class="site-info">
+									<a href="https://ja.wordpress.org/" class="imprint" title="セマンティックなパブリッシングツール">
+				Proudly powered by WordPress			</a>
+		</div>
+<!-- .site-info -->
+	</footer><!-- #colophon -->
+</div>
+<!-- #page -->
+
+<!-- Powered by WPtouch: 4.3.44 --><script type="text/javascript" src="/wp-content/themes/twentytwelve/js/navigation.js?ver=20140711" id="twentytwelve-navigation-js"></script>
+</body>
+</html>

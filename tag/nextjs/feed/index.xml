@@ -1,0 +1,350 @@
+<?xml version="1.0" encoding="UTF-8"?><rss version="2.0"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:atom="http://www.w3.org/2005/Atom"
+	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
+	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
+	>
+
+<channel>
+	<title>NextJS &#8211; Sunvisor Lab. Ext JS 別館</title>
+	<atom:link href="/tag/nextjs/feed" rel="self" type="application/rss+xml" />
+	<link>/</link>
+	<description>Ext JS 関連の話題を取り上げます。</description>
+	<lastBuildDate>Tue, 20 Sep 2011 01:45:47 +0000</lastBuildDate>
+	<language>ja</language>
+	<sy:updatePeriod>
+	hourly	</sy:updatePeriod>
+	<sy:updateFrequency>
+	1	</sy:updateFrequency>
+	<generator>https://wordpress.org/?v=6.1</generator>
+	<item>
+		<title>Ext JS / Sencha Perfectday #007 講義メモ</title>
+		<link>/380</link>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sun, 18 Sep 2011 00:12:41 +0000</pubDate>
+				<category><![CDATA[Ext JS]]></category>
+		<category><![CDATA[NextJS]]></category>
+		<category><![CDATA[Ext4]]></category>
+		<guid isPermaLink="false">/?p=380</guid>
+
+					<description><![CDATA[Ext JS / Sencha Pefectday #007 に参加してきました。 以下そのレポートです。 Ext JS 4 実践開発ガイド 配布と紹介 ついに出ました。やっとでました。書籍、Ext JS 4 実践開発ガ [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>Ext JS / Sencha Pefectday #007 に参加してきました。
+以下そのレポートです。
+<span id="more-380"></span></p>
+
+<h2>Ext JS 4 実践開発ガイド 配布と紹介</h2>
+
+<p>ついに出ました。やっとでました。書籍、Ext JS 4 実践開発ガイド。
+この本の出版にはレビュワーとして少々関わっていたので、
+実際にできあがった本を見ると感慨深いものがありました。
+さっそく著者のサインももらっておきました。</p>
+
+<p>購入はゼノフィのサイトで買うのが安くなりますが、アマゾンでも買えます。
+（サイドバーの広告をみてね）</p>
+
+<h2>発表</h2>
+
+<p>@kotsutsumiさんから三つの発表がありました。</p>
+
+<h3>発表１</h3>
+
+<p>Ext JS 4 のAPIドキュメントの日本語版についての発表がありました。</p>
+
+<p><a href="http://docs.xenophy.com/ext-js/4-0/">http://docs.xenophy.com/ext-js/4-0/</a></p>
+
+<p>まだ全部を翻訳できているわけではなくて、現在の進捗は60%ぐらいです。
+僕はこれにも少し関わっています。ドキュメントの中にひどい和訳があれば、
+それはきっと僕の仕事です。ｗ</p>
+
+<h3>発表２</h3>
+
+<p>NextJS 0.8.x</p>
+
+<p>現在NextJSは0.8.2が出ています。MySQLにも繋がるし、Ext.Directも使えます。
+僕もいろいろと試してみたいのですが、まだまだです。</p>
+
+<p><a href="http://nextjs.net/">http://nextjs.net/</a></p>
+
+<h3>発表３</h3>
+
+<p>Ext JS 4 実践開発ガイド２ についての発表です。
+@kotsutsumi さん、続編を書いてくれるという発表でした。</p>
+
+<ul>
+<li>第01章 ドラッグアンドドロップ</li>
+<li>第02章 Ext.fxによるアニメーション制御</li>
+<li>第03章 チャート</li>
+<li>第04章 Ext Direct</li>
+<li>第05章 キーボード制御とアクセシビリティ</li>
+<li>第06章 アプリケーション設計</li>
+<li>第07章 コンポーネントテスト指向開発</li>
+<li>第08章 リリースビルド</li>
+<li>第09章 デバッグ術</li>
+<li>第10章 サイクルテスト</li>
+<li>第11章 パフォーマンスチューニング</li>
+<li>第12章 Next JS と Ext DirectによるRPC</li>
+<li>第13章 実践！Twitterクライアント作成</li>
+<li>第14章 実践！ユーザー管理システム構築 </li>
+</ul>
+
+<p>すごい内容になりそうな本です。
+(こんなのここに書いていいのかな、だめだったら言ってください。消しますので）
+僕としては5〜11あたりの、まさに「実践」的な内容に心惹かれます。
+ただ、この本は今回出版した「一冊目の売り上げ次第で中止する」そうです。
+2冊目出て欲しいんで、みんな、本買ってください。</p>
+
+<h2>Review</h2>
+
+<p>ここからExt JS 4 の基本のおさらいをしました。
+ものすごいスピードでの講義でした。
+突然、当てられて、アセりました。(´･ω･`)</p>
+
+<h2>LT：Ext JS 4 におけるExt.Direct (@martini3oz 氏)</h2>
+
+<p>LTということで Ext.Direct を MVC アーキテクチャで使う、
+というのを発表しました。
+内容は、</p>
+
+<p><a href="/using-direct-with-mvc/">/using-direct-with-mvc/</a></p>
+
+<p>です。是非ご覧ください。</p>
+
+<h2>Ext.Direct for Ext JS 4 </h2>
+
+<p>その後、@kotsutsumi さんが Ext.Direct について講義。以下、そのメモ。</p>
+
+<h3>PollingProvider</h3>
+
+<ul>
+<li>一定時間定期的にリクエストを投げ続ける</li>
+<li>サーバーサイドの状態を取得させる</li>
+<li>時までsetIntervalを使いリクエストを投げる処理を記述しなくても良い。</li>
+<li>Ext.Directのリクエストが他に重なっても1リクエストで処理してくれる。</li>
+</ul>
+
+<div>[js]
+{
+    &quot;type&quot;: &quot;event&quot;,
+    &quot;name&quot;: &quot;hogehoge&quot;,
+    &quot;data&quot;:{
+        &quot;foo&quot;: &quot;bar&quot;
+    }
+}
+[/js]</div>
+
+<ul>
+<li>サーバーサイドで返す場合Json形式で typeキーに対してeventを指定すること。</li>
+</ul>
+
+<h3>RemotingProvider</h3>
+
+<ul>
+<li>サーバーサイドのAPIを公開し、APIを直接クライアントサイドのExtJSから呼び出すことができるプロバイダー</li>
+<li>ある期間の間のDirectが呼ばれたらまとめて送信する。</li>
+<li>サーバーサイドではまとめて処理していっぺんに返す。</li>
+<li>クライアントではtidをもとにイベントを起こしてコールバックを呼び出す。</li>
+<li>ファイルのアップロードにも対応している。</li>
+<li>$_POSTでリクエストデータが取得できない。</li>
+<li>file_get_contents(&#8216;php://input&#8217;)で取得します。</li>
+</ul>
+
+<h3>LT：Ext.core.Elementの活用 ( @asano_yuki氏)</h3>
+
+<p>Xenophyの @asano_yuki さんのLT。Ext.core.Element には地味に便利な静的メソッドがいっぱいあるのね。</p>
+
+<ul>
+<li>Ext JS 4で増えたメソッドについて</li>
+<li>35個増えている。Ext.Fxだったものがあるのでそれを覗くと24</li>
+<li>追加された静的メソッド11個</li>
+<li>Ext.core.Element.***出呼び出す</li>
+</ul>
+
+<dl>
+<dt>fromPointメソッド</dt>
+<dd>指定した位置にある要素を取得しExt.core.Elementを返す。</dd>
+
+<dt>getDocumentHeight / getDocumentWidth</dt>
+<dd>Ext.core.Element.getDocumentHeight();</dd>
+
+<dd>ブラウザのウィンドウサイズを返す</dd>
+
+<dt>getOrientation</dt>
+<dd>windowの向きを返す portrait landscape を返す。</dd>
+
+<dt>serializeForm</dt>
+<dd>フォームの内容をエンコードもしてクエリ文字列にして返してくれる</dd>
+
+<dt>unitizeBox</dt>
+<dd>unitizeBox(5, &#8220;px&#8221;)</dd>
+
+<dd>->&#8221;5px 5px 5px 5px&#8221;</dd>
+</dl>
+
+<p>など、全部はメモできませんでした。</p>
+
+<h2>Next JS概論</h2>
+
+<ul>
+<li>node製のアプリケーションサーバーを作っている。</li>
+<li>iconvモジュールは使えるが、iso2002jpに変換できない。</li>
+<li>iconvへの日本語パッチを当てる必要がある。</li>
+<li>iconvjpを使ってそれをNextJSに組み込んだ。</li>
+</ul>
+
+<p>0.8 から 1.0へ、現在の機能と今後。</p>
+
+<ul>
+<li>PDF, Excel, Word を出力したい。</li>
+<li>SVGデータ出力</li>
+<li>WebSocketに完全対応。</li>
+</ul>
+
+<p>Next JSとExt JS</p>
+
+<ul>
+<li>同じクラスシステムが使えること</li>
+<li>サーバーサイドにライブラリを一元管理する仕組みを考えている。</li>
+<li>Ext Directを簡単に利用できること</li>
+</ul>
+
+<h2>Ext.Drawの利用</h2>
+
+<ul>
+<li>Ext JS 4 から実装された。</li>
+<li>SVC/VMLを抽象レイヤーとして扱えるようにする</li>
+<li>SVCは標準、VMLはIE6対応。</li>
+<li>Ext.drawに実装されています。</li>
+<li>描画領域Ext.draw.Surface</li>
+<li>ベクターデータは、Ext.draw.Sprite</li>
+<li>SurfaceにaddでSpriteを追加してゆく</li>
+</ul>
+
+<p>SVGチャートクラス</p>
+
+<ul>
+<li>Ext.drawベースでのチャートです。</li>
+<li>Flashがなくても動く。</li>
+<li>Sencha touch chart</li>
+<li>Ext.chart.Chartコンポーネントを経由して利用する。</li>
+<li>データストアと連動して描画する。</li>
+<li>あるデータストアの表現の一つとしてチャートを表示する。</li>
+</ul>
+
+<h3>Sencha Touch Chart</h3>
+
+<p>Sencha Touch 2.0 が出る。</p>
+
+<h2>追記</h2>
+
+<p>awacioさんのブログで PerfectDay #007 のリポートを見つけました。
+<a href="http://d.hatena.ne.jp/awacio/20110918/1316295521">http://d.hatena.ne.jp/awacio/20110918/1316295521</a></p>
+]]></content:encoded>
+					
+		
+		
+			</item>
+		<item>
+		<title>NextJSの勉強再開するぞ</title>
+		<link>/332</link>
+					<comments>/332#comments</comments>
+		
+		<dc:creator><![CDATA[sunvisor]]></dc:creator>
+		<pubDate>Sat, 13 Aug 2011 23:47:40 +0000</pubDate>
+				<category><![CDATA[NextJS]]></category>
+		<guid isPermaLink="false">/?p=332</guid>
+
+					<description><![CDATA[NextJSの0.7系の開発がどんどん進んでいます。 ちょっとnodeやNextJSから離れていたので、node自体の環境も新たに作ることにしました。 nodejsのインストール しばらく触っていなかったので、npmとか [&#8230;]]]></description>
+										<content:encoded><![CDATA[<p>NextJSの0.7系の開発がどんどん進んでいます。
+ちょっとnodeやNextJSから離れていたので、node自体の環境も新たに作ることにしました。
+<span id="more-332"></span></p>
+
+<h2>nodejsのインストール</h2>
+
+<p>しばらく触っていなかったので、npmとかの仕様がずいぶん変わっています。
+以前のようにやっていたら、うまくインストールできなくて困りました。</p>
+
+<p>開発環境ですので、
+Macのユーザーhomeディレクトリにインストールする方法をとります。
+なかなかうまく動きませんでしたが、次のようにするとうまく行きました。
+キモは、nodeのコンパイルの時にconfigureでprefixを指定することです。</p>
+
+<p>nodejsはGitHubから取得します。</p>
+
+<div>[bash]
+    git clone https://github.com/joyent/node.git
+    cd node
+    git checkout v0.4.9
+    ./configure &#8211;prefix=~/local
+    make
+    make install
+[/bash]</div>
+
+<p>これでユーザーhomeのlocalディレクトリ以下にnodeをインストールできました。
+.bashrcでパスを追加しておきます。</p>
+
+<div>[bash]
+    export PATH=~/local/bin:$PATH
+[/bash]</div>
+
+<p>次にnpmをインストールします。</p>
+
+<div>[bash]
+    curl http://npmjs.org/install.sh | sh
+[/bash]</div>
+
+<p>さきほどのコンパイルでprefixを指定していないと、
+これがどうしてもうまく行かないので注意です。</p>
+
+<h2>NextJSを入れる</h2>
+
+<p>これで取りあえずnodejsとnpmが動くようになりました。
+やっとNextJSのテストに入れます。</p>
+
+<div>[bash]
+    npm install NX
+[/bash]</div>
+
+<p>おー！簡単。そこからはcode:xの記事を順にやってみましょう。</p>
+
+<ul>
+<li><a href="http://code.xenophy.com/?p=1463" >Next JS 0.7.2 リリースとマニュアルの下書き用に。 &#8211; code:x</a></li>
+<li><a href="http://code.xenophy.com/?p=1476" >アクション(1) – Next JS 0.7.2 &#8211; code:x</a></li>
+<li><a href="http://code.xenophy.com/?p=1491" >アクション(2) – Next JS 0.7.2 &#8211; code:x</a></li>
+<li><a href="http://code.xenophy.com/?p=1516" >アクション(3) – Next JS 0.7.2 &#8211; code:x</a></li>
+</ul>
+
+<p>さあ、やるぞ！</p>
+
+<p>ここで、@kotsutsumi さんからリプライをもらいました。</p>
+
+<blockquote>
+  <p>@martini3oz １点、npm install NX から　npm install nxに変わってるので、
+  ご注意をｗ 多分だ丈夫なのかな、あとでNXのほうけせたら消してみますけど。</p>
+</blockquote>
+
+<p>ということで、</p>
+
+<div>[bash]
+    npm uninstall NX
+    npm install nx
+[/bash]</div>
+
+<p>とやりましたら、</p>
+
+<pre><code>└─┬ nx@0.7.3 
+  └── nx-core@0.1.5 
+</code></pre>
+
+<p>となってくれました。</p>
+]]></content:encoded>
+					
+					<wfw:commentRss>/332/feed</wfw:commentRss>
+			<slash:comments>1</slash:comments>
+		
+		
+			</item>
+	</channel>
+</rss>
